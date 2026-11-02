@@ -32,6 +32,11 @@ export const PublicAccessSettings = lazy(() =>
     default: m.PublicAccessSettings,
   })),
 )
+export const SemanticIndexSettings = lazy(() =>
+  import('../settings/adminSections').then((m) => ({
+    default: m.SemanticIndexSettings,
+  })),
+)
 export const SnapshotSettings = lazy(() =>
   import('../settings/adminSections').then((m) => ({
     default: m.SnapshotSettings,

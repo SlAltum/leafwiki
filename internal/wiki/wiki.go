@@ -15,7 +15,9 @@ import (
 	"github.com/perber/wiki/internal/core/email"
 	"github.com/perber/wiki/internal/core/ignore"
 	"github.com/perber/wiki/internal/core/revision"
+	"github.com/perber/wiki/internal/core/shared/advisorylock"
 	"github.com/perber/wiki/internal/core/tree"
+	"github.com/perber/wiki/internal/embed"
 	"github.com/perber/wiki/internal/favorites"
 	httpmetrics "github.com/perber/wiki/internal/http/metrics"
 	"github.com/perber/wiki/internal/links"
@@ -44,6 +46,7 @@ import (
 	wikisnapshot "github.com/perber/wiki/internal/wiki/snapshot"
 	wikitags "github.com/perber/wiki/internal/wiki/tags"
 	wikiusersettings "github.com/perber/wiki/internal/wiki/usersettings"
+	"github.com/perber/wiki/internal/wiki/vectors"
 )
 
 type Wiki struct {
@@ -63,6 +66,12 @@ type Wiki struct {
 	searchIndex       *search.SQLiteIndex
 	status            *search.IndexingStatus
 	storageDir        string
+
+	// Semantic search. All three stay nil while the feature is off.
+	vectorService *vectors.Service
+	vectorStore   *embed.Store
+	vectorEncoder *embed.Encoder
+	vectorLock    *advisorylock.File
 
 	// Domain route registrars (populated by NewWiki).
 	pagesRoutes            *wikipages.Routes
@@ -90,6 +99,7 @@ type Wiki struct {
 	restoreRoutes          *wikirestore.Routes
 	instanceSettingsRoutes *wikiinstancesettings.Routes
 	resyncRoutes           *wikiresync.Routes
+	vectorsRoutes          *vectors.Routes
 	resyncJob              *wikiresync.ResyncJob
 	ignoreCache            *ignore.Cache
 	reloadMu               sync.Mutex
@@ -121,6 +131,18 @@ type WikiOptions struct {
 	TOTPEncryptionKey       string        // Key used to encrypt per-user TOTP secrets at rest; empty disables TOTP self-service
 	SMTP                    email.Config  // SMTP config for password-reset/invite email; SMTP.Enabled()==false disables the feature entirely
 	Metrics                 *httpmetrics.HTTPMetrics
+	Vectors                 VectorsOptions // semantic search; the zero value keeps it off
+}
+
+// VectorsOptions configures semantic search.
+type VectorsOptions struct {
+	// Mode is off, auto or manual; empty means off.
+	Mode string
+	// ModelDir is the parent of the model directories. Empty means
+	// <data-dir>/models.
+	ModelDir string
+	// LibraryPath is the libonnxruntime shared library to load.
+	LibraryPath string
 }
 
 func NewWiki(options *WikiOptions) (*Wiki, error) {
@@ -176,6 +198,9 @@ func (w *Wiki) boot(options *WikiOptions) error {
 	if err := w.initSearch(); err != nil {
 		return err
 	}
+	if err := w.initVectors(options); err != nil {
+		return err
+	}
 	if err := w.initBranding(); err != nil {
 		return err
 	}
@@ -197,6 +222,21 @@ func (w *Wiki) boot(options *WikiOptions) error {
 	w.metrics.RegisterRuntimeStats(runtimeStatsSource{w: w})
 	w.buildRoutes(options)
 	return nil
+}
+
+// ForgetSemanticIndex drops the vectors and their build identity. A restored
+// snapshot says nothing about vectors built from the content it replaced, so
+// keeping them would answer from the past (FR-604, NFR-7). The next resync
+// finds no build and rebuilds.
+func (w *Wiki) ForgetSemanticIndex() {
+	if w.vectorStore == nil {
+		return
+	}
+	if err := w.vectorStore.Reset(); err != nil {
+		w.log.Warn("could not drop the semantic index after a restore", "error", err)
+		return
+	}
+	w.log.Info("semantic index dropped after a restore, a rebuild is needed")
 }
 
 // AuthService returns the authentication service.
@@ -360,6 +400,24 @@ func (w *Wiki) Close() error {
 	if w.searchIndex != nil {
 		if err := w.searchIndex.Close(); err != nil {
 			errs = append(errs, fmt.Errorf("close search index: %w", err))
+		}
+	}
+
+	if w.vectorEncoder != nil {
+		if err := w.vectorEncoder.Close(); err != nil {
+			errs = append(errs, fmt.Errorf("close the vector encoder: %w", err))
+		}
+	}
+
+	if w.vectorStore != nil {
+		if err := w.vectorStore.Close(); err != nil {
+			errs = append(errs, fmt.Errorf("close the vectors database: %w", err))
+		}
+	}
+
+	if w.vectorLock != nil {
+		if err := w.vectorLock.Release(); err != nil {
+			errs = append(errs, fmt.Errorf("release the vectors lock: %w", err))
 		}
 	}
 

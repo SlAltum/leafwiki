@@ -49,7 +49,6 @@ assignees: ''
 * [ ] linux amd64
 * [ ] windows amd64
 * [ ] linux arm64
-* [ ] linux 386 (32-bit x86)
 * [ ] MacOS
 
 ### Steps to reproduce

@@ -11,6 +11,7 @@ import (
 type PageView struct {
 	Page       *tree.Page
 	Tags       []string
+	Aliases    []string
 	Properties map[string]string
 }
 
@@ -18,8 +19,8 @@ type PageView struct {
 // single-page reads of the API and SEO share it so both return the same view.
 // It is not a visibility layer: other readers still use the tree directly.
 func newPageView(t *tree.TreeService, page *tree.Page) *PageView {
-	tags, properties := readPageMetadata(t, page.ID)
-	return &PageView{Page: page, Tags: tags, Properties: properties}
+	tags, aliases, properties := readPageMetadata(t, page.ID)
+	return &PageView{Page: page, Tags: tags, Aliases: aliases, Properties: properties}
 }
 
 // ─── GetPageViewByID ────────────────────────────────────────────────────────

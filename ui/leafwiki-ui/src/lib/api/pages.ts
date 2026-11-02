@@ -38,6 +38,7 @@ export interface Page {
   title: string
   content: string
   tags?: string[]
+  aliases?: string[]
   properties?: Record<string, string>
   version: string
   kind: 'page' | 'section'
@@ -149,11 +150,20 @@ export async function updatePage(
   slug: string,
   content: string,
   tags: string[],
+  aliases: string[],
   properties: Record<string, string>,
 ): Promise<Page | null> {
   return await fetchWithAuth<Page | null>(`/api/pages/${id}`, {
     method: 'PUT',
-    body: JSON.stringify({ version, title, slug, content, tags, properties }),
+    body: JSON.stringify({
+      version,
+      title,
+      slug,
+      content,
+      tags,
+      aliases,
+      properties,
+    }),
   })
 }
 

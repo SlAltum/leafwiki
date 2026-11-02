@@ -155,6 +155,7 @@ describe('TreeNodeActionsMenu', () => {
         'renamed',
         'some content',
         [],
+        [],
         {},
       )
     })

@@ -303,6 +303,7 @@ type UpdateNodeInput struct {
 	Content             *string
 	ExpectedVersion     string
 	Tags                []string
+	Aliases             []string
 	Properties          map[string]string
 	PreserveFrontmatter bool
 }
@@ -340,8 +341,8 @@ func (t *TreeService) UpdateNode(in UpdateNodeInput) error {
 			switch {
 			case in.PreserveFrontmatter:
 				upsertErr = t.store.UpsertContentPreservingFrontmatter(node, *in.Content)
-			case in.Tags != nil || in.Properties != nil:
-				upsertErr = t.store.UpsertContentAndMetadata(node, *in.Content, in.Tags, in.Properties)
+			case in.Tags != nil || in.Aliases != nil || in.Properties != nil:
+				upsertErr = t.store.UpsertContentAndMetadata(node, *in.Content, in.Tags, in.Aliases, in.Properties)
 			default:
 				upsertErr = t.store.UpsertContent(node, *in.Content)
 			}

@@ -283,11 +283,14 @@ too — again, index maintenance only, no content rewriting elsewhere.
      NewPath, OldTitle?, NewTitle?}`, batches changed content via
      `tree.BulkUpdateContent`, records content revisions
      (`revision.RecordContentUpdates`), and updates the link index
-     (`links.UpdateRewrittenLinksAndHealForPages`).
+     (`links.UpdateRewrittenLinksAndHealForPages`). Because `tree.BulkUpdateContent` fires no
+     save event, the use case runs the same `pagesave.PageSaveEvent` a normal save would send for
+     each rewritten page afterwards (`reindexRewrittenPages`), so the search index follows the
+     new text.
   3. Then performs the actual move/rename: for `RefactorKindRename`, delegates to the same
      `UpdatePageUseCase`; for `RefactorKindMove`, delegates to the same `MovePageUseCase` —
-     both wrapped in a **fresh, refactor-scoped** `pagesave.PageSaveOrchestrator` with only
-     the link + revision side effects (`refactor.go`), not the full five-effect set.
+     both wrapped in the orchestrator the composition root builds
+     (`Wiki.newPageOrchestrator`), so every side effect of a normal save applies here too.
   4. `rewritePathChangedSubtree` (`refactor.go`) then rewrites path-relative links
      *inside* the moved/renamed subtree's own pages (their own path changed, so relative
      links within them need updating even if no external page referenced them).

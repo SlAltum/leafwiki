@@ -32,10 +32,12 @@ export default function PageEditor() {
   const forceOverwrite = usePageEditorStore((s) => s.forceOverwrite)
   const setContent = usePageEditorStore((s) => s.setContent)
   const setTags = usePageEditorStore((s) => s.setTags)
+  const setAliases = usePageEditorStore((s) => s.setAliases)
   const setFrontmatterFields = usePageEditorStore((s) => s.setFrontmatterFields)
   const loadPageData = usePageEditorStore((s) => s.loadPageData)
   const initialPage = usePageEditorStore((s) => s.initialPage) // contains the initial page data when loaded
   const tags = usePageEditorStore((s) => s.tags)
+  const aliases = usePageEditorStore((s) => s.aliases)
   const frontmatterFields = usePageEditorStore((s) => s.frontmatterFields)
   const frontmatterUnsupported = usePageEditorStore(
     (s) => s.frontmatterUnsupported,
@@ -212,10 +214,12 @@ export default function PageEditor() {
           <>
             <PageFrontmatterPanel
               tags={tags}
+              aliases={aliases}
               fields={frontmatterFields}
               errors={frontmatterErrors}
               hasUnsupportedFields={Boolean(frontmatterUnsupported)}
               onTagsChange={setTags}
+              onAliasesChange={setAliases}
               onFieldsChange={setFrontmatterFields}
             />
             <MarkdownEditor

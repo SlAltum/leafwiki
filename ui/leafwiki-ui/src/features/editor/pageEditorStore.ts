@@ -27,6 +27,7 @@ export interface PageEditorState {
   slug: string // current slug in the editor
   content: string // current markdown content in the editor
   tags: string[] // convenient tag editor state
+  aliases: string[] // aliases the page answers to (wikilinks and search)
   frontmatterFields: EditorFrontmatterField[]
   frontmatterUnsupported: string
   frontmatterErrors: Record<string, string>
@@ -39,6 +40,7 @@ export interface PageEditorState {
   setSlug: (slug: string) => void // set the current slug
   setContent: (content: string) => void // set the current markdown content
   setTags: (tags: string[]) => void
+  setAliases: (aliases: string[]) => void
   setFrontmatterFields: (fields: EditorFrontmatterField[]) => void
   setFrontmatterErrors: (errors: Record<string, string>) => void
   setError: (error: string | null) => void // set the error message
@@ -81,13 +83,14 @@ function buildEditableProperties(
 }
 
 export const isDirtyState = (s: PageEditorState) => {
-  const { page, title, slug, content, tags, frontmatterFields } = s
+  const { page, title, slug, content, tags, aliases, frontmatterFields } = s
   if (!page) return false
   return (
     page.title !== title ||
     page.slug !== slug ||
     page.content !== content ||
     tagsChanged(tags, page.tags ?? []) ||
+    tagsChanged(aliases, page.aliases ?? []) ||
     propertiesChanged(frontmatterFields, page.properties ?? {})
   )
 }
@@ -112,6 +115,7 @@ export const usePageEditorStore = create<PageEditorState>((set, get) => ({
   slug: '',
   content: '',
   tags: [],
+  aliases: [],
   frontmatterFields: [],
   frontmatterUnsupported: '',
   frontmatterErrors: {},
@@ -120,6 +124,7 @@ export const usePageEditorStore = create<PageEditorState>((set, get) => ({
   setTitle: (title) => set({ title }),
   setSlug: (slug) => set({ slug }),
   setContent: (content) => set({ content }),
+  setAliases: (aliases) => set({ aliases }),
   setTags: (tags) =>
     set((state) => {
       const nextErrors = { ...state.frontmatterErrors }
@@ -144,7 +149,7 @@ export const usePageEditorStore = create<PageEditorState>((set, get) => ({
   setError: (error) => set({ error }),
   setPage: (page) => set({ page }),
   savePage: async (options?: { silent?: boolean }) => {
-    const { page, title, slug, content, tags, frontmatterFields } = get()
+    const { page, title, slug, content, tags, aliases, frontmatterFields } = get()
     if (!page || !isDirtyState(get())) return
     const session = editorSession
 
@@ -207,6 +212,7 @@ export const usePageEditorStore = create<PageEditorState>((set, get) => ({
             slug,
             content,
             tags,
+            aliases,
             properties,
           )
         }
@@ -218,11 +224,13 @@ export const usePageEditorStore = create<PageEditorState>((set, get) => ({
           slug,
           content,
           tags,
+          aliases,
           properties,
         )
       }
 
       const nextTags = updatedPage?.tags ?? tags
+      const nextAliases = updatedPage?.aliases ?? aliases
       const nextProperties =
         updatedPage && updatedPage.properties
           ? updatedPage.properties
@@ -250,9 +258,11 @@ export const usePageEditorStore = create<PageEditorState>((set, get) => ({
             path: updatedPage.path,
             version: updatedPage.version,
             tags: nextTags,
+            aliases: nextAliases,
             properties: nextProperties,
           },
           tags: nextTags,
+          aliases: nextAliases,
           frontmatterFields: state.frontmatterFields.map((field) => {
             if (field.internal || field.type !== 'text') {
               return field
@@ -342,6 +352,7 @@ export const usePageEditorStore = create<PageEditorState>((set, get) => ({
         slug: page.slug,
         content: page.content,
         tags: page.tags ?? [],
+        aliases: page.aliases ?? [],
         frontmatterFields: fields,
         frontmatterUnsupported: '',
       })
@@ -386,6 +397,7 @@ export const usePageEditorStore = create<PageEditorState>((set, get) => ({
       slug: '',
       content: '',
       tags: [],
+      aliases: [],
       frontmatterFields: [],
       frontmatterUnsupported: '',
       frontmatterErrors: {},

@@ -20,6 +20,7 @@ import {
   MovePageDialog,
   PageQuickSwitcherDialog,
   PageRefactorDialog,
+  PageSemanticIndexDialog,
   PermalinkDialog,
   RestoreRevisionDialog,
   Search,
@@ -81,6 +82,7 @@ export const DIALOG_IMAGE_PREVIEW = 'image-preview'
 export const DIALOG_PAGE_QUICK_SWITCHER = 'page-quick-switcher'
 export const DIALOG_PAGE_REFACTOR_CONFIRMATION = 'page-refactor-confirmation'
 export const DIALOG_PAGE_PERMALINK = 'page-permalink'
+export const DIALOG_PAGE_SEMANTIC_INDEX = 'page-semantic-index'
 export const DIALOG_RESTORE_REVISION_CONFIRMATION =
   'restore-revision-confirmation'
 export const DIALOG_LINK_INSERT = 'link-insert'
@@ -150,6 +152,8 @@ registerDialog(DIALOG_PAGE_REFACTOR_CONFIRMATION, PageRefactorDialog, {
 })
 
 registerDialog(DIALOG_PAGE_PERMALINK, PermalinkDialog)
+
+registerDialog(DIALOG_PAGE_SEMANTIC_INDEX, PageSemanticIndexDialog)
 
 registerDialog(DIALOG_LINK_INSERT, LinkInsertDialog)
 

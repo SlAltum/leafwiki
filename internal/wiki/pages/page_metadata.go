@@ -11,21 +11,46 @@ import (
 // custom string properties. Both are always non-nil so the API serializes
 // them as [] and {} for pages without frontmatter; read or parse failures
 // yield the empty values as well.
-func readPageMetadata(t *tree.TreeService, pageID string) ([]string, map[string]string) {
+func readPageMetadata(t *tree.TreeService, pageID string) ([]string, []string, map[string]string) {
 	tags := []string{}
+	aliases := []string{}
 	properties := map[string]string{}
 
 	raw, err := t.ReadPageRaw(pageID)
 	if err != nil {
-		return tags, properties
+		return tags, aliases, properties
 	}
 
 	fm, _, has, err := markdown.ParseFrontmatter(raw)
-	if err != nil || !has || len(fm.ExtraFields) == 0 {
-		return tags, properties
+	if err != nil || !has {
+		return tags, aliases, properties
 	}
 
-	return extractPageMetadata(fm.ExtraFields)
+	aliases = normalizeAliasInputs(fm.LeafWikiAliases)
+	tags, properties = extractPageMetadata(fm.ExtraFields)
+	return tags, aliases, properties
+}
+
+// normalizeAliasInputs trims aliases, drops the empty ones, removes duplicates
+// (aliases are matched case-insensitively) and refuses entries long enough to
+// be a paragraph rather than a name.
+func normalizeAliasInputs(aliases []string) []string {
+	const maxAliasRunes = 64
+	seen := make(map[string]struct{}, len(aliases))
+	out := make([]string, 0, len(aliases))
+	for _, alias := range aliases {
+		trimmed := strings.TrimSpace(alias)
+		if trimmed == "" || len([]rune(trimmed)) > maxAliasRunes {
+			continue
+		}
+		key := strings.ToLower(trimmed)
+		if _, dup := seen[key]; dup {
+			continue
+		}
+		seen[key] = struct{}{}
+		out = append(out, trimmed)
+	}
+	return out
 }
 
 func extractPageMetadata(fields map[string]interface{}) ([]string, map[string]string) {

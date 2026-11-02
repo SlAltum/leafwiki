@@ -1,3 +1,19 @@
+import { slugifyHeadline } from './headingAnchor'
+
+/**
+ * findHeadlineElement returns the heading the fragment points at: an exact id
+ * first, then the normalized form of it.
+ */
+function findHeadlineElement(headlineId: string): HTMLElement | null {
+  const exact = document.getElementById(headlineId)
+  if (exact) return exact
+
+  const normalized = slugifyHeadline(headlineId)
+  if (!normalized || normalized === headlineId) return null
+
+  return document.getElementById(normalized)
+}
+
 type ScrollToHeadlineOptions = {
   behavior?: ScrollBehavior
   waitForStableLayout?: boolean
@@ -63,7 +79,10 @@ export function scrollToHeadlineHash(
       headlineId = rawHeadlineId
     }
 
-    const headlineElement = document.getElementById(headlineId)
+    // A hand-written fragment ("#Nika's clothes") and the id the reader
+    // generated ("nikas-clothes") name the same section, so the normalized
+    // form is tried as well (FR-502, FR-505).
+    const headlineElement = findHeadlineElement(headlineId)
     if (!headlineElement) {
       console.warn(`Headline with id "${headlineId}" not found.`)
       return

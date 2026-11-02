@@ -6,13 +6,13 @@ import (
 	"fmt"
 	"log/slog"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"sync"
 	"unicode"
 
 	"github.com/perber/wiki/internal/core/excerpt"
 	"github.com/perber/wiki/internal/core/markdown"
-	"github.com/perber/wiki/internal/core/shared/htmlutil"
 	"github.com/perber/wiki/internal/core/shared/sqliteutil"
 	"github.com/perber/wiki/internal/core/tree"
 	"github.com/yuin/goldmark"
@@ -85,7 +85,12 @@ func extractHeadings(src string) string {
 // comma or apostrophe in the other field and failed with an FTS5 syntax
 // error. Classifying field-by-field means one field's operator syntax can
 // no longer vouch for a different field's stray punctuation.
-func buildFuzzyQuery(q string) string {
+// termSuggester returns a corrected spelling for a term the corpus does not
+// contain. Query construction stays a pure function and takes the corrections
+// as a lookup; nil means "match the query as typed".
+type termSuggester func(term string) (string, bool)
+
+func buildFuzzyQuery(q string, suggest termSuggester) string {
 	q = strings.TrimSpace(q)
 	if q == "" {
 		return q
@@ -105,11 +110,33 @@ func buildFuzzyQuery(q string) string {
 	}
 
 	fields := splitFTS5AwareFields(q)
-	sanitized := make([]string, len(fields))
+
+	parts := make([]string, 0, len(fields))
+	literal := make([]bool, 0, len(fields))
 	for i := range fields {
-		sanitized[i] = sanitizeFTS5Field(fields, i)
+		fragment, isLiteral := sanitizeFTS5Field(fields, i, suggest)
+		if fragment == "" {
+			continue
+		}
+		parts = append(parts, fragment)
+		literal = append(literal, isLiteral)
 	}
-	return strings.Join(sanitized, " ")
+
+	// Two literal fields are joined with an explicit AND: a corrected term is
+	// a parenthesised group, and FTS5 rejects a group that merely follows a
+	// phrase. Operator syntax keeps its plain spacing.
+	var b strings.Builder
+	for i, fragment := range parts {
+		if i > 0 {
+			if literal[i] && literal[i-1] {
+				b.WriteString(" AND ")
+			} else {
+				b.WriteString(" ")
+			}
+		}
+		b.WriteString(fragment)
+	}
+	return b.String()
 }
 
 // isNearFunctionCall reports whether q, trimmed, is shaped like a complete
@@ -165,14 +192,14 @@ func splitFTS5AwareFields(q string) []string {
 // path, even if the same field also contains an operator character like *
 // or : (that combination is exactly what #1577's follow-up reports found:
 // "sometimes # and \"" alongside other punctuation).
-func sanitizeFTS5Field(fields []string, i int) string {
+func sanitizeFTS5Field(fields []string, i int, suggest termSuggester) (fragment string, literal bool) {
 	f := fields[i]
 	if f == "" {
-		return f
+		return f, false
 	}
 
 	if isBalancedQuotedField(f) {
-		return f
+		return f, false
 	}
 
 	// A column filter is always rewritten (never trusted verbatim) into a
@@ -182,7 +209,7 @@ func sanitizeFTS5Field(fields []string, i int) string {
 	// own escaping rules, because it's built from the same safe
 	// splitIntoIndexWords primitive as the plain-literal-text path below.
 	if rewritten, ok := rewriteColumnFilterField(f); ok {
-		return rewritten
+		return rewritten, false
 	}
 
 	// An operator field ("foo*", "(foo", "bar)") is only trusted when it is
@@ -191,10 +218,10 @@ func sanitizeFTS5Field(fields []string, i int) string {
 	// partner, a bare "*") goes through the literal path below.
 	if strings.ContainsAny(f, "*()") {
 		if isWellFormedOperatorField(f) && (!strings.ContainsAny(f, "()") || operatorParensBalanced(fields)) {
-			return f
+			return f, false
 		}
 	} else if isFTS5Keyword(f) && hasRealOperandNeighbors(fields, i) {
-		return f
+		return f, false
 	}
 
 	// Literal text: split it into the same "words" the pages table's
@@ -208,7 +235,10 @@ func sanitizeFTS5Field(fields []string, i int) string {
 	// `"it's"` phrase query fails to match content containing "it's" even
 	// though both tokenize the same way. AND-ing independent terms doesn't
 	// depend on that adjacency at all.
-	return quoteWordsAsPrefixTerms(splitIntoIndexWords(f))
+	// CJK runs become bigrams here exactly as cjkAnalyze wrote them into the
+	// index, so a query and the text it should find agree on their tokens
+	// (FR-104, FR-108).
+	return quoteFieldTerms(QueryTerms(f), suggest), true
 }
 
 // isBarewordRune reports whether r may appear in an unquoted FTS5 bareword.
@@ -273,6 +303,29 @@ func operatorParensBalanced(fields []string) bool {
 		}
 	}
 	return depth == 0
+}
+
+// quoteFieldTerms builds the MATCH fragment for one literal field: every term
+// quoted as a prefix match, joined by FTS5's implicit AND. A term the corpus
+// does not contain is matched by both its typed spelling and its correction,
+// so a page carrying either is found (FR-303). FTS5 has no per-term weight, so
+// the typed spelling is one of two alternatives rather than boosted above the
+// correction; a page carrying both still scores higher.
+func quoteFieldTerms(terms []string, suggest termSuggester) string {
+	parts := make([]string, 0, len(terms))
+	for _, term := range terms {
+		quoted := strconv.Quote(term) + "*"
+		if suggest != nil {
+			if corrected, ok := suggest(term); ok && corrected != term {
+				parts = append(parts, "("+quoted+" OR "+strconv.Quote(corrected)+"*"+")")
+				continue
+			}
+		}
+		parts = append(parts, quoted)
+	}
+	// An explicit AND: FTS5 accepts a parenthesised group after a phrase only
+	// when an operator joins them, and a correction turns one term into one.
+	return strings.Join(parts, " AND ")
 }
 
 // quoteWordsAsPrefixTerms wraps each word as its own quoted-phrase-prefix
@@ -347,18 +400,59 @@ func isFTS5Keyword(f string) bool {
 	}
 }
 
+// searchColumnNames lists the pages FTS5 table's columns in declaration
+// order. It is the single source for the bm25 weights and for the column
+// filters rewriteColumnFilterField accepts.
+var searchColumnNames = []string{
+	"path",
+	"filepath",
+	"pageID",
+	"kind",
+	"title",
+	"headings",
+	"content",
+	"aliases",
+}
+
+// searchColumnWeights is the bm25 weight of each column, in
+// searchColumnNames order: a hit in the title or a declared alias says more
+// about a page's subject than a hit in the body. bm25() pads a short weight
+// list with 1.0 and ignores a long one without failing, so the list is
+// generated from these and the length is checked below; a column that lost
+// its weight would otherwise rank as if it were body text (FR-106).
+var searchColumnWeights = []float64{
+	0,  // path
+	0,  // filepath
+	0,  // pageID
+	0,  // kind
+	20, // title
+	5,  // headings
+	1,  // content
+	10, // aliases
+}
+
 // searchColumns are the pages FTS5 table's real column names, lowercased,
 // against which a field's "col:" prefix is validated before trusting it as
 // an FTS5 column filter (see rewriteColumnFilterField). FTS5 column-name
 // matching is case-insensitive, so column names are compared lowercased.
-var searchColumns = map[string]bool{
-	"path":     true,
-	"filepath": true,
-	"pageid":   true,
-	"kind":     true,
-	"title":    true,
-	"headings": true,
-	"content":  true,
+var searchColumns = map[string]bool{}
+
+func init() {
+	if err := checkSearchColumnWeights(searchColumnNames, searchColumnWeights); err != nil {
+		panic(err)
+	}
+	for _, name := range searchColumnNames {
+		searchColumns[strings.ToLower(name)] = true
+	}
+}
+
+// checkSearchColumnWeights reports whether every pages column has exactly
+// one bm25 weight.
+func checkSearchColumnWeights(names []string, weights []float64) error {
+	if len(names) != len(weights) {
+		return fmt.Errorf("search: %d bm25 weights for %d pages columns", len(weights), len(names))
+	}
+	return nil
 }
 
 // rewriteColumnFilterField checks whether f looks like a deliberate FTS5
@@ -388,7 +482,7 @@ func rewriteColumnFilterField(f string) (string, bool) {
 	if !searchColumns[strings.ToLower(col)] {
 		return "", false
 	}
-	words := splitIntoIndexWords(f[idx+1:])
+	words := QueryTerms(f[idx+1:])
 	if len(words) == 0 {
 		return "", false
 	}
@@ -488,6 +582,7 @@ func (s *SQLiteIndex) withDBRead(fn func(db *sql.DB) error) error {
 func (s *SQLiteIndex) ensureSchema() error {
 	return s.withDB(func(db *sql.DB) error {
 		_, err := db.Exec(`
+			DROP TABLE IF EXISTS pages_vocab;
 			DROP TABLE IF EXISTS pages;
 			CREATE VIRTUAL TABLE IF NOT EXISTS pages USING fts5(
 				path UNINDEXED,
@@ -497,8 +592,12 @@ func (s *SQLiteIndex) ensureSchema() error {
 				title,
 				headings,
 				content,
+				aliases,
 				tokenize = "unicode61 tokenchars '` + searchTokenChars + `'"
 			);
+			-- The term vocabulary is a view over the index itself, so it needs no
+			-- separate rebuild path and cannot drift from the postings (FR-301).
+			CREATE VIRTUAL TABLE IF NOT EXISTS pages_vocab USING fts5vocab(pages, 'row');
         `)
 		return err
 	})
@@ -570,12 +669,13 @@ func (s *SQLiteIndex) IndexPages(inputs []IndexPageInput) ([]IndexFailure, error
 		path, filePath, pageID, title string
 		kind                          tree.NodeKind
 		headings, sanitizedBody       string
+		aliases                       string
 	}
 
 	var failures []IndexFailure
 	prepped := make([]prepared, 0, len(inputs))
 	for _, in := range inputs {
-		_, content, _, err := markdown.ParseFrontmatter(in.Raw)
+		fm, content, _, err := markdown.ParseFrontmatter(in.Raw)
 		if err != nil {
 			failures = append(failures, IndexFailure{PageID: in.PageID, Err: err})
 			continue
@@ -585,10 +685,11 @@ func (s *SQLiteIndex) IndexPages(inputs []IndexPageInput) ([]IndexFailure, error
 			path:          in.Path,
 			filePath:      in.FilePath,
 			pageID:        in.PageID,
-			title:         in.Title,
+			title:         cjkAnalyze(in.Title),
 			kind:          in.Kind,
-			headings:      extractHeadings(content),
-			sanitizedBody: excerpt.PlainTextForSearch(content),
+			headings:      cjkAnalyze(extractHeadings(content)),
+			sanitizedBody: cjkAnalyze(excerpt.PlainTextForSearch(content)),
+			aliases:       cjkAnalyze(strings.Join(fm.LeafWikiAliases, "\n")),
 		})
 	}
 
@@ -614,8 +715,8 @@ func (s *SQLiteIndex) IndexPages(inputs []IndexPageInput) ([]IndexFailure, error
 		}()
 
 		insertStmt, err := tx.Prepare(`
-			INSERT INTO pages (path, filepath, pageID, kind, title, headings, content)
-			VALUES (?, ?, ?, ?, ?, ?, ?);
+			INSERT INTO pages (path, filepath, pageID, kind, title, headings, content, aliases)
+			VALUES (?, ?, ?, ?, ?, ?, ?, ?);
 		`)
 		if err != nil {
 			return err
@@ -628,7 +729,7 @@ func (s *SQLiteIndex) IndexPages(inputs []IndexPageInput) ([]IndexFailure, error
 			if _, err := deleteStmt.Exec(p.pageID); err != nil {
 				return err
 			}
-			if _, err := insertStmt.Exec(p.path, p.filePath, p.pageID, string(p.kind), p.title, p.headings, p.sanitizedBody); err != nil {
+			if _, err := insertStmt.Exec(p.path, p.filePath, p.pageID, string(p.kind), p.title, p.headings, p.sanitizedBody, p.aliases); err != nil {
 				return err
 			}
 		}
@@ -717,7 +818,8 @@ func (s *SQLiteIndex) Search(query string, pageIDs []string, offset, limit int) 
 	// raw query wasn't empty, and `pages MATCH ''` is itself an FTS5 syntax
 	// error — the same crash class #1577 reported, for the simplest
 	// possible input.
-	ftsQuery := buildFuzzyQuery(query)
+	suggestion, suggest := s.correctionsFor(query)
+	ftsQuery := buildFuzzyQuery(query, suggest)
 
 	if len(pageIDs) == 0 && pageIDs != nil {
 		return &SearchResult{
@@ -739,7 +841,7 @@ func (s *SQLiteIndex) Search(query string, pageIDs []string, offset, limit int) 
 		}, nil
 	}
 
-	sr := &SearchResult{TagFacets: []SearchTagFacet{}}
+	sr := &SearchResult{TagFacets: []SearchTagFacet{}, Suggestion: suggestion}
 
 	err := s.withDBRead(func(db *sql.DB) error {
 		var total int
@@ -756,17 +858,12 @@ func (s *SQLiteIndex) Search(query string, pageIDs []string, offset, limit int) 
 			pageID,
 			path,
 			kind,
-			%s AS highlighted_title,
-			%s AS excerpt,
-			content,
 			%s AS bm25_score
 		FROM pages
 		WHERE %s
 		ORDER BY %s
 		LIMIT ? OFFSET ?;
 	`,
-			searchTitleExpr(ftsQuery != ""),
-			searchExcerptExpr(ftsQuery != ""),
 			searchRankExpr(ftsQuery != ""),
 			whereClause,
 			searchOrderByExpr(ftsQuery != ""),
@@ -787,14 +884,9 @@ func (s *SQLiteIndex) Search(query string, pageIDs []string, offset, limit int) 
 		for rows.Next() {
 			var r SearchResultItem
 			var bm25Score float64
-			var content string
 
-			if err := rows.Scan(&r.PageID, &r.Path, &r.Kind, &r.Title, &r.Excerpt, &content, &bm25Score); err != nil {
+			if err := rows.Scan(&r.PageID, &r.Path, &r.Kind, &bm25Score); err != nil {
 				return err
-			}
-			r.Title = sanitizeSearchTitle(r.Title)
-			if strings.TrimSpace(r.Excerpt) == "" {
-				r.Excerpt = excerpt.FromBody(content)
 			}
 
 			if ftsQuery == "" {
@@ -823,7 +915,8 @@ func (s *SQLiteIndex) Search(query string, pageIDs []string, offset, limit int) 
 
 func (s *SQLiteIndex) SearchPageIDs(query string, pageIDs []string) ([]string, error) {
 	query = strings.TrimSpace(query)
-	ftsQuery := buildFuzzyQuery(query)
+	_, suggest := s.correctionsFor(query)
+	ftsQuery := buildFuzzyQuery(query, suggest)
 
 	if len(pageIDs) == 0 && pageIDs != nil {
 		return []string{}, nil
@@ -869,6 +962,26 @@ func (s *SQLiteIndex) SearchPageIDs(query string, pageIDs []string) ([]string, e
 	return result, err
 }
 
+// correctionsFor resolves the corrections for one query in a single
+// vocabulary read: the suggester the query constructor uses, and the query
+// with the corrections applied, for the hint the response carries. A failed
+// vocabulary read must not fail the search, so the query is matched as typed.
+func (s *SQLiteIndex) correctionsFor(query string) (string, termSuggester) {
+	corrections, err := s.CorrectTerms(QueryTerms(query))
+	if err != nil {
+		slog.Default().Warn("search: could not read the term vocabulary, matching the query as typed", "error", err)
+		return "", nil
+	}
+	if len(corrections) == 0 {
+		return "", nil
+	}
+	suggest := func(term string) (string, bool) {
+		corrected, ok := corrections[term]
+		return corrected, ok
+	}
+	return applyCorrections(query, corrections), suggest
+}
+
 func buildSearchWhereClause(ftsQuery string, pageIDs []string) (string, []interface{}) {
 	clauses := make([]string, 0, 2)
 	args := make([]interface{}, 0, 1+len(pageIDs))
@@ -889,41 +1002,15 @@ func buildSearchWhereClause(ftsQuery string, pageIDs []string) (string, []interf
 	return strings.Join(clauses, " AND "), args
 }
 
-func searchTitleExpr(hasQuery bool) string {
-	if hasQuery {
-		return "highlight(pages, 4, char(2), char(3))"
-	}
-	return "title"
-}
-
-func sanitizeSearchTitle(title string) string {
-	return htmlutil.EscapeTextWithAllowedMarkers(
-		title,
-		htmlutil.AllowedMarker{Marker: "\u0002", HTML: "<b>"},
-		htmlutil.AllowedMarker{Marker: "\u0003", HTML: "</b>"},
-	)
-}
-
-func searchExcerptExpr(hasQuery bool) string {
-	if hasQuery {
-		return "snippet(pages, 6, '<b>', '</b>', '...', 16)"
-	}
-	return "''"
-}
-
 func searchRankExpr(hasQuery bool) string {
-	if hasQuery {
-		return `bm25(pages,
-				0.0,  -- path
-				0.0,  -- filepath
-				0.0,  -- pageID
-				0.0,  -- kind
-				20.0, -- title
-				5.0,   -- headings
-				1.0    -- content
-			)`
+	if !hasQuery {
+		return "0.0"
 	}
-	return "0.0"
+	weights := make([]string, len(searchColumnWeights))
+	for i, w := range searchColumnWeights {
+		weights[i] = strconv.FormatFloat(w, 'f', -1, 64)
+	}
+	return "bm25(pages, " + strings.Join(weights, ", ") + ")"
 }
 
 func searchOrderByExpr(hasQuery bool) string {

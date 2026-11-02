@@ -43,6 +43,14 @@ function safeDecodeURIComponent(s: string): string {
   }
 }
 
+// withFragment re-attaches the caller's "#section" to a resolved wiki path.
+// normalizeWikiRoutePath drops the fragment on purpose (a path is not a URL),
+// but a link to another page's section has to keep it (FR-501).
+function withFragment(path: string, href: string): string {
+  const hashIndex = href.indexOf('#')
+  return hashIndex < 0 ? path : path + href.slice(hashIndex)
+}
+
 function isWebHref(href: string): boolean {
   return /^(https?:|\/\/)/i.test(href)
 }
@@ -257,7 +265,7 @@ export function MarkdownLink({
 
     return (
       <Link
-        to={normalizedHref}
+        to={withFragment(normalizedHref, href)}
         state={createNavigationVisitState()}
         {...props}
         className="no-underline hover:underline"

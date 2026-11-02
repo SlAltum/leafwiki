@@ -25,6 +25,7 @@ import (
 	wikisnapshot "github.com/perber/wiki/internal/wiki/snapshot"
 	wikitags "github.com/perber/wiki/internal/wiki/tags"
 	wikiusersettings "github.com/perber/wiki/internal/wiki/usersettings"
+	"github.com/perber/wiki/internal/wiki/vectors"
 )
 
 func (w *Wiki) buildRoutes(options *WikiOptions) {
@@ -51,19 +52,27 @@ func (w *Wiki) buildRoutes(options *WikiOptions) {
 		wikiresync.NewGetResyncStatusUseCase(w.resyncJob),
 		w.auth,
 	)
+	// Registered whether or not the feature is on: with it off every endpoint
+	// answers 503, which is clearer than a 404 that looks like a typo (FR-401).
+	w.vectorsRoutes = vectors.NewRoutes(w.vectorService, w.auth)
 }
 
 // ─── Domain route builder helpers ────────────────────────────────────────────
 
 func (w *Wiki) newPageOrchestrator() *pagesave.PageSaveOrchestrator {
-	return pagesave.NewPageSaveOrchestrator(
-		w.metrics,
+	effects := []pagesave.PageSideEffect{
 		pagesave.NewSearchIndexSideEffect(w.searchIndex, w.tree, w.log, w.metrics),
 		pagesave.NewLinkIndexSideEffect(w.links, w.log, w.metrics),
 		pagesave.NewRevisionSideEffect(w.revision, w.log, w.metrics),
 		pagesave.NewTagsSideEffect(w.tags, w.log, w.metrics),
 		pagesave.NewPropertiesSideEffect(w.props, w.log, w.metrics),
-	)
+	}
+	// Semantic indexing joins the same pipeline, but only when the feature is
+	// on: an instance with vectors off must not queue anything (FR-401).
+	if w.vectorService != nil {
+		effects = append(effects, vectors.NewSideEffect(w.vectorService, w.log))
+	}
+	return pagesave.NewPageSaveOrchestrator(w.metrics, effects...)
 }
 
 func (w *Wiki) buildPagesRoutes() *wikipages.Routes {
@@ -83,7 +92,7 @@ func (w *Wiki) buildPagesRoutes() *wikipages.Routes {
 		EnsurePath:      wikipages.NewEnsurePathUseCase(w.tree, w.slug, o, w.log),
 		SuggestSlug:     wikipages.NewSuggestSlugUseCase(w.tree, w.slug),
 		PreviewRefactor: wikipages.NewPreviewPageRefactorUseCase(w.tree, w.slug, w.links, w.log),
-		ApplyRefactor:   wikipages.NewApplyPageRefactorUseCase(w.tree, w.slug, w.revision, w.links, w.log, w.metrics),
+		ApplyRefactor:   wikipages.NewApplyPageRefactorUseCase(w.tree, w.slug, w.revision, w.links, w.log, w.metrics, o),
 		PinPage:         wikipages.NewPinPageUseCase(w.tree, w.log),
 		AddFavorite:     wikipages.NewAddFavoriteUseCase(w.tree, w.favorites),
 		RemoveFavorite:  wikipages.NewRemoveFavoriteUseCase(w.favorites),
@@ -147,7 +156,7 @@ func (w *Wiki) buildRevisionsRoutes() *wikirevisions.Routes {
 
 func (w *Wiki) buildSearchRoutes() *wikisearch.Routes {
 	return wikisearch.NewRoutes(wikisearch.RoutesConfig{
-		Search:            wikisearch.NewSearchUseCase(w.searchIndex, w.tags, w.tree),
+		Search:            wikisearch.NewSearchUseCase(w.searchIndex, w.tags, w.tree, semanticBridge{service: w.vectorService}).WithSemanticSearcher(semanticBridge{service: w.vectorService}),
 		GetIndexingStatus: wikisearch.NewGetIndexingStatusUseCase(w.status),
 		AuthService:       w.auth,
 	})
@@ -256,6 +265,7 @@ func (w *Wiki) Registrars() []httpinternal.RouteRegistrar {
 		w.importerRoutes,
 		w.healthRoutes,
 		w.resyncRoutes,
+		w.vectorsRoutes,
 	}
 	if w.backupRoutes != nil {
 		registrars = append(registrars, w.backupRoutes)

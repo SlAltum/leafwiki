@@ -10,10 +10,8 @@ import (
 // data out from under the running server. It has no HTTP dependency itself —
 // internal/http/middleware/maintenance wraps it as gin middleware.
 type WriteGate struct {
-	mu      sync.Mutex
-	engaged bool
-	// atomic.Int64 rather than a raw int64: it is guaranteed 64-bit aligned,
-	// so this doesn't panic on 32-bit platforms (linux/386).
+	mu       sync.Mutex
+	engaged  bool
 	inflight atomic.Int64
 }
 

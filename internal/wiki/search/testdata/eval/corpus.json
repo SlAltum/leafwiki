@@ -1,0 +1,4532 @@
+{
+ "pages": [
+  {
+   "slug": "dictionary-letter-0-25k-influence",
+   "title": "25k influence",
+   "body": "\n\n# 25k influence\n\n- 中文术语：两万五影响力\n\n玩家特质。[MoR Enhanced](/dictionary/m#mor%20enhanced) 专属，Cost 20，Requirements 无。[影响力](/dictionary/i#influence)开局加 25,000 点，来自玩家多年的冒险、成就与人脉。除起始影响力外没有持续效果。\n"
+  },
+  {
+   "slug": "dictionary-letter-0-5-000-000",
+   "title": "$5,000,000",
+   "body": "\n\n# $5,000,000\n\n- 中文术语：五百万\n\n玩家特质。[MoR Enhanced](/dictionary/m#mor%20enhanced) 专属，Cost 200，Requirements 无。玩家靠一笔旧遗产开局手握五百万[现金](/dictionary/c#cash)。这笔钱足以翻新[宅邸](/dictionary/h#household)并雇一队精锐佣兵。除起始现金外没有持续效果。\n"
+  },
+  {
+   "slug": "dictionary-letter-0-50-cal-rifle",
+   "title": ".50 cal rifle",
+   "body": "\n\n# .50 cal rifle\n\n- 中文术语：.50 口径步枪\n\n远程[武器](/dictionary/w#weapon)，使用 .50 口径[弹药](/dictionary/a#ammunition)。基础价 3,100 元。远距伤害加 45，近距加 30。远距命中修正 0，近距加 5。具[护甲穿透](/dictionary/a#armor%20piercing)，[后坐力](/dictionary/r#recoil)高，[击倒概率](/dictionary/i#incapacitation%20chance) −10。它以精度换威力，原为打车辆与工事而设计。特殊效果为狙击：用[瞄准](/dictionary/a#aim)动作时从远距多掷一颗伤害骰，约 +17。变量 own50c。\n"
+  },
+  {
+   "slug": "dictionary-letter-0-750-000",
+   "title": "$750,000",
+   "body": "\n\n# $750,000\n\n- 中文术语：七十五万\n\n玩家特质。[MoR Enhanced](/dictionary/m#mor%20enhanced) 专属，Cost 60，Requirements 无。玩家终身做投资，开局手握七十五万[现金](/dictionary/c#cash)。这笔钱相当于普通工人五十年的薪水。除起始现金外没有持续效果。\n"
+  },
+  {
+   "slug": "dictionary-letter-0-9mm-pistol",
+   "title": "9mm pistol",
+   "body": "\n\n# 9mm pistol\n\n- 中文术语：9mm 手枪\n\n远程武器，使用 9mm 子弹。基础价 380 元，由 Cyker 的[西区](/dictionary/w#westside)装配厂依旧图纸生产。远距伤害加 15，近距加 18。远距命中修正 0，近距加 5。具[护甲穿透](/dictionary/a#armor%20piercing)，后坐力低，击倒概率 +0。变量 ownpistol。\n"
+  },
+  {
+   "slug": "dictionary-letter-a-academic-retainer",
+   "title": "academic retainer",
+   "body": "\n\n# academic retainer\n\n- 中文术语：学院聘金\n\n玩家特质。Cost 120，Requirements 为[学者](/dictionary/s#scholar)类的 Adept 级。在开局购点界面把[学者](/dictionary/s#scholar)类练满即得。玩家写有一本小有名气的书，每日带来 200 元聘金。开局另有[学院](/dictionary/a#the%20academy)的一份岗位与 800 点学院[立场](/dictionary/s#standing)。\n"
+  },
+  {
+   "slug": "dictionary-letter-a-academics-professor",
+   "title": "academics professor",
+   "body": "\n\n# academics professor\n\n- 中文术语：学术教授\n\n城市岗位。在[学院](/dictionary/a#the%20academy)授课，需[学术](/dictionary/a#academics) 70 以上。底薪 70 元。学术 80、90、100、120 以上时分别加 5、20、35、60 元。[威望](/dictionary/p#prestige) 50、150、500 以上时分别加 5、15、15 元，另按威望的 5% 加成。带[守旧](/dictionary/t#traditionalist)特质加 30 元。[奴隶](/dictionary/s#slave)或[罪奴](/dictionary/c#convict)身份减 15 元。纪律低于 20 减 15 元，低于 40 再减 15 元。每日加 4 点[影响力](/dictionary/i#influence)。每日有 1% 概率提升学术，上限 100。每日有 2% 概率提升纪律，上限 90。每日有 6% 概率提升智力，上限 100。每日有 10% 概率提升意志，上限 80。学术或[科学](/dictionary/s#science) 100 以上时，每日有六分之一概率加 1 点威望，无上限。年龄需 21 以上，玩家影响力 6,000 以上时不限。上课消耗 20% 体力。\n"
+  },
+  {
+   "slug": "dictionary-letter-a-accountant",
+   "title": "accountant",
+   "body": "\n\n# accountant\n\n- 中文术语：会计\n\nNPC 特质。Armand Blackford 与 Adrienne Keller 的出身与性格让她们精于会计。派为会计岗位时，她们的会计技能带来的商业收入加成再提高 45%。卖[奴隶](/dictionary/s#slave)时雇着 Armand，奴隶底价加 50 元，或在他好感为 Amiable 以上时加 10%。\n\n岗位。宅邸岗位，每户限 1 人。他的技能提高宅邸收入并降低维护费。自由人身份（[仆役](/dictionary/s#servant)或更高）时效率更高。拉纳的伊斯兰教徒因文化与商路关系，做会计尤其出色。\n"
+  },
+  {
+   "slug": "dictionary-letter-a-aging",
+   "title": "aging",
+   "body": "\n\n# aging\n\n- 中文术语：衰老\n\n机制。年龄会改玩家的属性与对话选项。NPC 过 50 岁后开始掉[力量](/dictionary/s#strength)、[敏捷](/dictionary/d#dexterity)与[体力](/dictionary/s#stamina)，三者任一归零即自然死亡。50 到 56 岁每半年减 1 点力量与敏捷，每年减 1 点体力。57 到 64 岁每 3 个月减 1 点力量与敏捷，每半年减 1 点体力。65 岁起每两个月减 1 点力量与敏捷，每 3 个月减 1 点体力。玩家在游戏内同样衰老：40 到 64 岁每半年减 1 点力量与敏捷，65 岁起每 3 个月减 1 点。玩家的力量或敏捷因此归零即自然死亡。开局年龄会带来一次性属性修正。18 到 20 岁加 6 点敏捷与 6 点[美貌](/dictionary/b#beauty)，但减 5 点[学术](/dictionary/a#academics)与[科学](/dictionary/s#science)。越老则力量与敏捷越吃亏，而[智力](/dictionary/i#intelligence)、[意志](/dictionary/w#willpower)与学术越高。NPC 可用[再生剂](/dictionary/r#revital)延缓衰老，玩家可在选项里把衰老设为冻结。玩家的子女在 14 岁与 16 岁生日时按性别改变体重、身高与[生命值](/dictionary/h#health%20points)，并在 16 岁定下[体格](/dictionary/b#body%20type%20%28frame%29)。\n"
+  },
+  {
+   "slug": "dictionary-letter-a-aria-bianchi",
+   "title": "aria bianchi",
+   "body": "\n\n# aria bianchi\n\n- 中文术语：阿丽亚·比安基\n\nNPC。[比安基家族](/dictionary/h#house%20bianchi) Desmond Bianchi 的幼女，亲眼送走家族黄金时代的最后十年，2481 年 Sphere Wars 中父亲倒下。在[水晶丘](/dictionary/c#crystal%20hills)的奴隶市场以 35,000 元出售。走 拉纳奴隶主（Slavemasters of Raana） 路线可把她推上第三共和国议长之位。\n"
+  },
+  {
+   "slug": "dictionary-letter-a-ashbury-estate",
+   "title": "ashbury estate",
+   "body": "\n\n# ashbury estate\n\n- 中文术语：梣邑庄园\n\n[耙岛](/dictionary/h#harrow%20island)上的废弃庄园。五十年间荒废，如今草木丛生。曾属一名[球上老爷](/dictionary/s#spheremaster)。他在 2430 年代第二共和国成立时站错了队，此后不得居住在[拉纳](/dictionary/r#raana)地表。玩家经 Amelia 的[任务](/dictionary/q#quest)解锁此地与陵墓。陵墓可产出黄金。\n"
+  },
+  {
+   "slug": "dictionary-letter-a-atheism",
+   "title": "atheism",
+   "body": "\n\n# atheism\n\n- 中文术语：无神论\n\n玩家可选的宗教。信徒约占伊卡诺斯的 25%。信条是真理只从科学方法得出，没有神、灵魂、鬼怪与超自然力量。[虔诚](/dictionary/d#devotion) 100 以上时每日有 10% 概率加 1 点[意志](/dictionary/w#willpower)，上限 100。妻室无上限。提升虔诚靠给 The Academy 授课，或把[科学](/dictionary/s#science)维持在 75 以上。游戏里归为 Atheist，变量 mcrel.faith 取值 0。\n"
+  },
+  {
+   "slug": "dictionary-letter-a-atlantica",
+   "title": "atlantica",
+   "body": "\n\n# atlantica\n\n- 中文术语：亚特兰蒂卡\n\n地点。邻近星系的行星，常被称作“拉纳的孪生兄弟”，在拉纳之后两年被发现，殖民时间也几乎相同。气候宜人，生物繁多而温和，与拉纳凶猛的原生动物形成对比。已知生物中不含智慧种族或技术文明，看上去像一处乐园。\n"
+  },
+  {
+   "slug": "dictionary-letter-b-bela-s-marsh",
+   "title": "bela's marsh",
+   "body": "\n\n# bela's marsh\n\n- 中文术语：贝拉沼泽\n\n[汉字园](/dictionary/k#kanji%20gardens)内的沼泽。\n"
+  },
+  {
+   "slug": "dictionary-letter-b-blacksmithing",
+   "title": "blacksmithing",
+   "body": "\n\n# blacksmithing\n\n- 中文术语：锻造\n\n玩家侧的制作类技能。\n"
+  },
+  {
+   "slug": "dictionary-letter-b-bloodthirsty",
+   "title": "bloodthirsty",
+   "body": "\n\n# bloodthirsty\n\n- 中文术语：嗜血\n\nNPC 特质。偏爱肾上腺素飙升的战斗，胜方时尤其兴奋。战斗获胜会涨[心情](/dictionary/h#happiness)与[好感](/dictionary/a#affection)。在竞技场的成功率更高。与[和平主义者](/dictionary/p#pacifist)是同一变量的两端。特质值 75 以上时为嗜血，低于 25 时转为和平主义者。\n"
+  },
+  {
+   "slug": "dictionary-letter-b-boars",
+   "title": "boars",
+   "body": "\n\n# boars\n\n- 中文术语：野猪\n\n生物。地球引入种，如今在伊卡诺斯城内的湿地等处已很常见，属[生物大灭绝](/dictionary/g#the%20great%20biological%20wipe)的范围。寿命 10 到 14 年，长 1.5 到 1.8 米，重 60 到 200 公斤。凶猛的杂食兽，只要火力压得住就能安全猎取，但仍要提防[帮派](/dictionary/b#bandits)。主张清理外来种的人鼓励把野猪当害兽扑杀。\n"
+  },
+  {
+   "slug": "dictionary-letter-b-bondage",
+   "title": "bondage",
+   "body": "\n\n# bondage\n\n- 中文术语：束缚\n\n束缚类玩法。原版后来把鞭打与束缚并入同一套引擎。\n"
+  },
+  {
+   "slug": "dictionary-letter-b-bratty",
+   "title": "bratty",
+   "body": "\n\n# bratty\n\n- 中文术语：骄纵\n\nNPC 特质。自认高于所有人，只把主人除外。不用最严[纪律](/dictionary/d#discipline)的家教课程受罚。针对她的[操纵](/dictionary/m#manipulate)判定也受罚，因为她不易受人利用。每日有 15% 概率使违抗加 1 点，上限 10。\n"
+  },
+  {
+   "slug": "dictionary-letter-b-butt-plug",
+   "title": "butt plug",
+   "body": "\n\n# butt plug\n\n- 中文术语：肛塞\n\n在 Devious Tools 出售，也可在[拉纳](/dictionary/r#raana)各地拾获。分四种，各有独立变量：小型 20 元（ownaplug1）、大型 40 元（ownaplug2）、歌利亚 100 元（ownaplug3）、[星魂石](/dictionary/e-1#embryl)款 3 万元（ownaplug4）。小型用于入门与中级训练，大型用于高级训练，歌利亚用于装饰、惩罚装置或极高级训练。每日 13:00 与午夜各结算一次，结果取决于佩戴者的[意志](/dictionary/w#willpower)、[腐化](/dictionary/c#corruption)、[疼痛](/dictionary/p#pain)、[肛交熟练度](/dictionary/a#anal%20proficiency)与特质。它抬高肛交损耗与疼痛，带[紧致](/dictionary/d#delicate)者更甚。正面效果（[性兴奋](/dictionary/a#arousal)与[心情](/dictionary/h#happiness)）从腐化 35 到 40 起生效，腐化越高越易触发。带[肛交偏好](/dictionary/a#anal%20fixation)者另有额外的心情与性兴奋。尺寸越大效果越强。大型与星魂石款各加 1 点心情与 1 点性兴奋。歌利亚在肛交熟练度 80 以上时加 1 点心情与 2 点性兴奋。镶宝与星魂石款在佩戴者裸体时加 2 点[美貌](/dictionary/b#beauty)与 2 点[魅力](/dictionary/c#charisma)。星魂石款每日另减 1 点[污染](/dictionary/t#taint)。歌利亚戴在肛交熟练度 90 以下者身上时，各类训练与战斗判定减 25 点。腐化低于 30 且肛交熟练度 89 以下时，每日有概率减 1 点意志，整天佩戴大型以上会提高该概率。意志 20 以上、喜好性虐 19 以下且腐化低于 20 者可能自行摘除，装置即刻回到玩家背包，其[忤逆](/dictionary/d#defiance)加 1 点。星魂石款可自制：需[工匠](/dictionary/a#artisan) 75 以上、3 颗星魂石与 3 个紧固件，在铁匠铺制作。带星魂石款或镶宝款上拍卖台时底价另加 3 万元。\n"
+  },
+  {
+   "slug": "dictionary-letter-b-the-border-wars",
+   "title": "the border wars",
+   "body": "\n\n# the border wars\n\n- 中文术语：边境战争\n\n历史。伊卡诺斯与[大卫王国](/dictionary/k#the%20kingdom%20of%20david)之间的战争，起因是伊卡诺斯对[第一波](/dictionary/f#the%20first%20wave)移民聚居地的经济与人口掠夺。游戏纪年为 2484 到 2487 年，战场在[边境](/dictionary/b#the%20borderlands)，双方阵亡 8,500 人，结局为边界不变。远征军自[毗湿奴堡](/dictionary/f#fort%20vishnu)北上，因贪功深入而遭伏击，三分之二的士兵阵亡。少校 Mykel Dornham 收拢残部突围，此役成为他日后的晋身之阶。双方议和后，伊卡诺斯拒绝交还掳来的部落女子，敌意延续至今。\n"
+  },
+  {
+   "slug": "dictionary-letter-c-camping",
+   "title": "camping",
+   "body": "\n\n# camping\n\n- 中文术语：野营\n\n其它机制。玩家在追随者界面右侧能看到手头的野营装备，随时可花钱买或升级。有装备且地形合适时，主界面的野营按钮才会亮。城里不行，劫匪与[天空守卫](/dictionary/s#skyguard)都会盯上你。搭营 18 分钟，收营 18 分钟，短休 30 分钟，搭收时间另计。1 级装备 400 元，含帐篷、炊具、绳索与两只装水与给养的大袋子。过夜损失 2 点体力，短休回复 2 点体力，可做处理肉与处理皮。2 级装备 1,900 元，含凉亭、基础家具、六只大袋子、挖掘工具与两头骡子。过夜回复 1 点体力，短休回复 4 点体力与 1 点生命，另可做修理与简单制作。\n"
+  },
+  {
+   "slug": "dictionary-letter-c-celassi",
+   "title": "celassi",
+   "body": "\n\n# celassi\n\n- 中文术语：塞拉西\n\n地名。[拉纳](/dictionary/r#raana)绕之公转的恒星。它在银河系中的位置与[地球](/dictionary/e-1#earth)绕行的太阳相当。它属于人类靠异星[量子门](/dictionary/q#quantum%20gates)打开的 2,500 光年探索泡内数百个星系之一。[大断绝](/dictionary/s#the%20severance)那天，塞拉西量子门神秘关闭。\n"
+  },
+  {
+   "slug": "dictionary-letter-c-connor-sunderland",
+   "title": "connor sunderland",
+   "body": "\n\n# connor sunderland\n\n- 中文术语：康纳·桑德兰\n\nNPC。走过拉纳许多地方的精英战士，心事重重。在 [神圣汁液](/dictionary/d#divine%20juices) 攒够 30 点社交后，于[水眼区](/dictionary/w#watery%20eyes)的 Warrior's Hall 现身。日薪 330 元。他牵 The Sunderland 任务，完成后可得[死忠](/dictionary/u#undying%20loyalty)。\n"
+  },
+  {
+   "slug": "dictionary-letter-c-control",
+   "title": "control",
+   "body": "\n\n# control\n\n- 中文术语：控制度\n\n表征[伊卡诺斯](/dictionary/i#ikaanos)的治安。它决定帮派与劫掠者的出现数量。\n"
+  },
+  {
+   "slug": "dictionary-letter-c-conversion",
+   "title": "conversion",
+   "body": "\n\n# conversion\n\n- 中文术语：改宗\n\n宗教机制。把手下 NPC 改成自己或他人的信仰。直接改宗走「互动 > 交谈 > 影响 > 改宗」，一次 2 小时，耗 10 点[虔诚](/dictionary/d#devotion)，玩家掉 2 点[体力](/dictionary/s#stamina)，对方掉 10 点。玩家虔诚须 100 以上才会出现该选项。成功率取玩家[智力](/dictionary/i#intelligence)，加对方[好感](/dictionary/a#affection)档位。好感 70 以上加 10，90 以上加 20，120 以上加 30。再减对方对其原信仰的虔诚与[意志](/dictionary/w#willpower)，以及两教的对立度。[传教士](/dictionary/p#preacher)特质加 15，穿 Robe 加 10。也可让[教员](/dictionary/e-1#educator)开精神模板替玩家改宗。\n"
+  },
+  {
+   "slug": "dictionary-letter-c-crow-s-end",
+   "title": "crow's end",
+   "body": "\n\n# crow's end\n\n- 中文术语：鸦末\n\n安静的中上阶层郊区。\n"
+  },
+  {
+   "slug": "dictionary-letter-c-currency",
+   "title": "currency",
+   "body": "\n\n# currency\n\n- 中文术语：货币\n\n银元为基准。金币一元合十银元，琥珀金 50 元，金马克 100 元。零钱为 Chims 0.25 元与 Jots 0.10 元。\n"
+  },
+  {
+   "slug": "dictionary-letter-c-the-children-of-ser-huggah",
+   "title": "the children of ser-huggah",
+   "body": "\n\n# the children of ser-huggah\n\n- 中文术语：瑟胡加之子\n\nNPC 专属宗教。激进的军事教团，与共和国时有武装冲突，归为帮派。成员数百人。无变量。\n"
+  },
+  {
+   "slug": "dictionary-letter-d-daiku",
+   "title": "daiku",
+   "body": "\n\n# daiku\n\n- 中文术语：大工棋\n\n其它机制。莱坎的两人战术棋盘游戏，又称「军队木匠」，是当地赌钱的首选玩法，一局约一小时。开局用 12 点买兵，可选农民（1 点）、弓手（2 点）、矛兵（2 点）、剑士（3 点）、骑士（4 点）与龙（10 点）。双方各自选择进攻或防守后，游戏只掷一次骰子，按双方技能与兵力对比定胜负。这一步用来快速模拟原本要掷很多次骰子的对局。可在雷坎的 Shunsuke's 酒馆找到对手。无论胜负，都能练[赌博](/dictionary/g#gambling)技能，上限 60。\n"
+  },
+  {
+   "slug": "dictionary-letter-d-damage",
+   "title": "damage",
+   "body": "\n\n# damage\n\n- 中文术语：伤害\n\n武器属性。武器加在 1D20 基础伤害骰上的固定值。远程武器分远距与近距两个值，近战武器只有近距。近战伤害另受[力量](/dictionary/s#strength)与[近战](/dictionary/m#melee%20combat)技能修正。\n"
+  },
+  {
+   "slug": "dictionary-letter-d-detached",
+   "title": "detached",
+   "body": "\n\n# detached\n\n- 中文术语：疏离\n\nNPC 特质。很难让她在深层上喜欢你。每日掉 5 点好感，最低到 60。心情 80 以上且好感达中立以上时，每日有 1% 概率使本特质减 1 点。变量 traitemo。\n"
+  },
+  {
+   "slug": "dictionary-letter-d-devor-dragon",
+   "title": "devor dragon",
+   "body": "\n\n# devor dragon\n\n- 中文术语：吞噬龙\n\n生物。拉纳原生的大型恐龙状掠食者，栖于[科拉松丛林](/dictionary/c#corazon%20jungles)。寿命可达 100 年，长 12 到 20 米，重 2 到 3 吨。当地人叫它 Gorathun，猎人只叫它「和查鲁克一样危险的另一件东西」。遭遇罕见，但几乎必死。游戏里只在拾荒时见到一具疑似它的骸骨。\n"
+  },
+  {
+   "slug": "dictionary-letter-d-direct-earth-lineage",
+   "title": "direct earth lineage",
+   "body": "\n\n# direct earth lineage\n\n- 中文术语：地球直系\n\nNPC 特质。该 NPC 的父母之一在地球出生长大，因此与人类摇篮有直接联系。联系或来自轶事，或来自今日伊卡诺斯已罕见的习俗。这类 NPC 多半用过[再生剂](/dictionary/r#revital)。每日有 5% 概率加[威望](/dictionary/p#prestige)，上限 2,000。教导指定学生时[学术](/dictionary/a#academics)判定加 25。每日减 1 点[污染](/dictionary/t#taint)。变量 traitold。目前只有 Louisiana Adler 有。\n"
+  },
+  {
+   "slug": "dictionary-letter-d-doctor-s-kit",
+   "title": "doctor's kit",
+   "body": "\n\n# doctor's kit\n\n- 中文术语：医疗箱\n\n消耗品。在[医生堂](/dictionary/d#doctor%27s%20hall)出售，600 元。用后即耗。玩家医学 40 以上时，可对[倒地](/dictionary/i#incapacitated)的随从使用，回复其[生命值](/dictionary/h#health%20points) 而不留下属性永久下降。\n"
+  },
+  {
+   "slug": "dictionary-letter-d-dungah-crawlers",
+   "title": "dungah crawlers",
+   "body": "\n\n# dungah crawlers\n\n- 中文术语：邓加爬虫\n\n生物。拉纳甲虫状无脊椎动物，不会飞，会掘洞，寿命可达 4 年，长 10 厘米。能取食地球引种的植物，繁殖极快，可成灾。在田里啃根，进了仓库与粮仓就吃粮。性成熟时仍很小，之后持续长大，越大型产卵越多。它营养差，其粪便与细菌还会污染储粮，不宜当作额外蛋白质。游戏里是「异星虫害」事件四种虫之一。\n"
+  },
+  {
+   "slug": "dictionary-letter-d-the-docks",
+   "title": "the docks",
+   "body": "\n\n# the docks\n\n- 中文术语：码头区\n\n城东码头的南段。\n"
+  },
+  {
+   "slug": "dictionary-letter-e-einar-corso",
+   "title": "einar corso",
+   "body": "\n\n# einar corso\n\n- 中文术语：埃纳尔·科尔索\n\nNPC。战士，出身可追溯到第一波移民的家族，家族名在归入[阿萨部族](/dictionary/a#the%20aesir%20tribe)后湮没。在[西区高地](/dictionary/w#westside%20heights)可雇，日薪 395 元，或按另一套条件以日薪 80 元受雇。\n"
+  },
+  {
+   "slug": "dictionary-letter-e-embryl",
+   "title": "embryl",
+   "body": "\n\n# embryl\n\n- 中文术语：星魂石\n\n拉纳特有而地球没有的金色矿物，比钻石更稀有，适合做首饰。极少有人出售，主要从[矿场](/dictionary/m#mine)或[勘探](/dictionary/p#prospecting)获得。名字取[上古崇拜](/dictionary/c#the%20cult%20of%20the%20elder)所敬奉的拉纳之眼那一层含义，民间直呼它为「拉纳之泪」，视作行星自身之物。传说它有异常性质，能护主免受或减轻[污染](/dictionary/t#taint)的侵蚀，贴身佩戴时效力更强。原石可自制两件物品。星魂石项链需[工匠](/dictionary/a#artisan) 90 以上、1 根金条与 1 颗星魂石，在铁匠铺制作。[肛塞](/dictionary/b#butt%20plug)需工匠 75 以上、3 颗星魂石与 3 个紧固件。NPC 佩戴项链时每日加 1 点[心情](/dictionary/h#happiness)，上限 70。带[物质至上](/dictionary/m#materialistic)者另有[好感](/dictionary/a#affection)加成。项链减污染为每日三分之一概率减 1 点。市场回收价 6,000 元一颗。变量 embryl。\n"
+  },
+  {
+   "slug": "dictionary-letter-e-emerald-island",
+   "title": "emerald island",
+   "body": "\n\n# emerald island\n\n- 中文术语：翡翠岛\n\n翡翠城所在，[伊卡诺斯](/dictionary/i#ikaanos)的冠冕。\n"
+  },
+  {
+   "slug": "dictionary-letter-e-environmental-modifier",
+   "title": "environmental modifier",
+   "body": "\n\n# environmental modifier\n\n- 中文术语：环境修正\n\n在黑暗、雨中、强风或风暴甲板上作战，都会影响战斗判定。\n"
+  },
+  {
+   "slug": "dictionary-letter-e-erich-bormann",
+   "title": "erich bormann",
+   "body": "\n\n# erich bormann\n\n- 中文术语：埃里希·博尔曼\n\nNPC。绰号“红腰带”，[斯托克丘陵](/dictionary/s#stokke%20hills)一带的疯癫劫掠者，盘踞在 Jaggernic 路上的一栋旧楼里。当地人恨他：他性侵儿童，还无端把一位老人打得半死。他肩上总挎着一支自动步枪，因此少有人敢反抗。击败他可替斯托克丘陵除去一害，加 50 点[影响力](/dictionary/i#influence)。他的性奴是[罗塞娜](/dictionary/r#rosena)。\n"
+  },
+  {
+   "slug": "dictionary-letter-e-ess-damodar",
+   "title": "ess damodar",
+   "body": "\n\n# ess damodar\n\n- 中文术语：ESS 达莫达号\n\n船与飞船。人类第一艘反重力推进的飞船，2087 年升空。它是[丹尼尔·埃斯特哈齐](/dictionary/d#daniel%20esterhazy)在纳米技术、聚变能与反重力场上的研究成果的直接产物。\n"
+  },
+  {
+   "slug": "dictionary-letter-e-exhibitionist",
+   "title": "exhibitionist",
+   "body": "\n\n# exhibitionist\n\n- 中文术语：露出癖\n\nNPC 特质。不在意衣着与身体暴露的世俗规矩。要她脱衣或穿暴露衣物时，[心情](/dictionary/h#happiness)与意志损失低于常人。与[羞怯](/dictionary/s#shamefast)处于同一变量的两端。\n"
+  },
+  {
+   "slug": "dictionary-letter-e-explorer-s-guild",
+   "title": "explorer's guild",
+   "body": "\n\n# explorer's guild\n\n- 中文术语：探险家公会\n\n势力与宗教。曾是拉纳研究领域最富庶的机构，资源近乎无限。[大断绝](/dictionary/s#the%20severance)后仍是不可小觑的力量。此后它逐渐衰落，如今只是学者与富有赞助人的网络，靠昔日的成就维系影响。它仍派队进入丛林寻找拉纳历史的线索，并奖励送来贵重资源或稀有药材的冒险者。成员常在[历史学会](/dictionary/h#historical%20society)出没，该处开放时段免费提供学术讨论场地。\n"
+  },
+  {
+   "slug": "dictionary-letter-f-farah-samad",
+   "title": "farah samad",
+   "body": "\n\n# farah samad\n\n- 中文术语：法拉·萨马德\n\nNPC。三年前入 Amir Hasan 家做女仆，与[阿伊莎·哈桑](/dictionary/a#aisha%20hasan)成了密友。随 Amir Hasan 那条任务在[鸦末](/dictionary/c#crow%27s%20end)入宅。\n"
+  },
+  {
+   "slug": "dictionary-letter-f-females",
+   "title": "females",
+   "body": "\n\n# females\n\n- 中文术语：女性\n\n宅邸指标。宅邸统计页第二页的计数，记录宅邸居住者中的女性人数。\n"
+  },
+  {
+   "slug": "dictionary-letter-f-femmer-beasts",
+   "title": "femmer beasts",
+   "body": "\n\n# femmer beasts\n\n- 中文术语：费默兽\n\n生物。拉纳原生动物里少数适应了人类驯养的一种。寿命可达 40 年，高 170 厘米，公牛重 450 公斤，母牛 350 公斤。杂食，靠弯角与厚皮抵御[乌尔猫](/dictionary/w#wrool%20cats)一类中型掠食者。嘴部附属物其实是短的分节触须，用来剥取植物、挖块茎与虫。对人无攻击性，乡间宅地广泛饲养，取肉与皮革。食量是地球牛的三倍以上，故在伊卡诺斯城周边的良田里不常见。\n"
+  },
+  {
+   "slug": "dictionary-letter-f-fishing",
+   "title": "fishing",
+   "body": "\n\n# fishing\n\n- 中文术语：钓鱼\n\n机制。钓点只有一处，在[北红天堂](/dictionary/n#north%20redhaven)的 Red River 岸边。渔具在[红天堂](/dictionary/r#redhaven)的 Redhaven Market 有售，一套 25 元。一天最多钓 4 次，每次 1 小时，缠线时多花 30 分钟。每次前 30 分钟用[生存](/dictionary/s#survival)判断当下该用哪种钓法，后 30 分钟结算。钓法分岸边、深水与浮漂三种，深水与浮漂平均收获更大，浮漂有缠线风险。判定后提示会给出最佳钓法与成功率区间，从 65% 到 95%。成功一次得 1 到 9 份给养的鱼。钓上的鱼直接变给养，不必像[狩猎](/dictionary/h#hunting)的兽肉那样回家加工。带钓竿的随从每人加 5 点成功率，其[生存](/dictionary/s#survival) 90 以上时加 10 点，并把渔获提高约三分之一份给养。随从不会在钓鱼中提升生存技能。变量 ownfishstick。\n"
+  },
+  {
+   "slug": "dictionary-letter-f-fists",
+   "title": "fists",
+   "body": "\n\n# fists\n\n- 中文术语：拳头\n\n近战武器。游戏面板列作 Unarmed。伤害加 2。攻速快，[攻击范围](/dictionary/r#reach) 0。不具[护甲穿透](/dictionary/a#armor%20piercing)。[击倒概率](/dictionary/i#incapacitation%20chance) +85。伤害另按[力量](/dictionary/s#strength)与[近战](/dictionary/m#melee%20combat)技能修正。无需购置，不占物品变量。\n"
+  },
+  {
+   "slug": "dictionary-letter-f-flair",
+   "title": "flair",
+   "body": "\n\n# flair\n\n- 中文术语：格调\n\n宅邸指标。由管粮女仆与主厨协作产出。用途有二：宴会时作为判定依据，以及按[奢华](/dictionary/l#luxury)等级（佳肴与酒水）换算成[影响力](/dictionary/i#influence)。女仆配备不足会带来格调惩罚，每十名宅邸成员至少配一名[女仆](/dictionary/m#maid)即可免除。\n"
+  },
+  {
+   "slug": "dictionary-letter-f-fort-vishnu",
+   "title": "fort vishnu",
+   "body": "\n\n# fort vishnu\n\n- 中文术语：毗湿奴堡\n\n地点。共和国的边境小堡之一，位于伊卡诺斯以北约 25 英里。\n"
+  },
+  {
+   "slug": "dictionary-letter-f-the-flash-fort",
+   "title": "the flash fort",
+   "body": "\n\n# the flash fort\n\n- 中文术语：闪存堡\n\n地点。特雷斯托家族的存储设施，也是拉纳最后一处网络化存储。它由数百枚来自导航控制板的微型芯片拼成，剩余容量约 10 TB。每一千字节都算珍贵。家族出高价收购冒险者找到的可用技术元件。\n"
+  },
+  {
+   "slug": "dictionary-letter-g-gandarians",
+   "title": "gandarians",
+   "body": "\n\n# gandarians\n\n- 中文术语：坎达里亚人\n\n世界观。一万名人类殖民者的后裔，他们定居在西方大陆[坎达里亚](/dictionary/g#gandaria)，[大断绝](/dictionary/s#the%20severance)后放弃并返回[伊伦多里亚](/dictionary/i#irendoria)。许多人保持着旧传统。人们至今把姓氏以 -assi 结尾的家族看作纯血坎达里亚人。\n"
+  },
+  {
+   "slug": "dictionary-letter-g-gold-ore",
+   "title": "gold ore",
+   "body": "\n\n# gold ore\n\n- 中文术语：金矿石\n\n材料。矿场的产出之一。10 份金矿石可在[锻炉](/dictionary/s#smithery)精炼成 1 份[黄金](/dictionary/g#gold)，需[锻造](/dictionary/b#blacksmithing) 25 以上且[工匠](/dictionary/a#artisan) 25 以上。\n"
+  },
+  {
+   "slug": "dictionary-letter-g-great-houses-of-ikaanos",
+   "title": "great houses of ikaanos",
+   "body": "\n\n# great houses of ikaanos\n\n- 中文术语：伊卡诺斯世家\n\n派系。七个围绕显赫家族或老企业形成的组织，掌控伊卡诺斯大部分生产设施、贸易市场与社会事业。近似独立王国，名义上效忠球上老爷，实力却足以自行其是。现存五家为 Cyker、Bellemme、Teresto、Kalidar 与 Kymanto。衰落的四家有[卡罗扎家族](/dictionary/c#the%20carozza%20family)、布赖、马利与佩因。详见贵族。\n"
+  },
+  {
+   "slug": "dictionary-letter-g-great-sword",
+   "title": "great sword",
+   "body": "\n\n# great sword\n\n- 中文术语：巨剑\n\n玩家特质。[MoR Enhanced](/dictionary/m#mor%20enhanced) 专属，Cost 5，Requirements 无。玩家十六岁起就能挥动父亲的巨剑，开局带一把。它由实心 durasteel 打造，属高品级近战武器。变量 owngsword。\n\n近战武器。伤害加 38。基础价 6,500 元。攻速慢，[攻击范围](/dictionary/r#reach) 2。具[护甲穿透](/dictionary/a#armor%20piercing)。[击倒概率](/dictionary/i#incapacitation%20chance) +15。[强力打击](/dictionary/p#power%20strike)额外加 15 点伤害。[力量](/dictionary/s#strength)低于 75 时伤害减 14，低于 40 时减 24。由[水晶丘](/dictionary/c#crystal%20hills)的匠师锻造。变量 owngsword。\n"
+  },
+  {
+   "slug": "dictionary-letter-g-grid-key",
+   "title": "grid key",
+   "body": "\n\n# grid key\n\n- 中文术语：网格密钥\n\n拇指大小的古董「通用串行总线」设备，接入 The Grid 后可解密灾变前遗留的数据。每持有一把，[骇入](/dictionary/h#hacking)判定加 4 点，加成可叠加，游戏内最多记 5 把。The Grid 界面的能量消耗为每次尝试 5 点，使用加速后 10 点。入手途径有二。与[露维莎·舵手](/dictionary/l#lovisa%20helm)好感足够后触发任务 The Vault，在她家的旧公寓取得她父亲留下的那一把。带回[埃利亚娜·尼科尔斯](/dictionary/e-1#eliana%20nichols)时触发任务 The Golden Seal，可取得她的那一把。变量 owngridkey。\n"
+  },
+  {
+   "slug": "dictionary-letter-g-guard",
+   "title": "guard",
+   "body": "\n\n# guard\n\n- 中文术语：护卫\n\n宅邸岗位。守备宅邸、抵御外部威胁，并阻止不满的[奴隶](/dictionary/s#slave)逃跑。可同时有多名。\n"
+  },
+  {
+   "slug": "dictionary-letter-g-gunpowder",
+   "title": "gunpowder",
+   "body": "\n\n# gunpowder\n\n- 中文术语：火药\n\n制作材料，用于制作[弹药](/dictionary/a#ammunition)。可按桶购买，常见为 100 或 200 单位一桶，单价约 1 元，亦有 5,000 单位的大宗批次。销售点含 Walton's Smithery、Belial Guns、Haruki's Store 与 Transit Department 等。可由[锯木厂](/dictionary/s#sawmill)产出：装上燃烧器后每日把 20% 的木材产出转为火药，储量在宅邸界面领取。变量 gpow。\n"
+  },
+  {
+   "slug": "dictionary-letter-g-gymnasium",
+   "title": "gymnasium",
+   "body": "\n\n# gymnasium\n\n- 中文术语：体育馆\n\n地点。位于[鸦末](/dictionary/c#crow%27s%20end)。伊卡诺斯头号体操赛事「大赛」的举办地。预赛每 25 天、决赛每 50 天一次，单次 2 小时。参赛需[影响力](/dictionary/i#influence) 1,000 以上、派一名[杂技](/dictionary/a#acrobatics) 60 以上的随从，入场费 500 元。预赛冠军可得 16,000 到 20,000 元与 700 点影响力。决赛冠军可得 40,000 元与 2,000 点影响力，并加[心情](/dictionary/h#happiness)、[威望](/dictionary/p#prestige)、[意志](/dictionary/w#willpower)、[敏捷](/dictionary/d#dexterity)、[杂技](/dictionary/a#acrobatics)、[舞蹈](/dictionary/d#dancing)与[完美主义者](/dictionary/p#perfectionist)特质值。\n"
+  },
+  {
+   "slug": "dictionary-letter-h-hamah-market",
+   "title": "hamah market",
+   "body": "\n\n# hamah market\n\n- 中文术语：哈马市场\n\n哈马湾的集市。\n"
+  },
+  {
+   "slug": "dictionary-letter-h-harem-lord",
+   "title": "harem lord",
+   "body": "\n\n# harem lord\n\n- 中文术语：后宫之主\n\n玩家特质。Cost 不适用，Requirements 参与[莫迪凯·阿德勒](/dictionary/m#mordecai%20adler)的[后宫](/dictionary/c#the%20collection)并走到最后，即 Aria 线的 拉纳奴隶主（Slavemasters of Raana） 路线。NPC 获得的性经验全部翻倍，玩家自己不受影响。变量 mctraitharem。\n"
+  },
+  {
+   "slug": "dictionary-letter-h-hate",
+   "title": "hate",
+   "body": "\n\n# hate\n\n- 中文术语：憎恨\n\nNPC 特质。遭受恶劣对待或暴力时会累积憎恨值。\n"
+  },
+  {
+   "slug": "dictionary-letter-h-heavy-leather-armor",
+   "title": "heavy leather armor",
+   "body": "\n\n# heavy leather armor\n\n- 中文术语：重型皮甲\n\n护甲。吸收值 14，[敏捷惩罚](/dictionary/p#penalty) −15。基础价 1,000 元，维修 60 元。它是用钢板加固的皮甲。NPC 用变量 ownslhleather，玩家用 ownhleather。\n"
+  },
+  {
+   "slug": "dictionary-letter-h-henry-kessian",
+   "title": "henry kessian",
+   "body": "\n\n# henry kessian\n\n- 中文术语：亨利·凯西安\n\nNPC。[双月教会](/dictionary/c#the%20church%20of%20the%20two%20moons) 2260 年代最早一批Lunae Mysteris（修道院）成员。以通晓拉纳秘辛著称，受边缘科学家与玄学爱好者推崇。他在公众层面不出名，只有[喂食者峡谷](/dictionary/f#feeder%27s%20canyon)的一座村庄奉他为地方圣人。\n"
+  },
+  {
+   "slug": "dictionary-letter-h-house-teresto",
+   "title": "house teresto",
+   "body": "\n\n# house teresto\n\n- 中文术语：特雷斯托家族\n\n派系。伊卡诺斯世家之一。427 点[权力](/dictionary/p#power%20value)，219 名兵员，资金 789,229,000，首领 The Council。侧重科技。它起于一家科技公司，与另外两家企业合并成集团。2380 年，它击败库赫哈拉姆家族，成为伊卡诺斯的实力派。它擅长计算机硬件，也是唯一能从古代技术里提取元件的机构，运营[网格](/dictionary/g#the%20grid)与[闪存堡](/dictionary/f#the%20flash%20fort)。世家由首席科学家组成的议事会治理，现任首席议事是[恩巴尔·贝诺维茨](/dictionary/e-1#embar%20benowitz)。与[赛克家族](/dictionary/h#house%20cyker)为敌。\n"
+  },
+  {
+   "slug": "dictionary-letter-h-hunter",
+   "title": "hunter",
+   "body": "\n\n# hunter\n\n- 中文术语：猎手\n\n宅邸[岗位](/dictionary/j#job)。对应狩猎产出。\n\n技能分类。开局购点选项，分三级：Novice 20 点、Adept 加 60 点、Expert 加 120 点，练满共 200 点。Novice 给[敏捷](/dictionary/d#dexterity)加 10 点、[潜行](/dictionary/s#stealth)加 5 点与[生存](/dictionary/s#survival)加 15 点。Adept 给[力量](/dictionary/s#strength)加 5 点、敏捷加 5 点、[体力](/dictionary/s#stamina)加 15 点、[近战](/dictionary/m#melee%20combat)加 5 点、[远程战斗](/dictionary/r#ranged%20combat)加 15 点与生存加 20 点。Expert 给力量加 10 点、体力加 15 点、近战加 10 点、远程战斗加 20 点。它还加潜行 15 点、生存 25 点、[影响力](/dictionary/i#influence) 60 点与 800 元现金。专家级头衔为[狩猎大师](/dictionary/h#huntmaster)，专家特质同名。\n"
+  },
+  {
+   "slug": "dictionary-letter-h-hygiene",
+   "title": "hygiene",
+   "body": "\n\n# hygiene\n\n- 中文术语：卫生\n\n变量 masterfilth。数值随清洁度上升。\n"
+  },
+  {
+   "slug": "dictionary-letter-i-ikaanos-city-outskirts",
+   "title": "ikaanos city outskirts",
+   "body": "\n\n# ikaanos city outskirts\n\n- 中文术语：伊卡诺斯城郊\n\n城外的近郊区域。含乙女冢、[牧师塘](/dictionary/p#preacher%27s%20pond)、[暗湖](/dictionary/d#darkmere)与[阿瓦尼斯](/dictionary/a#arvannis)。\n"
+  },
+  {
+   "slug": "dictionary-letter-i-implants",
+   "title": "implants",
+   "body": "\n\n# implants\n\n- 中文术语：植入体\n\n植入体内的装置。多数出自地球时代的技术，拉纳无法自制。\n"
+  },
+  {
+   "slug": "dictionary-letter-i-inbred",
+   "title": "inbred",
+   "body": "\n\n# inbred\n\n- 中文术语：近亲繁殖\n\nNPC 特质。家族世代近亲通婚，患有严重遗传缺陷。特质值取 0、25、50、75 或 100，不同档位给不同起始属性。25 为 Hideous，起始[美貌](/dictionary/b#beauty)与[魅力](/dictionary/c#charisma)极低。50 为 Aggressive。\n"
+  },
+  {
+   "slug": "dictionary-letter-i-incapacitation-chance",
+   "title": "incapacitation chance",
+   "body": "\n\n# incapacitation chance\n\n- 中文术语：击倒概率\n\n人类敌人[生命](/dictionary/h#health)降到 0 以下时，有 11% 基础概率变为倒地而非死亡。收尾一击的[武器](/dictionary/w#weapon)致命度会改动这个概率。钝器与鞭杖能大幅提高它，例如 Cane/whip 为 100%，Fists 为 96%，Sledgehammer 为 46%。枪械大多维持 11%，左轮降到 7%。[.50 口径步枪](/dictionary/0-9#.50%20cal%20rifle)降到 1%，博福斯 40mm 降到 −89%。玩家拥有玩家版[猎人者](/dictionary/m#manhunter)特质时另加 15%，该加成不适用于[随从](/dictionary/f#followers)。NPC 版猎人者的加成取特质值的 10%，并受多项调整。[殴斗者](/dictionary/b#brawler)达 50 以上时，[和平主义者](/dictionary/p#pacifist)低于 25 加 5 点，善良达 75 以上加 3 点。[嗜血](/dictionary/b#bloodthirsty)达 75 以上且[近战](/dictionary/m#melee%20combat)低于 100 时减 3 点，[狂战士](/dictionary/b#berserker)不为零则减 5 点。特质值满 100 另加 5 点。\n"
+  },
+  {
+   "slug": "dictionary-letter-i-inheritance",
+   "title": "inheritance",
+   "body": "\n\n# inheritance\n\n- 中文术语：遗产\n\n玩家特质。[MoR Enhanced](/dictionary/m#mor%20enhanced) 专属，Cost 30，Requirements 无。玩家开局获得一条专属[任务](/dictionary/q#quest)，教程结束后可用。任务终点是家族秘藏。秘藏含 850 块金条、5 块 durasteel 锭、37 单位 Merchandise、5 块电路板与 5 单位织物。变量 enstart 取值 2。\n\n游戏内以 `The Inheritance` 之名列出，另有 Tier4+ 订阅版的「富有的父母」开局模板可自动激活同一件事。\n"
+  },
+  {
+   "slug": "dictionary-letter-i-iona-farley",
+   "title": "iona farley",
+   "body": "\n\n# iona farley\n\n- 中文术语：艾奥娜·法利\n\nNPC。[议长](/dictionary/c#chancellor)[莫迪凯·阿德勒](/dictionary/m#mordecai%20adler)[后宫](/dictionary/c#the%20collection)的一员，驻[塞内卡号](/dictionary/u#uss%20seneca)，属 新世界秩序（New World Order） 任务。\n"
+  },
+  {
+   "slug": "dictionary-letter-i-iron-ore",
+   "title": "iron ore",
+   "body": "\n\n# iron ore\n\n- 中文术语：铁矿石\n\n材料。矿场的产出之一，可精炼成[钢](/dictionary/s#steel)。\n"
+  },
+  {
+   "slug": "dictionary-letter-i-the-irendor-shuttle",
+   "title": "the irendor shuttle",
+   "body": "\n\n# the irendor shuttle\n\n- 中文术语：伊伦多穿梭机\n\n地点。拉纳首次受控着陆的穿梭机，三百多年前落地。残骸现存于[红天堂市场](/dictionary/r#redhaven%20market)，当地人视之为圣物。\n"
+  },
+  {
+   "slug": "dictionary-letter-j-jack-peasant",
+   "title": "jack peasant",
+   "body": "\n\n# jack peasant\n\n- 中文术语：杰克·老农\n\nNPC。踏实的老兵，习惯苦力与荒野长途，有大家庭要养，靠当[雇佣兵](/dictionary/m#mercenary)赚钱。在红天堂市场可雇，日薪 22 元。他有[厨师长](/dictionary/h#head%20chef)特质。\n"
+  },
+  {
+   "slug": "dictionary-letter-j-jaded",
+   "title": "jaded",
+   "body": "\n\n# jaded\n\n- 中文术语：麻木\n\nNPC 特质。[心情](/dictionary/h#happiness)增长远慢于常人，好事对她影响很小。坏事对她的冲击也小于常人。玩家待她差时，掉的心情与[好感](/dictionary/a#affection)少于常人。\n"
+  },
+  {
+   "slug": "dictionary-letter-j-jail-cell",
+   "title": "jail cell",
+   "body": "\n\n# jail cell\n\n- 中文术语：牢房\n\n其它机制。关在牢房里的 NPC 完全落在抓捕者手里，每日承受若干惩罚。\n\n- 基础有 70% 概率使[意志](/dictionary/w#willpower)减 1 到 3 点，最低降到 9。\n- [物质至上](/dictionary/m#materialistic)者该概率加 15%。\n- [麻木](/dictionary/j#jaded)者该概率减 15%。\n"
+  },
+  {
+   "slug": "dictionary-letter-j-jeff-grandwell",
+   "title": "jeff grandwell",
+   "body": "\n\n# jeff grandwell\n\n- 中文术语：杰夫·格兰德威尔\n\n剧情 NPC。[格兰德威尔家族](/dictionary/h#house%20grandwell)的家主，[基曼托辛迪加](/dictionary/k#the%20kymanto%20syndicate)的联络人。玩家送包裹到格兰德威尔宅时已找不到他，事后只寻得被撕碎至无法辨认的尸体。\n"
+  },
+  {
+   "slug": "dictionary-letter-j-jester",
+   "title": "jester",
+   "body": "\n\n# jester\n\n- 中文术语：诙谐\n\nNPC 特质。爱开玩笑，给周围带来喜感。\n"
+  },
+  {
+   "slug": "dictionary-letter-j-job",
+   "title": "job",
+   "body": "\n\n# job\n\n- 中文术语：岗位\n\n指派给 NPC 的日常工作，与[头衔](/dictionary/t#title)是两套体系。\n"
+  },
+  {
+   "slug": "dictionary-letter-j-joycum",
+   "title": "joycum",
+   "body": "\n\n# joycum\n\n- 中文术语：欢液\n\n一种植入体，让精液带上甜味。可非法加载高成瘾成分，使接受者产生精液依赖。\n"
+  },
+  {
+   "slug": "dictionary-letter-k-kahill-mine",
+   "title": "kahill mine",
+   "body": "\n\n# kahill mine\n\n- 中文术语：卡希尔矿场\n\n地点。位于卡希尔峰下、卡希尔哨站附近的丛林谷地，有简易住所与三条浅井，正在勘探金银矿脉。产权在[旧市政厅](/dictionary/o#old%20city%20hall)挂牌出售，要价 350,000 元，原主是 Vladimir Teresto。\n"
+  },
+  {
+   "slug": "dictionary-letter-k-kahill-outpost",
+   "title": "kahill outpost",
+   "body": "\n\n# kahill outpost\n\n- 中文术语：卡希尔前哨\n\n[塞利奥尔森林](/dictionary/c#celior%20forest)中的贸易枢纽。\n"
+  },
+  {
+   "slug": "dictionary-letter-k-kansas-adler",
+   "title": "kansas adler",
+   "body": "\n\n# kansas adler\n\n- 中文术语：堪萨斯·阿德勒\n\nNPC。[老爷球](/dictionary/m#the%20mastersphere)上的佣兵，日薪 750 元。需走 拉纳奴隶主（Slavemasters of Raana），并把 Aria 卖给 Kymanto Hall。\n"
+  },
+  {
+   "slug": "dictionary-letter-k-kasey-s-crack-overlook",
+   "title": "kasey's crack overlook",
+   "body": "\n\n# kasey's crack overlook\n\n- 中文术语：凯西裂隙眺台\n\n地点。城墙外靠近[乙女冢](/dictionary/i#imogen%27s%20barrow)的小丘，可俯瞰「凯西裂隙」。那是切穿伊卡诺斯城墙的一道大缺口。城墙是灾变前留下的百尺高工事。别处大体完好，唯此缺口屡修不成，是城防的弱点。有谣言说附近[天空守卫](/dictionary/s#skyguard)堡的队长收了走私客与匪首的重金，故意不修。\n"
+  },
+  {
+   "slug": "dictionary-letter-k-kasey-s-park",
+   "title": "kasey's park",
+   "body": "\n\n# kasey's park\n\n- 中文术语：凯西公园\n\n城市西南的区。昔日以大型公园著称。\n"
+  },
+  {
+   "slug": "dictionary-letter-k-ken-brayden",
+   "title": "ken brayden",
+   "body": "\n\n# ken brayden\n\n- 中文术语：肯·布雷登\n\n剧情 NPC。盘踞[码头区](/dictionary/d#the%20docks)的犯罪头目，经营一家接手数年的脱衣舞厅。他手里有[巴尔塔扎·德雷克](/dictionary/b#baltazar%20drake)之子 Jasper 的戒指，开价三万元（或五万元），是[以上帝之名](/dictionary/i#in%20the%20name%20of%20god)一条线上的目标。\n"
+  },
+  {
+   "slug": "dictionary-letter-k-kingsport",
+   "title": "kingsport",
+   "body": "\n\n# kingsport\n\n- 中文术语：金斯波特\n\n地点。建于 2239 年，位于伊卡诺斯以北约 50 英里、伊伦多里亚海岸的一处海湾。约 500 栋建筑，10 万人口，寡头制，首府金斯波特镇有 4 万人，首领是市长 Harold Velmer。2,000 名步兵、1 艘聚变动力护卫舰与 42 艘商船。出产鱼与谷物，进口科技品、香料与咖啡。正受赤潮威胁。\n"
+  },
+  {
+   "slug": "dictionary-letter-k-the-karlshamn-raiders",
+   "title": "the karlshamn raiders",
+   "body": "\n\n# the karlshamn raiders\n\n- 中文术语：卡尔斯港劫掠者\n\nNPC 专属宗教。激进的军事教团，与共和国时有武装冲突，归为帮派。成员数百人。无变量。\n"
+  },
+  {
+   "slug": "dictionary-letter-l-leather",
+   "title": "leather",
+   "body": "\n\n# leather\n\n- 中文术语：皮革\n\n材料。由[兽皮](/dictionary/s#skins)加工而来。轻甲、皮甲与大量中低阶配方的基础材料。\n"
+  },
+  {
+   "slug": "dictionary-letter-l-liberty",
+   "title": "liberty",
+   "body": "\n\n# liberty\n\n- 中文术语：自由\n\n伊卡诺斯的治理指标之一，与繁荣、控制、腐化并列。\n"
+  },
+  {
+   "slug": "dictionary-letter-l-loren-de-machaut",
+   "title": "loren de machaut",
+   "body": "\n\n# loren de machaut\n\n- 中文术语：洛伦·德·马肖\n\nNPC。天生的猎人，在伊卡诺斯城郊出生长大，泼辣无畏。在 Marston Ave. 的 Moe's Tavern 可雇，日薪 25 元。她有[猎兵](/dictionary/j#jaeger)特质。\n"
+  },
+  {
+   "slug": "dictionary-letter-l-lost-battles",
+   "title": "lost battles",
+   "body": "\n\n# lost battles\n\n- 中文术语：败仗\n\n宅邸指标。宅邸统计页第二页的计数。战斗结束时敌方还有至少一人站立，而我方全员倒下，计为一场败仗。\n"
+  },
+  {
+   "slug": "dictionary-letter-l-louisiana-adler",
+   "title": "louisiana adler",
+   "body": "\n\n# louisiana adler\n\n- 中文术语：路易斯安那·阿德勒\n\nNPC。[典范](/dictionary/p#paragon)，Mordecai Adler 的妹妹，20 岁时随兄长来到拉纳。在共和国宫，属 拉纳奴隶主（Slavemasters of Raana） 任务。她有[地球直系](/dictionary/d#direct%20earth%20lineage)特质。\n"
+  },
+  {
+   "slug": "dictionary-letter-l-luxury",
+   "title": "luxury",
+   "body": "\n\n# luxury\n\n- 中文术语：奢华\n\n宅邸指标。用于提升宅邸的居住品质。除按 NPC 数量给出[影响力](/dictionary/i#influence)加成（支出越高加成越大）之外，还影响[心情](/dictionary/h#happiness)与[好感](/dictionary/a#affection)。分三级。\n\n一级 Good 尚可。每日每人加 1 点心情，上限 60。好感每日有 33% 概率加 1，上限友好。\n\n二级 Extravagant 奢靡。每日每人加 1 点心情，上限 80。每日加 1 点[格调](/dictionary/f#flair)。好感上限提到亲切。\n\n三级 Imperial 御用。每日每人加 2 点心情，上限 100。每日加 2 点格调。好感上限提到亲切，[物质至上](/dictionary/m#materialistic)者则到深爱。\n\n城市[繁荣度](/dictionary/p#prosperity)低于 9 或对方物质至上时，好感加成的概率从 33% 提到 100%。\n"
+  },
+  {
+   "slug": "dictionary-letter-l-the-lesano-chasm",
+   "title": "the lesano chasm",
+   "body": "\n\n# the lesano chasm\n\n- 中文术语：莱萨诺裂谷\n\n地名。伊卡诺斯以北的深谷，长约 30 公里（19 英里），当地人称之为“黄色峡谷”。谷壁多为 200 码的垂直落差，只有几处凿入岩壁的阶梯可以下到谷底。谷内洞穴与地下河至今仍为农民与逃亡奴隶提供庇护。隧道据说一直通到[普罗米修斯湖](/dictionary/p#prometheus%20lake)与[伊伦多里亚海](/dictionary/i#irendorian%20sea)。谷南的[德雷纳村](/dictionary/d#drenner%20village)可通往谷底。南段现由崇拜[黄衣女王](/dictionary/y#the%20yellow%20queen)的教团占据。[黑暗时代](/dictionary/d#the%20dark%20age)期间，这里是常用藏身处。\n"
+  },
+  {
+   "slug": "dictionary-letter-m-mainframe",
+   "title": "mainframe",
+   "body": "\n\n# mainframe\n\n- 中文术语：主机\n\n世界观。大小不及冰箱的固定式计算机。玩家的宅邸有一台，可用来解密从外星飞船上提取的数据。玩家在殖民地的机房里也会遇到它，那种机器装在防辐射的 C2R 外壳里，配有中继与整套通信阵列。[学院](/dictionary/a#the%20academy)那台已运转 320 年，负责给藏书编目，近年停摆。\n"
+  },
+  {
+   "slug": "dictionary-letter-m-master-healer",
+   "title": "master healer",
+   "body": "\n\n# master healer\n\n- 中文术语：名医\n\n玩家特质。Cost 120，Requirements 为[医生](/dictionary/d#doctor)类的 Adept 级。在开局购点界面把[医生](/dictionary/d#doctor)类练满即得。买 强化剂 一律打七五折。开局带 40 支 强化剂 与 10 个 Doctor's Kit。Crystal Heights 的 Doctor's Hall 有一名联系人，每两天可为玩家与全队回满[生命值](/dictionary/h#health%20points)一次。\n"
+  },
+  {
+   "slug": "dictionary-letter-m-maximum-health",
+   "title": "maximum health",
+   "body": "\n\n# maximum health\n\n- 中文术语：生命上限\n\n亦称 Toughness。由（[力量](/dictionary/s#strength) + [体力](/dictionary/s#stamina) + [体格](/dictionary/b#body%20type%20%28frame%29)系数）除以 2 推出。体格系数取 0 到 150，按[体型](/dictionary/b#body%20size)与性别分档。变量 .npc.avNNN.toughness，可超过 200。0 为[死亡](/dictionary/d#death)。训练力量与体力可提升。[水晶高地](/dictionary/c#crystal%20heights)的 Doctor's Hall 可植入高科技义体，最多加 75。\n"
+  },
+  {
+   "slug": "dictionary-letter-m-maximum-stamina",
+   "title": "maximum stamina",
+   "body": "\n\n# maximum stamina\n\n- 中文术语：体力上限\n\n变量 .npc.avNNN.maxstamina，取值 0 到 130，可略超。分档为虚弱、未训练、正常、良好、不知疲倦。它参与[生命](/dictionary/h#health)上限的推导。它也减少战斗中的生命损失。50 以上每次受伤少掉 1 点，90 以上少掉 5 点。与玩家共同训练、CHAGS 训练营、The Academy 体操课与随机事件均可提升。\n"
+  },
+  {
+   "slug": "dictionary-letter-m-mechanized-unit",
+   "title": "mechanized unit",
+   "body": "\n\n# mechanized unit\n\n- 中文术语：机械单位\n\nNPC 特质。载具与乘员组成的战斗单位，例如[博福斯 40mm 高射炮](/dictionary/b#bofors%2040mm)。背包不可用，不参与多数特质效果、宅邸属性与头衔脚本。玩家进入多数室内战斗时自动解除其[随从](/dictionary/f#followers)身份。可参加讲学、宴会与训练。只要编入宅邸，[权力](/dictionary/p#power%20value)值加 20。变量 machine。\n"
+  },
+  {
+   "slug": "dictionary-letter-m-melee-combat",
+   "title": "melee combat",
+   "body": "\n\n# melee combat\n\n- 中文术语：近战\n\n决定用近战武器命中概率的首要因素。\n"
+  },
+  {
+   "slug": "dictionary-letter-m-modules",
+   "title": "modules",
+   "body": "\n\n# modules\n\n- 中文术语：模块\n\n不占平面图空间即可加装的设施，为宅邸提供额外能力。\n"
+  },
+  {
+   "slug": "dictionary-letter-m-my-beloved-father",
+   "title": "my beloved father",
+   "body": "\n\n# my beloved father\n\n- 中文术语：我亲爱的父亲\n\n人物委托。[大城梅琳](/dictionary/m#mai-lynn%20oshiro)之父大城俊的园艺生意。玩家可出资买断，也可夜里潜入[水晶丘](/dictionary/c#crystal%20hills)的狩猎研究设施盗回丢失的种子与孢子。走后者须先在市政厅取得蓝图，并带梅琳同行破解双锁。之后还须从[银白林](/dictionary/s#silfren%20woods)的[灾爪兽](/dictionary/b#baneclaw)巢取四份粪肥。\n"
+  },
+  {
+   "slug": "dictionary-letter-n-nemesis-sr-c",
+   "title": "nemesis sr-c",
+   "body": "\n\n# nemesis sr-c\n\n- 中文术语：复仇女神 SR-C\n\n远程[武器](/dictionary/w#weapon)，使用 NEM-50 [弹药](/dictionary/a#ammunition)。无法购买，为佣兵刺客 Clea Vallas 专属。远距与近距伤害都加 63。两个距离都无命中修正。不具[护甲穿透](/dictionary/a#armor%20piercing)，[后坐力](/dictionary/r#recoil)无，[击倒概率](/dictionary/i#incapacitation%20chance) −10。它以狙击人形目标为设计目标。特殊效果为狙击：用[瞄准](/dictionary/a#aim)动作时从远距多掷一颗伤害骰，约 +17。变量 ownneme。\n"
+  },
+  {
+   "slug": "dictionary-letter-n-neuraclean",
+   "title": "neuraclean",
+   "body": "\n\n# neuraclean\n\n- 中文术语：净脑剂\n\nThe Severance 之前的精神科药物，本意是永久治愈精神分裂与重度躁郁症。2280 年因其作用范围超出预期而列入禁令。服下会立即移除对象所有非生理特质。\n"
+  },
+  {
+   "slug": "dictionary-letter-n-new-tokyo",
+   "title": "new tokyo",
+   "body": "\n\n# new tokyo\n\n- 中文术语：新东京\n\n地点。[白山帝国](/dictionary/h#hakusan%20empire)的首都，位于[普罗米修斯湖](/dictionary/p#prometheus%20lake)对岸、[红河](/dictionary/r#red%20river)上游，西北距伊卡诺斯城约一日程。约 20 万人口，是仅次于伊卡诺斯与[湖城](/dictionary/l#lake%20city)的第三大都市区。\n"
+  },
+  {
+   "slug": "dictionary-letter-n-news-reporter",
+   "title": "news reporter",
+   "body": "\n\n# news reporter\n\n- 中文术语：新闻记者\n\nNPC 特质。[妮可·布赖](/dictionary/n#nicole%20boulay)是记者，能帮玩家把一间房改成 News Office，并解锁她的专属岗位新闻记者。办报后玩家可决定报什么、略过什么、用哪种笔法，进而改变伊卡诺斯社会的走向。目前只有她有。\n\n岗位。[妮可·布赖](/dictionary/n#nicole%20boulay) 专属的城市岗位，需先在宅邸建 News Office，造价 10,000 元。玩家可选报道路线，路线要么由她的立场决定，要么由玩家指定。报道带来金钱，并改变[伊卡诺斯](/dictionary/i#ikaanos)的[繁荣度](/dictionary/p#prosperity)、[控制度](/dictionary/c#control)与腐化。政治权力越高，报道的影响与收入越大，收入按政治权力的 0.45 倍计。城市控制度在 10 到 34 之间时收入乘 1.1，遇[政治事件](/dictionary/p#political%20event)期间乘 1.25，她的[名望](/dictionary/f#fame) 100 以上时再乘 1.1。\n"
+  },
+  {
+   "slug": "dictionary-letter-n-night-stalkers",
+   "title": "night stalkers",
+   "body": "\n\n# night stalkers\n\n- 中文术语：夜魔\n\n生物。又称 Umbra Raptor，学名 Umbrafelis raptor。大型爬行类掠食者，栖于森林与偏远荒野，多在[塞利奥尔森林](/dictionary/c#celior%20forest)一带。寿命可达 60 年，雄性高 15 尺 2 寸、重达 5,500 公斤。夜行，靠智力与无声潜行伏击。终生配对，雌性先喷腐蚀性酸液致盲削弱猎物，雄性再以强壮后肢与钩爪收尾。领地意识极强，靠咔嗒声联络，猎人听到声音时袭击往往在即。游戏里是高等敌人，雌性的酸液一击可造成 90 点伤害，猎杀它可涨随从的战士特质。\n"
+  },
+  {
+   "slug": "dictionary-letter-n-north-redhaven",
+   "title": "north redhaven",
+   "body": "\n\n# north redhaven\n\n- 中文术语：北红天堂\n\n玩家宅邸所在的围墙院落。\n"
+  },
+  {
+   "slug": "dictionary-letter-n-north-river-basin",
+   "title": "north river basin",
+   "body": "\n\n# north river basin\n\n- 中文术语：北河流域\n\n伊卡诺斯北侧的水域。\n"
+  },
+  {
+   "slug": "dictionary-letter-n-nusa",
+   "title": "nusa",
+   "body": "\n\n# nusa\n\n- 中文术语：北美合众国（NUSA）\n\n世界观。2130 到 2197 年的北美政权，全名见[北美合众国](/dictionary/n#north%20united%20states%20of%20america)。它是[地球联合政府](/dictionary/u#united%20earth%20gov.)的创始成员之一。游戏行文多用缩写 NUSA。\n"
+  },
+  {
+   "slug": "dictionary-letter-o-oathsworn",
+   "title": "oathsworn",
+   "body": "\n\n# oathsworn\n\n- 中文术语：誓约者\n\n玩家特质。Cost 30，Requirements 无。玩家立誓信奉 Aesir 旧神，开局即为[阿萨神教](/dictionary/a#aesir)的[虔诚](/dictionary/d#devotion)信徒，虔诚 110 点，此后不能改宗。Aesir 部族[派系](/dictionary/f#faction)立场加 7 点。使用近战武器时伤害加 3 点。它与[神选者](/dictionary/g#god%27s%20chosen)互斥。变量 mctraitviking。\n"
+  },
+  {
+   "slug": "dictionary-letter-o-occultist",
+   "title": "occultist",
+   "body": "\n\n# occultist\n\n- 中文术语：玄学家\n\n玩家特质。Cost 15，Requirements 无。玩家钻研边缘科学与冷僻仪式，开局玄学技能加 10 点。除起始技能外没有持续效果。\n"
+  },
+  {
+   "slug": "dictionary-letter-o-offspring",
+   "title": "offspring",
+   "body": "\n\n# offspring\n\n- 中文术语：子嗣\n\n[怀孕](/dictionary/p#pregnancy)满 280 天后分娩，产出女孩或男孩。\n\n子女系统。玩家关掉女性 NPC 的[透她露](/dictionary/t#totalube)后与之性交并体内射精，点「结束当日」结算怀孕几率。同一人多次性交可提高几率，开局选[动漫量](/dictionary/m#massive%20load)特质能加快。对方 21 岁以下几率更高，21 岁以上递减。每天午夜结算一次，条件是未服透她露且精液量在 10 分之 1 以上。基准取生育力，精液量 3 以上加 10，6 以上再加 10，9 再加 10。以生育力 60 计，满量时为 90，再随机减 1 到 150，结果大于 1 即受孕，此后每晚继续结算直到受孕。精液量每日午夜减 1。怀孕标准时长 280 天，可在选项里把进度调到 10 倍。孕 200 天起出孕相，且[敏捷](/dictionary/d#dexterity) 60 以上者每日有 1% 概率掉 1 点敏捷。分娩另掉 1 点敏捷、[生命值](/dictionary/h#health%20points)临时减 12、阴道磨损加 25，[体力](/dictionary/s#stamina)临时压到 4。孩子出生后进[育婴室](/dictionary/n#nursery)，由[保姆](/dictionary/n#nanny)照看，容量 18 人。玩家可与孩子玩耍，也可教[学术](/dictionary/a#academics)或教战斗。孩子的初始属性主要随母亲，父亲只抬高上限。智力直接继承母亲，再按概率在 −5 到 +10 之间修正。带[聪慧](/dictionary/b#brainy)特质或智力 130 以上时上限加 5。美貌继承母亲的裸值，不带头像以外的装饰加成，但手术得来的算数，出生时另有小概率加 5。孩子约 9 岁后可走[子嗣处理](/dictionary/p#process%20offspring)流程。生男生女的比例可在选项里调成 75% 女、75% 男或各半。\n"
+  },
+  {
+   "slug": "dictionary-letter-o-old-city-hall",
+   "title": "old city hall",
+   "body": "\n\n# old city hall\n\n- 中文术语：旧市政厅\n\n地点。位于[皇宫区](/dictionary/p#palace%20district)。各部会首长在此传达议长的意旨。元老院每三天在此集会一次，批准立法者法庭送来的法案与敕令。玩家可参与元老院会议并提出影响伊卡诺斯的法案，也可在此取得名誉头衔。\n"
+  },
+  {
+   "slug": "dictionary-letter-o-old-clubhouse",
+   "title": "old clubhouse",
+   "body": "\n\n# old clubhouse\n\n- 中文术语：旧俱乐部\n\n地点。位于[斯托克丘陵](/dictionary/s#stokke%20hills)的废弃工厂，玩家与兄弟年少时的聚会处。屋内只剩鸽粪、机油味与涂鸦，墙上有“蓝查鲁克”帮的标记与一个奇怪的象形符号。地板下有暗门通地下室。可来此怀旧。\n"
+  },
+  {
+   "slug": "dictionary-letter-o-oral-fixation",
+   "title": "oral fixation",
+   "body": "\n\n# oral fixation\n\n- 中文术语：口欲偏好\n\nNPC 特质。偏好口交，也喜欢点心与[接吻](/dictionary/k#kissing)。[好感](/dictionary/a#affection)达中立以上时，索要口交的说服判定加 20 点。口交高潮带来额外[心情](/dictionary/h#happiness)。给点心时有概率多涨 1 点心情。\n"
+  },
+  {
+   "slug": "dictionary-letter-o-oral-skill",
+   "title": "oral skill",
+   "body": "\n\n# oral skill\n\n- 中文术语：口交技能\n\n决定把阴茎刺激到射精的熟练度。\n"
+  },
+  {
+   "slug": "dictionary-letter-o-outer-marston-swamp",
+   "title": "outer marston swamp",
+   "body": "\n\n# outer marston swamp\n\n- 中文术语：马斯顿沼泽外缘\n\n[红天堂](/dictionary/r#redhaven)以西的贫困区，位于[湿地带](/dictionary/w#the%20wetlands)边缘。\n"
+  },
+  {
+   "slug": "dictionary-letter-p-palace-rating",
+   "title": "palace rating",
+   "body": "\n\n# palace rating\n\n- 中文术语：宫殿评级\n\n类似影响力，但只针对[伊卡诺斯](/dictionary/i#ikaanos)的上流社会。玩家靠[宅邸](/dictionary/h#household)中的高身份 NPC 每日产出，可用来左右共和国走向。变量 palcred，取值 0 到 10,000。\n"
+  },
+  {
+   "slug": "dictionary-letter-p-perfectionist",
+   "title": "perfectionist",
+   "body": "\n\n# perfectionist\n\n- 中文术语：完美主义者\n\nNPC 特质。凡事极端投入，不接受半途而废。\n"
+  },
+  {
+   "slug": "dictionary-letter-p-prestige",
+   "title": "prestige",
+   "body": "\n\n# prestige\n\n- 中文术语：威望\n\n衡量 NPC 的民间事迹。在 [体育馆](/dictionary/g#gymnasium) 赢下决赛可提升。\n"
+  },
+  {
+   "slug": "dictionary-letter-p-process-offspring",
+   "title": "process offspring",
+   "body": "\n\n# process offspring\n\n- 中文术语：子嗣处理\n\n孩子约满 3000 天即 9 岁后，可经随机 NPC 流程处理。\n"
+  },
+  {
+   "slug": "dictionary-letter-p-professor-hemme",
+   "title": "professor hemme",
+   "body": "\n\n# professor hemme\n\n- 中文术语：空教授\n\nNPC。[学院](/dictionary/a#the%20academy)教授，开课 Know-It-All，学费 950 元，智力 60 以上可拿到最高收益。他认为共和国那批聚变反应堆的剩余寿命不过数十年，与主张还能用几百年的统治阶层相左。让 Michelle Wolfe 先修完他的课再收为奴，她会更快乐、更聪明，也更亲近。\n"
+  },
+  {
+   "slug": "dictionary-letter-p-prospecting-gear",
+   "title": "prospecting gear",
+   "body": "\n\n# prospecting gear\n\n- 中文术语：勘探工具\n\n在[红天堂](/dictionary/r#redhaven)的 Roo's General Store 出售，700 元一套，含淘盘、工具、绳与一盏简易纳米灯。购入后在开放[勘探](/dictionary/p#prospecting)的地区自动解锁「调查区域」里的洞穴搜索与黄金扎营。多人同行可提高成功率。随从的[科学](/dictionary/s#science) 40 以上、[生存](/dictionary/s#survival) 40 以上或带[拾荒者](/dictionary/s#scavenger)特质，各加 10 点。每名随从需自带一套工具，加成才会生效。变量 ownprospect。\n"
+  },
+  {
+   "slug": "dictionary-letter-p-prostitution",
+   "title": "prostitution",
+   "body": "\n\n# prostitution\n\n- 中文术语：卖淫\n\n性玩法。伊卡纳斯的卖淫系统，从 NPC 菜单的「卖淫」界面操作，与「岗位与头衔」分开。任何[奴隶](/dictionary/s#slave)或[仆役](/dictionary/s#servant)只要够顺从或够腐化，都能派去接客。三条指派线：白天的[站“金”](/dictionary/g#gold%20walkers)、[酒馆妓女](/dictionary/t#tavern%20prostitutes)，以及夜间的[援交](/dictionary/p#prostitution%20ring)。服务分口活、全套与伴游三档。自愿条件：女性需有[色情狂](/dictionary/n#nymphomaniac)特质、[腐化](/dictionary/c#corruption) 50 以上，或[意志](/dictionary/w#willpower)低于 20。男性需腐化 80 以上且意志 4 以下。伴游另有[艳名](/dictionary/n#notoriety)门槛，40 以上，玩家[影响力](/dictionary/i#influence) 5,000 以上时降到 20。事后可嘉奖、训斥或给分成，分成提升[心情](/dictionary/h#happiness)。接客累积口部、阴道与肛部磨损，需用 Healing Ointment 处理。昏迷、任一磨损满 100%、或[生命值](/dictionary/h#health%20points)低于 10 者暂时停接。变量 prostring、prostloc、prostscore。\n"
+  },
+  {
+   "slug": "dictionary-letter-p-the-prometheus-republic",
+   "title": "the prometheus republic",
+   "body": "\n\n# the prometheus republic\n\n- 中文术语：普罗米修斯共和国\n\n政权。2230 年建，55 万人口，首都[湖城](/dictionary/l#lake%20city)，元首为大市长 Brynn Seigler（2482 年生）。12,000 名步兵、1,200 名陆战队员、2,000 名骑兵、2 辆聚变动力履带战车与 12 艘驱逐舰。属普罗米修斯诸王国，并附庸于伊卡诺斯共和国。出产制成品、香料、谷物、牲畜与矿石，进口科技品。\n"
+  },
+  {
+   "slug": "dictionary-letter-q-quantum-gates",
+   "title": "quantum gates",
+   "body": "\n\n# quantum gates\n\n- 中文术语：量子门\n\n看似早已停用的异星科技，人类靠它往来星际。[伊斯兰教](/dictionary/i#islam)就是 23 世纪经量子门传入拉纳的。\n"
+  },
+  {
+   "slug": "dictionary-letter-q-quartermaster",
+   "title": "quartermaster",
+   "body": "\n\n# quartermaster\n\n- 中文术语：军需官\n\n[宅邸](/dictionary/h#household)[头衔](/dictionary/t#title)。是玩家的副官。\n"
+  },
+  {
+   "slug": "dictionary-letter-q-quelled",
+   "title": "quelled",
+   "body": "\n\n# quelled\n\n- 中文术语：行尸\n\nNPC 特质。几乎完全脑死，只剩一具会动的躯壳。认知功能大多停止，需要人下指令才能行动。战斗中可以参战，但无法使用[武器](/dictionary/w#weapon)，只能赤手。Prowler 通常在战斗败北后陷入此状态。\n"
+  },
+  {
+   "slug": "dictionary-letter-q-quest",
+   "title": "quest",
+   "body": "\n\n# quest\n\n- 中文术语：任务\n\n任务与进度。玩家接受的目标。游戏用 `$quest_` 前缀的变量逐条记录状态。开始时会弹一面横幅，写明任务名，并提示去看[日记簿](/dictionary/j#journal)。进度由日记簿跟踪，更新时显示 `JOURNAL UPDATED!`。一条任务由若干步组成，游戏内标作 `TASK`，例如送来一批货物或者处决某个人。\n\n游戏代码里没有任务类别。类别是百科为方便玩家理解而分的，共九类。它们是主线、店主、学院、兴趣点、酒馆、宴会事件、人物委托、市政厅悬赏与隐藏。游戏本身不标类别。\n"
+  },
+  {
+   "slug": "dictionary-letter-r-rachel-stapleton",
+   "title": "rachel stapleton",
+   "body": "\n\n# rachel stapleton\n\n- 中文术语：蕾切尔·斯特普尔顿\n\nNPC。在[汉密尔顿广场](/dictionary/h#hamilton%20square)的 Kymanto Hall 以 3,000 元购入。她常出现在[水晶丘](/dictionary/c#crystal%20hills)的 Mr. Tomaso 娱乐厅。\n"
+  },
+  {
+   "slug": "dictionary-letter-r-ranged-combat",
+   "title": "ranged combat",
+   "body": "\n\n# ranged combat\n\n- 中文术语：远程战斗\n\n决定用远程武器命中概率的首要因素。\n"
+  },
+  {
+   "slug": "dictionary-letter-r-rations",
+   "title": "rations",
+   "body": "\n\n# rations\n\n- 中文术语：给养\n\n经济与产业。宅邸的食物按「份」计，游戏内以 food ration 为单位追踪存量（变量 foodstuff），界面上简写作 R，故一条给养即 1R。存量不足时游戏会提示还能撑几天。\n\n获取途径有二。一是在[红天堂市场](/dictionary/r#redhaven%20market)按市价购入。二是在自家处理肉，12 分钟把 10 份生肉制成 20 份给养，需[生存](/dictionary/s#survival) 20 以上并耗 1 点[体力](/dictionary/s#stamina)。宅邸另有[给养自动采购](/dictionary/a#auto%20buy%20rations)开关。\n"
+  },
+  {
+   "slug": "dictionary-letter-r-raxin-speed",
+   "title": "raxin speed",
+   "body": "\n\n# raxin speed\n\n- 中文术语：拉克辛\n\n街头兴奋剂，又名 Raxophedrine 或 rexar。\n"
+  },
+  {
+   "slug": "dictionary-letter-r-relics",
+   "title": "relics",
+   "body": "\n\n# relics\n\n- 中文术语：遗物\n\n物品大类。比[文物](/dictionary/a#artifacts)更古老、更神秘、也更贵的旧物，多与[玄学](/dictionary/o#occult)相关，常见出土地是废墟与神庙。与文物的分工是：文物含地球旧货与 Beryll 陶器这类来历平常之物。遗物则来历不明，价格高得多。[学院](/dictionary/a#the%20academy)与[历史学会](/dictionary/h#historical%20society)都出高价收购。\n"
+  },
+  {
+   "slug": "dictionary-letter-r-rifleman",
+   "title": "rifleman",
+   "body": "\n\n# rifleman\n\n- 中文术语：步枪专精\n\nNPC 特质。擅长[铁管枪](/dictionary/p#pipe%20gun)、[霰弹枪](/dictionary/s#shotgun)与步枪，包括 [.50 口径步枪](/dictionary/0-9#.50%20cal%20rifle)。使用这类武器时多掷一颗 1D20 伤害骰。使用其它武器时承受 25 点命中惩罚。攻击墙后隐蔽的敌人不受命中惩罚。变量 traitweapon 取值 2。\n"
+  },
+  {
+   "slug": "dictionary-letter-r-rodar-vermin",
+   "title": "rodar vermin",
+   "body": "\n\n# rodar vermin\n\n- 中文术语：罗达害兽\n\n生物。拉纳原生小动物，寿命不到三个月，长 5 厘米。数量会周期性暴增成灾，摧毁人类作物与储粮。游戏里是「异星虫害」事件四种虫之一。\n"
+  },
+  {
+   "slug": "dictionary-letter-r-rosena",
+   "title": "rosena",
+   "body": "\n\n# rosena\n\n- 中文术语：罗塞娜\n\nNPC。「红腰带」Erich Bormann 的性奴。Bormann 是个独行法外之徒，常出没[斯托克丘陵](/dictionary/s#stokke%20hills)，凶暴、装备精良且精明。可掳获。\n"
+  },
+  {
+   "slug": "dictionary-letter-s-sacra-gang",
+   "title": "sacra gang",
+   "body": "\n\n# sacra gang\n\n- 中文术语：萨克拉帮\n\n势力与宗教。[斯托克堡](/dictionary/f#fort%20stokke)的常驻[帮派](/dictionary/b#bandits)之一。wiki 说它以残忍与狂热的无政府信仰出名。守门五人：MERCENARY、TORMENTOR、ELITE GUARD、FAT GUARD 与 BRUTE 各一名。清空后可得[影响力](/dictionary/i#influence) +600。\n"
+  },
+  {
+   "slug": "dictionary-letter-s-schematic",
+   "title": "schematic",
+   "body": "\n\n# schematic\n\n- 中文术语：草图\n\n经济与产业。[制作](/dictionary/c#crafting)系统的前置。没有草图就做不出指定物品。获得途径有三：任务奖励、商店购买、技能值达标。部分草图还要求先装好对应的[锻炉](/dictionary/s#smithery)或[织机](/dictionary/l#loom)。\n"
+  },
+  {
+   "slug": "dictionary-letter-s-slaver",
+   "title": "slaver",
+   "body": "\n\n# slaver\n\n- 中文术语：奴隶主\n\n技能分类。开局购点选项，分三级：Novice 20 点、Adept 加 60 点、Expert 加 120 点，练满共 200 点。Novice 给[操纵](/dictionary/m#manipulate)加 10 点、[束缚](/dictionary/b#bondage)加 10 点与[接吻](/dictionary/k#kissing)加 5 点。Adept 给[智力](/dictionary/i#intelligence)加 5 点、操纵加 15 点、[魅力](/dictionary/c#charisma)加 15 点、束缚加 15 点、[鞭笞](/dictionary/f#flagellation)加 15 点与[影响力](/dictionary/i#influence) 500 点。Expert 给智力加 10 点、[意志](/dictionary/w#willpower)加 10 点、操纵加 25 点、魅力加 10 点。它还加[性交](/dictionary/c#copulation) 15 点、束缚 25 点、鞭笞 15 点、接吻 5 点与影响力 900 点。专家级头衔为 Slave Owner，专家特质为[阿多拉·萨诺尔](/dictionary/a#adora%20sanor)。\n"
+  },
+  {
+   "slug": "dictionary-letter-s-small-garden",
+   "title": "small garden",
+   "body": "\n\n# small garden\n\n- 中文术语：小园圃\n\n地点。玩家后院专用小槽位的可建设施，与[雕像](/dictionary/s#statue)在同一槽位二选一。主要种[特尼尔草](/dictionary/t#ternyl%20grass)，一种拉纳原生高热量作物，基础产出每日 2 份给养，升级后 4 份。可改名或拆除。\n"
+  },
+  {
+   "slug": "dictionary-letter-s-sofia-ortega",
+   "title": "sofia ortega",
+   "body": "\n\n# sofia ortega\n\n- 中文术语：索菲亚·奥尔特加\n\nNPC。奴隶，26 岁，西班牙裔，高 5 尺 7 寸，重 132 磅。在[汉密尔顿广场](/dictionary/h#hamilton%20square)的[基曼托府邸](/dictionary/k#kymanto%20hall)出售，2,000 元。她原是[水眼区](/dictionary/w#watery%20eyes)拉丁街区一名走私犯的亲信，双方关系不明。那名走私犯死于与[天空守卫](/dictionary/s#skyguard)的枪战，法庭判她终身奴役，由[基曼托辛迪加](/dictionary/k#the%20kymanto%20syndicate)在囚犯拍卖会上买下。性格火爆，不易驯服。固定特质：[强势](/dictionary/d#dominant)、[麻木](/dictionary/j#jaded)、[物质至上](/dictionary/m#materialistic)、[粘人精](/dictionary/a#attention-whore)。\n"
+  },
+  {
+   "slug": "dictionary-letter-s-superficial",
+   "title": "superficial",
+   "body": "\n\n# superficial\n\n- 中文术语：颜控\n\nNPC 特质。只看外貌，不管其它。玩家[美貌](/dictionary/b#beauty)低于 50 时，每日掉 1 点好感，最低到 Amiable。低于 30 时每日掉 3 点，最低到中立。玩家好看时，各项成功率加成很大。\n"
+  },
+  {
+   "slug": "dictionary-letter-s-the-silver-sword",
+   "title": "the silver sword",
+   "body": "\n\n# the silver sword\n\n- 中文术语：“银剑”\n\n近战武器。伤害加 13。攻速快，[攻击范围](/dictionary/r#reach) 0。不具[护甲穿透](/dictionary/a#armor%20piercing)。[击倒概率](/dictionary/i#incapacitation%20chance) +70。它实为从旧宇宙飞船拆下的一根 DuraSteel 支撑杆。玩家的兄弟 Joseph 把它藏在俱乐部小屋里，用来给街头的孩子封骑士。仅 Tier2+ 订阅版收录。变量 ownss。\n"
+  },
+  {
+   "slug": "dictionary-letter-s-the-sugar-daddy",
+   "title": "the sugar daddy",
+   "body": "\n\n# the sugar daddy\n\n- 中文术语：糖爹\n\n宴会事件。只请[露维莎·舵手](/dictionary/l#lovisa%20helm)一人吃晚饭。她未动怒也未恨你，且在宅邸住满十四天以上时，会请你替她收拾一个在[红天堂](/dictionary/r#redhaven)纠缠她的男人。\n"
+  },
+  {
+   "slug": "dictionary-letter-t-tar-snakes",
+   "title": "tar snakes",
+   "body": "\n\n# tar snakes\n\n- 中文术语：焦油蛇\n\n生物。拉纳原生的小型毒蛇，多见于[生物大灭绝](/dictionary/g#the%20great%20biological%20wipe)之后形成的焦油状水洼与沼泽。图鉴见 `Bestiary` 页。\n"
+  },
+  {
+   "slug": "dictionary-letter-t-taskmaster",
+   "title": "taskmaster",
+   "body": "\n\n# taskmaster\n\n- 中文术语：严师\n\n玩家特质。Cost 20，Requirements 无。家教课程会额外消耗学生的[体力](/dictionary/s#stamina)。课程另有 15% 概率提升学生的[顺从](/dictionary/s#submissive)与[完美主义者](/dictionary/p#perfectionist)，并必定扣 5 点体力。使用纪律主题时全部效果翻倍。变量 mctraittask。\n"
+  },
+  {
+   "slug": "dictionary-letter-t-tavern-jobs",
+   "title": "tavern jobs",
+   "body": "\n\n# tavern jobs\n\n- 中文术语：酒馆岗位\n\n城市产业岗位。自有酒馆可派 7 名工人与 1 名酒保。工人分服务员、保镖与表演者三类，胜任分分别取[魅力](/dictionary/c#charisma)与[家务](/dictionary/d#domestic)、[力量](/dictionary/s#strength)与[近战](/dictionary/m#melee%20combat)、[表演](/dictionary/p#performance)与魅力的均值。酒保的分数取魅力、[智力](/dictionary/i#intelligence)与[外向](/dictionary/e-1#extrovert)特质的均值，另有角色加成、年龄、[名望](/dictionary/f#fame)与[影响力](/dictionary/i#influence)的修正。各人的分数计入酒馆每日的成功结算。酒保到位后酒馆才营业。\n"
+  },
+  {
+   "slug": "dictionary-letter-t-taverns",
+   "title": "taverns",
+   "body": "\n\n# taverns\n\n- 中文术语：酒馆\n\n经济与产业。在[红天堂](/dictionary/r#redhaven)买下外部地块后可以自建酒馆，共两处地块可选。基础造价 32,000 元，建成后给你所属势力的[权力](/dictionary/p#power%20value)加 2。功能与[工坊](/dictionary/w#workshop)相近，属进阶投资与升级设施。可派工人、保镖、表演者、[酒保](/dictionary/b#barkeeper)与[站“金”](/dictionary/g#gold%20walkers)等岗位。玩家可在自家酒馆消遣、赌博、打听传闻，并累积声望。声望每天掷一次骰子结算，另有一套混乱机制。\n"
+  },
+  {
+   "slug": "dictionary-letter-t-team-wixx",
+   "title": "team wixx",
+   "body": "\n\n# team wixx\n\n- 中文术语：维克斯组合\n\nNPC 特质。Laika 与 Loden Wixx 都有[拾荒者](/dictionary/s#scavenger)特质，且兄妹配合极好。同日派两人出去拾荒，会多带回 1 到 6 件杂货，另有十五分之一概率带回 1 支[强化剂](/dictionary/t#tendstims)。目前只有他们俩有。\n"
+  },
+  {
+   "slug": "dictionary-letter-t-tempest-building",
+   "title": "tempest building",
+   "body": "\n\n# tempest building\n\n- 中文术语：风暴大楼\n\n地点。位于[水眼区](/dictionary/w#watery%20eyes)工业区，[桑格林·维玛拉集团](/dictionary/s#sangrin%20wemara%20group)南伊卡诺斯分部的总部。用途为组织、财务与战略。已被翻拣一空，无开采价值，档案评级为中等威胁，威胁源是劫掠者。\n"
+  },
+  {
+   "slug": "dictionary-letter-t-textiles",
+   "title": "textiles",
+   "body": "\n\n# textiles\n\n- 中文术语：织物\n\n材料。由[碎布](/dictionary/s#scrap%20cloth)精纺而成，是[织机](/dictionary/l#loom)工序的成品。用于衣物与高级裁缝配方。\n"
+  },
+  {
+   "slug": "dictionary-letter-t-the-terror-from-the-deep",
+   "title": "the terror from the deep",
+   "body": "\n\n# the terror from the deep\n\n- 中文术语：深渊恐兽\n\n生物。同名事件放出的一头独特巨兽。它从[塞利奥尔森林](/dictionary/c#celior%20forest)深处闯入伊卡诺斯，在[凯西公园](/dictionary/k#kasey%27s%20park)与[斯托克丘陵](/dictionary/s#stokke%20hills)之间游荡，直到有人把它除掉。触发它的事件本身使[控制度](/dictionary/c#control) −5、[繁荣度](/dictionary/p#prosperity) −5，并在地图上为凯西公园添一处敌人据点。\n\n它每次出现都随机取名，取自一张二十五名的表。\n\n- The Shadow Reaper、The Doom Serpent、The King of Fangs、The Bloodscale、The Dread Reptile\n- The Maw of Darkness、The Ancient Devourer、The Haunter of the Dark、The Scourge of the Wilds\n- The Fang Tyrant、The Dreadscale、The Beast of Black Pines、The Ravager Prime\n- The Spinebreaker、The Widowmaker、The Skullsplitter、The Talon Sovereign\n- The Prime Devourer、The Terror of the Wilds、The Dark Terror\n- Haalu's Servant、Adem's Watcher、Chonk、Horgasz Little、The Cat\n\n战斗编号 `155`，列为不可捕获。变量 `$terrormonster`。城市控制度达 60 以上时，[天空守卫](/dictionary/s#skyguard)有概率自行把它杀掉。玩家亲杀可得[影响力](/dictionary/i#influence) +1,500、NPC [名望](/dictionary/f#fame) +20、[共和国](/dictionary/r#the%20republic)[立场](/dictionary/s#standing) +3。\n"
+  },
+  {
+   "slug": "dictionary-letter-u-bermenschen",
+   "title": "übermenschen",
+   "body": "\n\n# übermenschen\n\n- 中文术语：乌伯人\n\n学院任务。起于[狼教授](/dictionary/p#professor%20wolf)在[学院](/dictionary/a#the%20academy)开的第二门课「行星研究」。该任务在游戏里未实装，仅见百科。\n"
+  },
+  {
+   "slug": "dictionary-letter-u-the-underworld",
+   "title": "the underworld",
+   "body": "\n\n# the underworld\n\n- 中文术语：地下世界\n\n地点。入口在[斯托克丘陵](/dictionary/s#stokke%20hills)。灾变前是巨型地下燃料仓，如今已改造成地底社区，居民两千余人。他们是付不起马斯顿沼泽土屋租金的流民、盗贼与匪类。此地存在是人尽皆知的秘密，入口不设防但隐蔽。玩家需在夜间酒馆打听线索才能得知入口位置。区内含[德雷纳村](/dictionary/d#drenner%20village)与[芬里克酒馆](/dictionary/f#fenrik%27s%20tavern)。\n"
+  },
+  {
+   "slug": "dictionary-letter-u-the-upper-class",
+   "title": "the upper class",
+   "body": "\n\n# the upper class\n\n- 中文术语：上流社会\n\n世界观。伊卡诺斯城及周边邦国的社会群体，约占伊卡诺斯人口的 5%。同为上流社会，两家的财富与地位也可能相差极大。当地有句老话：上等人就是拥有一处四间以上房产的人。他还要有足够财力买下、养活与供养两名奴隶。\n"
+  },
+  {
+   "slug": "dictionary-letter-u-the-uwlak-monument",
+   "title": "the uwlak monument",
+   "body": "\n\n# the uwlak monument\n\n- 中文术语：乌瓦克石碑\n\n地点。位于[南红天堂](/dictionary/s#south%20redhaven)与[斯托克丘陵](/dictionary/s#stokke%20hills)之间的林荫深处，近布斯特勒溪。三根古柱覆满苔藓与古怪象形文字，二十码外有四具撬开的空棺。古柱称“乌瓦克部落石”。2230 年 USS Seneca 号抵达时，占据这片森林的第一波猎人在此立石。另有传言说它们与[坦克雷德石](/dictionary/t#tancred%27s%20stone)同样古老，已有数千年。\n"
+  },
+  {
+   "slug": "dictionary-letter-u-unbreakable",
+   "title": "unbreakable",
+   "body": "\n\n# unbreakable\n\n- 中文术语：不屈\n\nNPC 特质。Cultist monk 的精神。[意志](/dictionary/w#willpower)低于 60 时，每日有 85% 概率使意志加 2 到 5 点。意志低于 25 时，每日掉 1 点本特质。拥有[主君](/dictionary/d#dominus)特质的玩家可在[神龛](/dictionary/s#the%20shrine)用反意志的[布道与讲学](/dictionary/s#sermons%20%26%20lectures)削弱它。\n"
+  },
+  {
+   "slug": "dictionary-letter-u-unlucky",
+   "title": "unlucky",
+   "body": "\n\n# unlucky\n\n- 中文术语：厄运\n\n玩家负面特质。Points +20，Requirements 无。它开启一条可重复的[宅邸](/dictionary/h#household)事件链，内容是小灾小难，例如受伤、打坏物品与临时减益。每日有 2% 概率触发。变量 mctraitjinx。\n"
+  },
+  {
+   "slug": "dictionary-letter-u-unwieldy",
+   "title": "unwieldy",
+   "body": "\n\n# unwieldy\n\n- 中文术语：膂力不足\n\n武器属性。[近战武器](/dictionary/m#melee%20weapon)对[力量](/dictionary/s#strength)设门槛，膂力不足便使不动，扣伤害。Great Sword 在力量低于 75 时扣 14 点，低于 40 时扣 24 点。Great Axe 分三档，力量低于 35 扣 35 点，40 到 74 扣 15 点，75 到 99 扣 10 点。Sacred Mallet 与 Sword of Azuk 另有更高的门槛。\n"
+  },
+  {
+   "slug": "dictionary-letter-u-uss-govinda",
+   "title": "uss govinda",
+   "body": "\n\n# uss govinda\n\n- 中文术语：USS 戈文达号\n\n船与飞船。飞船。2098 年在火星背后发现异星量子传送门，人类由此进入太空探索时代。它的舰名也是拉纳第三颗卫星 Raana-3 的别名。\n"
+  },
+  {
+   "slug": "dictionary-letter-v-the-vakon-expanse",
+   "title": "the vakon expanse",
+   "body": "\n\n# the vakon expanse\n\n- 中文术语：瓦孔荒域\n\n[伊卡诺斯](/dictionary/i#ikaanos)之外的荒原地区。\n"
+  },
+  {
+   "slug": "dictionary-letter-v-the-vault",
+   "title": "the vault",
+   "body": "\n\n# the vault\n\n- 中文术语：密室\n\n人物委托。[露维莎·舵手](/dictionary/l#lovisa%20helm)的专属线，须把她的好感到亲切，再问起身世。她会带你回[北红天堂](/dictionary/n#north%20redhaven)的旧公寓，探她父亲留下的地窖，其中藏着一把[网格密钥](/dictionary/g#grid%20key)。\n"
+  },
+  {
+   "slug": "dictionary-letter-v-vaginal-skill",
+   "title": "vaginal skill",
+   "body": "\n\n# vaginal skill\n\n- 中文术语：阴道技能\n\n反映女性 NPC 的总体性经验与骑乘熟练度。\n"
+  },
+  {
+   "slug": "dictionary-letter-v-valeria-helm",
+   "title": "valeria helm",
+   "body": "\n\n# valeria helm\n\n- 中文术语：瓦莱里娅·舵手\n\nNPC。Gregory Helm 的妻子，Tori 与 Helm 家姐妹的母亲。出现在 The Helm Family 任务里，人在 Kymanto Hall。\n"
+  },
+  {
+   "slug": "dictionary-letter-v-vestal-complex",
+   "title": "vestal complex",
+   "body": "\n\n# vestal complex\n\n- 中文术语：贞女情结\n\nNPC 特质。该 NPC 想把子宫留给某件神圣之事。只要她仍是阴道处女，每日加 3 点[心情](/dictionary/h#happiness)，上限 75。肛交与口交的接受判定加 75。家教判定加 15。与玩家互动时可能触发专属的玄学事件。阴道性交会立即移除该特质。目前只有 Seve Pásztor 有。变量 traitvestal。\n"
+  },
+  {
+   "slug": "dictionary-letter-v-virax-springs",
+   "title": "virax springs",
+   "body": "\n\n# virax springs\n\n- 中文术语：Virax 温泉\n\n地点。位于[水晶丘](/dictionary/c#crystal%20hills)。2245 年由 Ilmar Delmer 在一处天然自流泉上创立，2401 年起由 [里赞兄弟会](/dictionary/b#brotherhood%20of%20ryzaan)经营。全日开放。按摩 200 元（[托丽·舵手](/dictionary/t#tori%20helm)）或 250 元（Cersei），66 分钟，回收[体力](/dictionary/s#stamina)与[生命值](/dictionary/h#health%20points)，另有四分之一概率加 1 点[意志](/dictionary/w#willpower)。泡浴 50 元、30 分钟。\n"
+  },
+  {
+   "slug": "dictionary-letter-v-void-beast",
+   "title": "void beast",
+   "body": "\n\n# void beast\n\n- 中文术语：虚空兽\n\n生物。游戏里的一场首领战对手，来自虚空。生命值 2,800，武技 160，护甲为天生。击败它加 5 点[意志](/dictionary/w#willpower)，并解锁成就 Void Guardian。图鉴页只给了名字，没有体尺与习性。\n"
+  },
+  {
+   "slug": "dictionary-letter-w-weak-boned",
+   "title": "weak-boned",
+   "body": "\n\n# weak-boned\n\n- 中文术语：瘦弱\n\n玩家负面特质。Points +25，Requirements 无。玩家骨架小，[力量](/dictionary/s#strength)永远不能超过 70。变量 mctraitwb。\n"
+  },
+  {
+   "slug": "dictionary-letter-w-weak-willed",
+   "title": "weak-willed",
+   "body": "\n\n# weak-willed\n\n- 中文术语：意志薄弱\n\n玩家负面特质。Points +25，Requirements 无。玩家性格敏感，[意志](/dictionary/w#willpower)永远不能超过 70。变量 mctraitww。\n"
+  },
+  {
+   "slug": "dictionary-letter-w-westside-heights",
+   "title": "westside heights",
+   "body": "\n\n# westside heights\n\n- 中文术语：西区高地\n\n地点。别称荒原之门。城区最西的边缘地带。\n"
+  },
+  {
+   "slug": "dictionary-letter-w-wife-limit",
+   "title": "wife limit",
+   "body": "\n\n# wife limit\n\n- 中文术语：妻室上限\n\n宗教规则。各[宗教](/dictionary/r#religion)对可娶[妻子](/dictionary/w#wife)数量各有上限。[无神论](/dictionary/a#atheism)无上限，双月教会与基督教各一，上古崇拜二，伊斯兰教四，阿萨神教五。超出上限每多一位妻子，每日扣 100 点[影响力](/dictionary/i#influence)。另有 5% 概率掉 1 点对该宗教的[立场](/dictionary/s#standing)，最低到 50。\n"
+  },
+  {
+   "slug": "dictionary-letter-w-william-hanbard-s-general-store",
+   "title": "william hanbard's general store",
+   "body": "\n\n# william hanbard's general store\n\n- 中文术语：William Hanbard 杂货铺\n\n地点。位于[马斯顿大道](/dictionary/m#marston%20avenue)。表面是中下层的杂货铺，卖甜菜、谷物、米与玉米等。完成 Professor Wolf 的行星研究第四课后解锁。此处出售 DX 注射剂（迪纳尔-X），每针把[力量](/dictionary/s#strength)、[敏捷](/dictionary/d#dexterity)、[体力](/dictionary/s#stamina)、[魅力](/dictionary/c#charisma)、[操纵](/dictionary/m#manipulate)、[近战](/dictionary/m#melee%20combat)与潜行各加 20，上限 120。玩家一旦上瘾，这些技能每日回落 2 点，直到 25 或戒断日归零。\n"
+  },
+  {
+   "slug": "dictionary-letter-w-willpower",
+   "title": "willpower",
+   "body": "\n\n# willpower\n\n- 中文术语：意志\n\n衡量服从、自信与主动性。意志低于 1 的[奴隶](/dictionary/s#slave)会答应一切请求。意志高于 30 且心情好的奴隶有小概率自我提升[魅力](/dictionary/c#charisma)。\n"
+  },
+  {
+   "slug": "dictionary-letter-w-wood",
+   "title": "wood",
+   "body": "\n\n# wood\n\n- 中文术语：木材\n\n材料。用于制作，也可烧来取暖：在宅邸管理界面每次加 10 单位木材，会提高宅邸的[心情](/dictionary/h#happiness)指标。可在[红天堂市场](/dictionary/r#redhaven%20market)、[Aimee's 杂货铺](/dictionary/a#aimee%27s%20goods)、[基拉杂货](/dictionary/k#kira%27s%20merch)与[彼列枪铺](/dictionary/b#belial%20guns)等处购入，单价 3 到 5 元。城外[拾荒](/dictionary/s#scavenging)也能得到。价格受市场存量、繁荣度、控制度与[黑湖锯木厂](/dictionary/d#darkmere%20mill)的可用木材影响。变量 wood。\n"
+  },
+  {
+   "slug": "dictionary-letter-w-workshop",
+   "title": "workshop",
+   "body": "\n\n# workshop\n\n- 中文术语：工坊\n\n地点。可建在自家后院或[红天堂](/dictionary/r#redhaven)两处可购地块的作坊，建造费 95,000 元。任命工头后最多派 7 名 NPC 上工。主厅分三级，升级费 20,000 与 50,000 元。工具与机器分四级，升级费 25,000、150,000 与 300,000 元。不任命工头也有产出。任命后按其[智力](/dictionary/i#intelligence)与对玩家的[好感](/dictionary/a#affection)提高产量。作坊可专注三件事：货物加工、制造与血汗工坊。货物加工把 100 单位以上的货物转成材料。制造产出生产点与技术点，用于制作武器、弹药与医疗品。技术点要求工头智力 50 以上，且工具已升到完全机械化。血汗工坊靠囤积货物提高产量。作坊另支持查看统计、清空工人、拆除与改名。\n"
+  },
+  {
+   "slug": "dictionary-letter-y-the-yard",
+   "title": "the yard",
+   "body": "\n\n# the yard\n\n- 中文术语：后院\n\n地点。环绕主楼与围墙的院落，含五个可开发槽位、西侧的[哨塔](/dictionary/g#guard%20tower)与围墙、北侧的小[神龛](/dictionary/s#the%20shrine)，以及一处唯一建筑位。槽位可建[工坊](/dictionary/w#workshop)（95,000 元）、训练场（5,000 元）与[马厩](/dictionary/s#stables)（5,000 元）。其余可选建筑含[凉亭](/dictionary/g#gazebo)、[附楼](/dictionary/a#annex)、[大园圃](/dictionary/g#garden)、[雕像](/dictionary/s#statue)（5,000 元）、酒馆（5,000 元）与[道场](/dictionary/d#dojo)。槽位 3 起初堆着废料，清空后才能开发。围墙与哨塔决定宅邸的守备力，影响[帮派](/dictionary/b#bandits)来袭的成功率与奴隶逃跑概率。唯一建筑位留给 [伊卡诺斯英雄像](/dictionary/h#heroes%20of%20ikaanos)。\n"
+  },
+  {
+   "slug": "dictionary-letter-y-the-yellow-queen",
+   "title": "the yellow queen",
+   "body": "\n\n# the yellow queen\n\n- 中文术语：黄衣女王\n\nNPC 专属宗教。信徒以女性为主，把黄衣女王当作与拉纳宇宙力量相连的女性神格原型。仪式以处子性力换取异能，强调[纯洁](/dictionary/p#purity)与荒野共处。成员约 800 人，据点在[莱萨诺裂谷](/dictionary/l#the%20lesano%20chasm)。与[达戈萨教团](/dictionary/d#the%20dagosa%20cult)是死敌，无变量。\n"
+  },
+  {
+   "slug": "dictionary-letter-z-z-mark",
+   "title": "z-mark",
+   "body": "\n\n# z-mark\n\n- 中文术语：Z 印记\n\n玩家特质。Cost 50，Requirements 无。母亲怀着玩家时服用了非法强效药 Denaar-X，药力透过了胎儿。医生 Thomas Redburn 在 2440 年代研究过该药，把结果分成两类。95% 的胎儿成为 Y 印记，终生带着身体残疾。5% 成为 Z 印记，技能增强，身体恢复更快。带 Z 印记的人虹膜里有细小发亮的晶体，不留意看不出来。知情者据此把他们认作一个「Z 印记种族」。宗教派系[黄金黎明](/dictionary/g#the%20golden%20dawn)的成员多为 Z 印记者，外界把他们看作变种人，异能成谜。玩家所得为：[力量](/dictionary/s#strength)、[敏捷](/dictionary/d#dexterity)与[近战](/dictionary/m#melee%20combat)各加 5 点，[体力](/dictionary/s#stamina)加 10 点。每夜另回 5 点体力与 5 点[生命值](/dictionary/h#health%20points)。变量 mctraitz。\n"
+  },
+  {
+   "slug": "dictionary-letter-z-zapin-fields",
+   "title": "zapin fields",
+   "body": "\n\n# zapin fields\n\n- 中文术语：扎平田野\n\n地点。[耙岛](/dictionary/h#harrow%20island)上的田野。\n"
+  },
+  {
+   "slug": "dictionary-letter-z-zenobia",
+   "title": "zenobia",
+   "body": "\n\n# zenobia\n\n- 中文术语：泽诺比娅\n\nNPC。街头孩子，父母是常年不在的拾荒者，由姐姐带大。她实际掌管 Baltor 帮，直到玩家在 The Ring 任务里把它打掉。人在 Baltor Hotel。\n"
+  },
+  {
+   "slug": "dictionary-letter-z-zweihander",
+   "title": "zweihander",
+   "body": "\n\n# zweihander\n\n- 中文术语：双手武器专精\n\nNPC 特质。擅长双手重型[近战](/dictionary/m#melee%20combat)[武器](/dictionary/w#weapon)，即 Sledgehammer、Great Sword、Great Axe、Sacred Mallet 与 Sword of Azuk。使用这类武器时多掷一颗 1D20 伤害骰。使用其它武器时承受 25 点命中惩罚。变量 traitweapon 取值 8。\n"
+  },
+  {
+   "slug": "dictionary-letter-a-akari-ito",
+   "title": "akari ito",
+   "body": "\n\n# akari ito\n\n- 中文术语：伊藤明里\n\nNPC。在[凯西公园](/dictionary/k#kasey%27s%20park)由[太空陆战队](/dictionary/s#space%20marines)控制的区域，击败 Space Hulk 后即可掳获。\n"
+  },
+  {
+   "slug": "dictionary-letter-a-arvannis",
+   "title": "arvannis",
+   "body": "\n\n# arvannis\n\n- 中文术语：阿瓦尼斯\n\n七百名基督徒的聚居地，由 Catholic Church 的 Bishop Lavigne 带领。\n"
+  },
+  {
+   "slug": "dictionary-letter-f-floor-crawler",
+   "title": "floor crawler",
+   "body": "\n\n# floor crawler\n\n- 中文术语：舔狗\n\n伊卡诺斯中地位最低的[奴隶](/dictionary/s#slave)，负责清洁并满足宅邸内的其他成员。\n"
+  },
+  {
+   "slug": "dictionary-letter-a-affection-tiers",
+   "title": "affection tiers",
+   "body": "\n\n# affection tiers\n\n- 中文术语：好感档位\n\nNPC 状态。NPC 对玩家的好感分 11 档，游戏只显示档名，不显示数值。档名与阈值如下。\n\n- 0 到 4：Venomous 怨恨\n- 5 到 9：Abhorred 憎恶\n- 10 到 14：Despising 鄙夷\n- 15 到 19：Unfriendly 冷淡\n- 20 到 29：Uninterested 无感\n- 30 到 49：Neutral 中立\n- 50 到 59：Friendly 友好\n- 60 到 74：Amiable 亲切\n- 75 到 89：Loving 喜爱\n- 90 到 109：Soulmate 灵魂伴侣\n- 110 以上：Undying 不渝\n\n各档名在游戏里的写法保留英文，中文名是本词典的定译。[宅邸](/dictionary/h#household)与事件常按档位设门槛，例：指派[床伴](/dictionary/b#bed%20partner)要求好感达灵魂伴侣，查妻子往事要求好感达喜爱以上。\n"
+  },
+  {
+   "slug": "dictionary-letter-p-preacher-s-hall",
+   "title": "preacher's hall",
+   "body": "\n\n# preacher's hall\n\n- 中文术语：牧师堂\n\n派系。James Fornica 领导的小型教派，绰号“疯教士”，驻[牧师塘](/dictionary/p#preacher%27s%20pond)。42 点[权力](/dictionary/p#power%20value)，49 名兵员，资金 60,000。侧重农业。立场值上限 70。\n"
+  },
+  {
+   "slug": "dictionary-letter-g-golden-papers",
+   "title": "golden papers",
+   "body": "\n\n# golden papers\n\n- 中文术语：金纸\n\n酒馆委托。涉及一批作假用的金纸，出处在[红天堂](/dictionary/r#redhaven)一带的酒馆。\n"
+  },
+  {
+   "slug": "dictionary-letter-g-the-goat-s-toe",
+   "title": "the goat's toe",
+   "body": "\n\n# the goat's toe\n\n- 中文术语：羊蹄酒馆\n\n地点。位于[卡希尔前哨](/dictionary/k#kahill%20outpost)。面向猎人与旅人的酒馆，卖冷啤酒与简易床位。酒 5 元、饭 10 元，可打听卡希尔一带的消息，也可租床：简易间 12 元、套房 32 元。此处可接「Dung Collector」与「The Mother Bounty」（即[凯德拉](/dictionary/k#kaedra)）两条线。\n"
+  },
+  {
+   "slug": "dictionary-letter-p-piercing",
+   "title": "piercing",
+   "body": "\n\n# piercing\n\n- 中文术语：人体穿孔\n\n在 [妮卡衣铺](/dictionary/n#nika%27s%20clothes) 出售，由店主当场为 NPC 施术，购买时有一次[疼痛](/dictionary/p#pain)与掉[心情](/dictionary/h#happiness)的风险。共三种。舌钉 200 元，加 1 点[美貌](/dictionary/b#beauty)与 1 点[魅力](/dictionary/c#charisma)，口交技能成长快 20%，上限 120。乳钉 250 元，加 1 点美貌。阴蒂与脐钉 350 元，加 3 点美貌与 1 点魅力。阴蒂与脐钉按[腐化](/dictionary/c#corruption)提高每日起始[性兴奋](/dictionary/a#arousal)。腐化 0 到 29 有 30% 概率加 4 点，30 到 49 为 55%，50 到 69 为 80%，70 以上必定加。阴蒂钉在阴道性交中每回合有 15% 概率加 1 点性兴奋。另有每日 5% 概率抬高腐化，上限 30。腐化低于 50 时，阴蒂钉每日有 5% 概率减 1 点[守常](/dictionary/v#vanilla)。腐化 30 以下时，带[守常](/dictionary/v#vanilla)或[纯洁](/dictionary/p#purity)者每日有 25% 风险掉 1 点心情。上述美貌与魅力加成不参与[奴隶市场](/dictionary/s#slave%20markets)的底价计算。穿戴本身则抬高底价：乳钉 100 元，脐钉 100 元，阴蒂钉 150 元，舌钉 100 元。乳钉与乳链不能同时佩戴。\n"
+  },
+  {
+   "slug": "dictionary-letter-s-statue",
+   "title": "statue",
+   "body": "\n\n# statue\n\n- 中文术语：雕像\n\n地点。玩家后院专用小槽位的可建设施，5,000 元，与[小园圃](/dictionary/s#small%20garden)在同一槽位二选一。雕的是灾变后伊卡诺斯首任市长 [坎多·维拉克斯](/dictionary/k#kandor%20virax)，他是[双月教会](/dictionary/c#the%20church%20of%20the%20two%20moons)的圣徒，也是把奴隶制写入法典的 Virax 修正案的主导者。每日加 1 点[失志](/dictionary/d#demoralization)、1 点[效率](/dictionary/e-1#efficiency)与 5 点[影响力](/dictionary/i#influence)，前两项上限 90。它另使后院的口交类互动判定加 10 点。可拆除，也可改名。变量 ownstatue。\n"
+  },
+  {
+   "slug": "dictionary-letter-c-crystal-heights-slave-market",
+   "title": "crystal heights slave market",
+   "body": "\n\n# crystal heights slave market\n\n- 中文术语：水晶丘奴隶市场\n\n地点。位于[水晶丘](/dictionary/c#crystal%20hills)。原是灾变前的歌剧院，现为奴隶交易场所，分画廊与拍卖厅两部分。全日可存放与查看奴隶，拍卖只在每日 7:00 到 20:30 进行。画廊以固定价出售[凯特琳·坦瑟](/dictionary/c#caitlin%20tensor)、[阿丽亚·比安基](/dictionary/a#aria%20bianchi)、[大城梅琳](/dictionary/m#mai-lynn%20oshiro)与[阿多拉·萨诺尔](/dictionary/a#adora%20sanor)等奴隶。拍卖厅自行竞价。\n"
+  },
+  {
+   "slug": "dictionary-letter-p-popular-sports",
+   "title": "popular sports",
+   "body": "\n\n# popular sports\n\n- 中文术语：流行运动\n\nThe Severance 之后伊卡诺斯最受欢迎的运动。竞技场是城里最热门的去处，尤受中上阶层青睐。足球分甲级 A2 与顶级 IUSL 两个联赛。另有帆船、飞盘、武术与赛马。\n"
+  },
+  {
+   "slug": "dictionary-letter-c-camp-yoshida",
+   "title": "camp yoshida",
+   "body": "\n\n# camp yoshida\n\n- 中文术语：吉田营\n\n人物委托。位于[耙岛](/dictionary/h#harrow%20island)的一处独立奴隶营，营主是持有执照的大奴隶主吉田少校。受托拔掉此地，营地即归玩家。\n"
+  },
+  {
+   "slug": "dictionary-letter-d-devious-tools",
+   "title": "devious tools",
+   "body": "\n\n# devious tools\n\n- 中文术语：Devious Tools\n\n地点。位于[白天堂区](/dictionary/w#whitehaven%20district)。BDSM 用品与书籍的店铺，店主是 Miss Devious。每日 8:45 到 22:15 营业。卖束具、栓具、口枷、项圈、乳链、束缚带与贞操带，也卖性主题的技能书与各种器具。另开一门七日课程，学费 1,800 元，为期七天。玩家可派一名奴隶在此工作，日入 50 元，风险高。\n"
+  },
+  {
+   "slug": "dictionary-letter-s-stormchild",
+   "title": "stormchild",
+   "body": "\n\n# stormchild\n\n- 中文术语：风暴之子\n\nNPC 特质。该 NPC 出生在一场奇异的磁暴中，身体在亚原子层面受到影响，[智力](/dictionary/i#intelligence)、[敏捷](/dictionary/d#dexterity)、[意志](/dictionary/w#willpower)与[力量](/dictionary/s#strength)都偏高。她受精神湍流影响，每日有六分之一概率加意志并掉[好感](/dictionary/a#affection)。每次受伤自然减免 4 点伤害，在竞技场里略占便宜。家教判定加 15%。非束缚式阴道性交中让她高潮，有小概率把智力加 1，上限 120。若在坏风暴中加入宅邸，四项属性还会更高。变量 girlid 为 201。\n"
+  },
+  {
+   "slug": "dictionary-letter-d-dominant",
+   "title": "dominant",
+   "body": "\n\n# dominant\n\n- 中文术语：强势\n\nNPC 特质。抵抗降低意志的手段。与[顺从](/dictionary/s#submissive)互为反面。\n"
+  },
+  {
+   "slug": "dictionary-letter-e-educator",
+   "title": "educator",
+   "body": "\n\n# educator\n\n- 中文术语：教员\n\n宅邸岗位。按模板训练宅邸 NPC 的技能。模板分战斗、体能、心智、教育、医疗、[表演](/dictionary/p#performance)等类。\n\n玩家特质。Cost 50，Requirements 无。玩家每日能多做一次训练或家教课程。这次额外课程可以独自进行，也可与 NPC 一起。变量 mctraitmentor。\n"
+  },
+  {
+   "slug": "dictionary-letter-c-cyber-cannon-w-e-g-a",
+   "title": "cyber cannon (w.e.g.a)",
+   "body": "\n\n# cyber cannon (w.e.g.a)\n\n- 中文术语：赛博炮\n\n远程武器，使用 W.E.G.A. cannisters，每发一罐。基础价 500,000 元与 20,000 点影响力，目前仅一门可购。远距与近距伤害都加 96。两个距离都无命中修正。具[护甲穿透](/dictionary/a#armor%20piercing)，后坐力低，击倒概率 −4。它靠神经链接操作，输出相当于一门载具主炮。它由地球的 Rostec 工厂组装，星门关闭后只运来少数几门。它与[弹药](/dictionary/a#ammunition)都来自地球，弹药正逐渐耗尽。此武器会覆盖[弹药包](/dictionary/a#ammo%20pack)特质。变量 owncyber。\n"
+  },
+  {
+   "slug": "dictionary-letter-m-mindmancer",
+   "title": "mindmancer",
+   "body": "\n\n# mindmancer\n\n- 中文术语：摄魂师\n\n神经活性纳米药物，原用于安抚新拓殖民地里的暴戾囚犯。2277 年列入禁令，少数存针流入黑市。一剂即让饮者永久沦为智力受损的顺服傀儡。\n"
+  },
+  {
+   "slug": "dictionary-letter-v-voice-of-adem",
+   "title": "voice of adem",
+   "body": "\n\n# voice of adem\n\n- 中文术语：阿丹之声\n\n玄学。[阿丹](/dictionary/a#adem)神系的大师级咒文，作用是接通 [Cydikar](/dictionary/c#cydikar) 的宫廷。学会它会让玩家成为极危险的对手。研习由咒文系统负担，代价是扣[意志](/dictionary/w#willpower)，详见[咒语](/dictionary/i#incantations)。\n"
+  },
+  {
+   "slug": "dictionary-letter-s-sex-addict",
+   "title": "sex addict",
+   "body": "\n\n# sex addict\n\n- 中文术语：性瘾\n\n玩家负面特质。Points +25，Requirements 无。玩家处于普通渴求或更高时头脑不清，命中判定受罚，家教与训练同样受罚。普通渴求减 6 点，强烈渴求减 12 点，极度渴求减 24 点，持续勃起以上减 48 点。变量 mctraitsex。\n"
+  },
+  {
+   "slug": "dictionary-letter-h-house-bianchi",
+   "title": "house bianchi",
+   "body": "\n\n# house bianchi\n\n- 中文术语：比安基家族\n\n势力与宗教。直到不久前仍是[伊卡诺斯世家](/dictionary/g#great%20houses%20of%20ikaanos)之一。2481 年的 Sphere Wars（球上老爷之间的夺位战）中，一批贵族试图推翻[议长](/dictionary/c#chancellor)[莫迪凯·阿德勒](/dictionary/m#mordecai%20adler)，比安基家是参与者之一。事败后，官府把他家软禁数年。随后为防万一，又暗杀了幸存的要人。[阿丽亚·比安基](/dictionary/a#aria%20bianchi)逃脱，是现任家主。\n"
+  },
+  {
+   "slug": "dictionary-letter-c-caitlin-tensor",
+   "title": "caitlin tensor",
+   "body": "\n\n# caitlin tensor\n\n- 中文术语：凯特琳·坦瑟\n\nNPC。在[水晶丘](/dictionary/c#crystal%20hills)奴隶市场以 10,000 元购入。走完 The Blind Hunt 之后，她会在[西区](/dictionary/w#westside)的 Caitlin's Clinic 出没。\n"
+  },
+  {
+   "slug": "dictionary-letter-s-study-focuses",
+   "title": "study focuses",
+   "body": "\n\n# study focuses\n\n- 中文术语：学习焦点\n\n机制。临时增益，给家教课程加 15 点成功率，并让[学院](/dictionary/a#the%20academy)课程略有技能收益。共五种。学术方向提升[学术](/dictionary/a#academics)收益，从宅邸随机事件与「外出散步／看星星」获得。家政方向提升[家务](/dictionary/d#domestic)与[园艺](/dictionary/g#gardening)收益，从宅邸随机事件获得。技术方向提升化学与[科学](/dictionary/s#science)收益，来源同学术方向。武术方向提升[远程战斗](/dictionary/r#ranged%20combat)与[近战](/dictionary/m#melee%20combat)收益，另可从带[奴隶](/dictionary/s#slave)打赢战斗获得。敏捷方向提升[体力](/dictionary/s#stamina)与[力量](/dictionary/s#strength)、[舞蹈](/dictionary/d#dancing)与[杂技](/dictionary/a#acrobatics)收益，从宅邸随机事件获得。\n"
+  },
+  {
+   "slug": "dictionary-letter-n-nobility",
+   "title": "nobility",
+   "body": "\n\n# nobility\n\n- 中文术语：贵族\n\n身份。伊卡诺斯虽是共和国，仍保留正式的贵族阶层，其源流可追溯到[大断绝](/dictionary/s#the%20severance)后的短暂君主制。也有家族靠影响力、财富，或凭世人逐步接纳而跻身其中。下等贵族含比安基、布赖、哈桑、凯萨林、马利、帕斯托尔与瓦尔科林等家，上等贵族含阿德勒等家。\n"
+  },
+  {
+   "slug": "dictionary-letter-m-morning-blowjobs",
+   "title": "morning blowjobs",
+   "body": "\n\n# morning blowjobs\n\n- 中文术语：晨间口交\n\n机制。玩家有派此职的 NPC 时，每天早上 7 点会有人来口交。指派入口在「宅邸规则 > 晨间口交 > 指派」，可派任意数量的女性 NPC，每天从其中随机选一人。人选要求[好感](/dictionary/a#affection)达 Loving 以上，或[意志](/dictionary/w#willpower)极低。没派人时，玩家睡到 8 点。做到射精会让玩家进入性耗竭状态，但可以中途退出，只当成早起闹钟用。这是抬高[意志](/dictionary/w#willpower)上限的重要途径，上限 90。不是每条分支都给机会，先让她把睾丸舔净才能最大化。过程前后可表扬、斥责或羞辱对方，事后可一起吃早饭或抽烟，这些都会影响她的[心情](/dictionary/h#happiness)与[好感](/dictionary/a#affection)。全程 54 分钟，选舔净再加 18 到 30 分钟。只做舔净可在 7:30 收尾，此时不进入性耗竭。全部选项走完可拖到 8:30。\n"
+  },
+  {
+   "slug": "dictionary-letter-w-w-e-g-a-armor",
+   "title": "w.e.g.a. armor",
+   "body": "\n\n# w.e.g.a. armor\n\n- 中文术语：W.E.G.A. 护甲\n\n护甲。吸收值 43，[敏捷惩罚](/dictionary/p#penalty) −20。基础价 150,000 元。它以 PIIR 涂层超薄 DuraSteel 板制成，内层是纳米机凝胶 TSR2，在极度紧张时激活。战斗中每回合加 5 点[生命值](/dictionary/h#health%20points)。可由[科学](/dictionary/s#science) 50 以上的人自行修复，或交给技能 80 以上的[军需官](/dictionary/q#quartermaster)，需要 300 个[纳米机](/dictionary/n#nanites)、2 份 durasteel 与一间实验室。NPC 用变量 ownslwega，玩家用 ownwega。\n"
+  },
+  {
+   "slug": "dictionary-letter-f-father-marinelli",
+   "title": "father marinelli",
+   "body": "\n\n# father marinelli\n\n- 中文术语：马里内利神父\n\n剧情 NPC。[圣母教堂](/dictionary/h#the%20holy%20virgin)的主持，与[尤文缇娅女院长](/dictionary/a#abbess%20juventia)共同掌管拉纳的天主教逾三十年。教堂派系任务「骑士」「狩猎」等由他发给玩家，[以上帝之名](/dictionary/i#in%20the%20name%20of%20god)那条也归他。\n"
+  },
+  {
+   "slug": "dictionary-letter-p-piper-holdman",
+   "title": "piper holdman",
+   "body": "\n\n# piper holdman\n\n- 中文术语：小辣椒·霍尔德曼\n\nNPC。奴隶，25 岁，入宅前不老化，安格鲁-日耳曼裔，深金发。在[白天堂区](/dictionary/w#whitehaven%20district)的 [Devious Tools](/dictionary/d#devious%20tools) 出售，6,000 元。父亲 Laggard Holdman 是做量子计算机逆向工程的技师。她先侍奉[探险家公会]的 Fallon 先生近十年。主人死于考察后，她进了水晶港的拍卖场，由[赛克家族](/dictionary/h#house%20cyker)买下，后来归 Devious 小姐。派她做[女仆](/dictionary/m#maid)时，若[家务](/dictionary/d#domestic) 70 以上且[好感](/dictionary/a#affection) 60 以上，另加 3 点[影响力](/dictionary/i#influence)。固定特质：[顺从](/dictionary/s#submissive)、[性冷感](/dictionary/f#frigid)、[麻木](/dictionary/j#jaded)、[物质至上](/dictionary/m#materialistic)。\n"
+  },
+  {
+   "slug": "dictionary-letter-s-soak",
+   "title": "soak",
+   "body": "\n\n# soak\n\n- 中文术语：吸收值\n\n护甲属性。命中造成伤害时，护甲按此值逐点扣掉伤害，前提是护甲完好。例：Heavy Leather Armor 的吸收值为 14，每次命中就减 14 点。受到穿透伤害时，它有 20% 概率掉一小截。归零后护甲永久消失。部分[武器](/dictionary/w#weapon)具[护甲穿透](/dictionary/a#armor%20piercing)，能绕过约 12% 到 20% 的吸收值。\n"
+  },
+  {
+   "slug": "dictionary-letter-d-dexterity",
+   "title": "dexterity",
+   "body": "\n\n# dexterity\n\n- 中文术语：敏捷\n\n衡量 NPC 的总体灵巧、闪避与[潜行](/dictionary/s#stealth)能力。\n"
+  },
+  {
+   "slug": "dictionary-letter-c-c-boards",
+   "title": "c-boards",
+   "body": "\n\n# c-boards\n\n- 中文术语：电路板\n\n材料。灾变前电子设备的残件，从伊卡诺斯衰败的基础设施中[拾荒](/dictionary/s#scavenging)所得。Teresto 家族靠保密的手法从中提取可用的精密元件。伊卡诺斯因此还保有数字存储能力，也才撑得起「网格」。[矿场](/dictionary/m#mine)的加工线也会产出它，产出率随工头技能提高（60 以上加 2%、90 以上加 5%、120 以上加 8%）。变量 cboards。\n"
+  },
+  {
+   "slug": "dictionary-letter-s-sven-johansson",
+   "title": "sven johansson",
+   "body": "\n\n# sven johansson\n\n- 中文术语：斯文·约翰松\n\nNPC。人称街头顽童，是个怪人。在[水眼区](/dictionary/w#watery%20eyes)可掳获。\n"
+  },
+  {
+   "slug": "dictionary-letter-r-races-and-culture",
+   "title": "races and culture",
+   "body": "\n\n# races and culture\n\n- 中文术语：种族与文化\n\n世界观。拉纳现存人口约两百万。按人数约为：美国人 35%，旧英国人 12%，斯堪的纳维亚人 11%。旧德国人 12%，旧法国人 7%，俄罗斯人 6%。[部落主义者](/dictionary/t#tribalists) 5% 到 15%，日本人 5%。[非洲联盟](/dictionary/a#african%20union)人 4%，凯尔特人 2%，意大利人 1%。[坎达里亚人](/dictionary/g#gandarians)（在[伊伦多里亚](/dictionary/i#irendoria)）0.01%。其余留在[坎达里亚](/dictionary/g#gandaria)的人数不明。带「旧」字的分类是[白天堂区](/dictionary/w#whitehaven%20district)学院派的谱系用语，指该族与他族混血已深，难以精确统计。原生种族只有[贝里尔猿](/dictionary/b#beryll%20monkeys)与[伊拉里安人](/dictionary/i#illarians)。\n"
+  },
+  {
+   "slug": "dictionary-letter-w-white-stables",
+   "title": "white stables",
+   "body": "\n\n# white stables\n\n- 中文术语：白马厩\n\n马术学校。位于[白天堂区](/dictionary/w#whitehaven%20district)北部，由[学院](/dictionary/a#the%20academy)赞助，专养 Romanov 血统的马，传统两百余年。日费 25 元。除[骑马](/dictionary/h#horse%20riding)的通用效果外，每日另加 5% 概率的[纪律](/dictionary/d#discipline)与 1 点[影响力](/dictionary/i#influence)。买马 900 元后，每日加 10% 概率的[心情](/dictionary/h#happiness)、5% 概率的纪律与 1 点影响力。加装马具 200 元后，每日再加 5% 概率的心情与 1 点影响力。换纯血马 1,500 元后，每日加 10% 概率的心情、5% 概率的纪律与 1 点影响力。换冠军马 2,500 元后，每日加 25% 概率的心情、5% 概率的纪律与 2 点影响力。\n"
+  },
+  {
+   "slug": "dictionary-letter-d-darkmere-hunting-spot",
+   "title": "darkmere hunting spot",
+   "body": "\n\n# darkmere hunting spot\n\n- 中文术语：暗湖猎场\n\n地点。[暗湖](/dictionary/d#darkmere)东南的一处隐蔽猎场。地形把入口收成狭窄岩道，杜卡因此不受猎人与大型掠食者打扰。这里数量稳定，是可靠的肉与皮毛来源。只有创建角色时选了[狩猎大师](/dictionary/h#huntmaster)特质的玩家才能进入。\n"
+  },
+  {
+   "slug": "dictionary-letter-s-strange-looking-mercenary",
+   "title": "strange-looking mercenary",
+   "body": "\n\n# strange-looking mercenary\n\n- 中文术语：模样古怪的佣兵\n\n酒馆委托。在[神圣汁液](/dictionary/d#divine%20juices)酒馆攒够 30 点交际值后听到的传闻。在同一处攒够 150 点，另会得到一条名为「往日的一口气」的线索，两者同属一条任务线。\n"
+  },
+  {
+   "slug": "dictionary-letter-g-gags",
+   "title": "gags",
+   "body": "\n\n# gags\n\n- 中文术语：口球与口枷\n\n配饰与装备。Devious Tools 出售的一整套口具，185 元，变量 owngags。背包里显示为 Gags (full set)。分两种：口球（ball gag）与口枷（oral gag）。在宅邸的 Bondagemaster 惩罚菜单里给 NPC 戴上或取下。\n"
+  },
+  {
+   "slug": "dictionary-letter-i-illarians",
+   "title": "illarians",
+   "body": "\n\n# illarians\n\n- 中文术语：伊拉里安人\n\n世界观。据传生活在拉纳的外星种族，可能现在存在，也可能在过去，甚至可能是原生种。[大断绝](/dictionary/s#the%20severance)后返回伊卡诺斯的[坎达里亚人](/dictionary/g#gandarians)确信，他们曾与有智慧的人形生物共享该大陆，后者在地下深处建有大城。今日多数科学家不采信，认为那要么是 2277 年战后某个犯罪团伙的目击，要么是类似[伊伦多里亚](/dictionary/i#irendoria)大陆[贝里尔猿](/dictionary/b#beryll%20monkeys)的猿类。\n"
+  },
+  {
+   "slug": "dictionary-letter-r-republic-palace",
+   "title": "republic palace",
+   "body": "\n\n# republic palace\n\n- 中文术语：共和国宫\n\n[皇宫区](/dictionary/p#palace%20district)的大楼，伊卡诺斯的统治中心。五十年前由议长莫迪凯·阿德勒所建。\n"
+  },
+  {
+   "slug": "dictionary-letter-m-medicine",
+   "title": "medicine",
+   "body": "\n\n# medicine\n\n- 中文术语：医学\n\n技能。既是战场技能，用于救治随从，也是制作技能。[强化剂](/dictionary/t#tendstims)与[医疗箱](/dictionary/d#doctor%27s%20kit)的配方都以它为主，并同样依赖[科学](/dictionary/s#science)。它决定[强化剂](/dictionary/t#tendstims)的回复量。医学 35 以上时，回复量由 20 点升到 30 点。它也是两道门槛：战斗注射器需 60 以上，[医疗箱](/dictionary/d#doctor%27s%20kit)需 40 以上。另有多处判定取它，含 Hunt 实验室的血液取样与[凯特琳诊所](/dictionary/c#caitlin%27s%20clinic)的诊疗。\n"
+  },
+  {
+   "slug": "engine-traits-prd",
+   "title": "特质 PRD",
+   "body": "\n# 特质 PRD\n\n## 1 文档定位\n\n本文描述特质组件的需求与验收标准。实施步骤见 `.context/plans/特质组件计划.md`。读者是组件层、规则层与界面层的实现者。\n\n与既有模块的分工参照 `engine/factions/PRD.md`、`engine/relations/PRD.md`：本组件只管「特质是什么、角色持有什么值」，判定与效果归规则层，呈现与接线归界面层。\n\n## 2 背景\n\n特质在组件层原先没有任何实现。第一阶段补上了标识、定义与持有值；第二阶段把定义从「一条特质一份固定文案」改成「一条特质带若干区间」，因为原版存在同一个变量按区间显示不同名称的情况：`traitaggro` 落在 0～24 显示 Pacifist，落在 75～100 显示 Bloodthirsty。\n\n原版的数据形态有三个特点，本组件必须容纳：\n\n- 特质是一组**开放命名**的字段，不是封闭枚举；扩展不应改代码。\n- 同一个特质对不同角色有不同的**程度值**（多数量表 0～100，`debt` 是金额）。\n- 同一个变量在不同区间显示不同的名称与效果，两端各自有独立的名称与图标。\n\n本组件建立**标识、定义（含区间）、持有值**三件互不耦合的东西，不含判定、行为与界面。\n\n## 3 术语\n\n| 术语 | 英文 | 定义 |\n|---|---|---|\n| 特质 | trait | 角色的一种固有属性，以一个标识区分，内部再按程度值分区间。 |\n| 特质标识 | trait id | 特质的小写词头，与 `Code` 语法一致。存档键、本地化键、目录名都用它。 |\n| 特质定义 | trait definition | 一条特质的静态事实：版本、标识、域、若干区间。一份文件一条。 |\n| 区间 | range | 定义内按程度值划分的一段，带自己的标识、上下界、名称、描述与图标。 |\n| 特质持有 | trait holdings | 一个角色的「标识 → 程度值」映射，容器是 `BTreeMap`。 |\n| 特质值 | value | 角色在某条特质上的程度，整数；0 是合法值。 |\n| 域 | domain | 特质的类别：生理、身份、教育、性、战斗、性格、经历。域决定目录层级 `assets/traits/<域>/<定义标识>/` 与徽章素材 `assets/traits/_00_traits_category_<域>.svg`。 |\n| 词头 | code | `mor_registry::Code`：小写字母开头，其后小写字母、数字或下划线，长度 1～32。 |\n| 侧别 | sides | 原版把特质分 NPC 侧与 MC 侧两份展示列表。本组件不设该字段。 |\n\n## 4 范围\n\n### 4.1 本期范围\n\n- 特质标识、定义、区间、持有值的类型与约束。\n- 一份特质定义的 JSON 编解码（扩展名 `.mortrait`）。\n- 角色文件中 `traits` 段的编解码。\n- 六条真实定义：`brawler`、`aggression`、`extraversion`、`vanilla`、`daddy_issues`、`delicate`。\n- gdext 的定义读取器与角色的特质字段。\n- 页面接线：Traits & Info 页的图标网格，按角色数据渲染。\n\n### 4.2 不在本期\n\n| 项 | 原因 |\n|---|---|\n| 定义注册表与加载时机 | 注册表逻辑尚未设计 |\n| 特质行为、效果与 mod 扩展点 | 作用域未定，扩展接缝是特质标识 |\n| 区间内效果的数值模型 | 属规则层 |\n| 侧别 `sides` | 组件模型不区分 NPC 与 MC |\n| 区间上下界之外的性别、年龄条件 | 属显示条件，归规则层 |\n| 二进制定义格式 `.mortraitb` | 名字先占，本期不做 |\n| 空态与错误态的界面 | 行为与 UI 尚未设计 |\n\n## 5 需求\n\n### R-1 特质用开放标识\n\n特质以标识区分，不用枚举。新增一条特质只需新增一份定义文件，不修改 crate 代码。\n\n验收：crate 的公开类型里没有以枚举承载特质名目的类型；新增定义文件后，编解码器可读入。\n\n### R-2 定义与持有分离\n\n定义只存特质的静态事实，不含任何角色数据；角色只存标识与程度值，不复制名称、描述、域、区间。\n\n验收：定义类型的字段中没有角色标识或角色状态；持有映射的键是标识、值是 `TraitValue`。\n\n### R-3 一条定义一个文件\n\n每条特质一份定义文件，文件名（去扩展名）等于定义标识。增删文件即增删特质。\n\n验收：文件名与定义标识不一致时，扫描用例报错；六个定义各占一份文件。\n\n### R-4 定义按区间描述显示差异\n\n定义含四个字段：`version`、`id`、`domain`、`ranges`。`ranges` 是至少一段的区间数组，每段含 `id`、`min`、`max`、`name`、`description`、`icon`。多余字段报错，区间缺任一字段也报错。\n\n验收：缺任一必填字段报错；出现键集以外的字段报错；区间为空数组报错。\n\n### R-5 名称与描述属于区间\n\n名称与描述挂在区间上，以英文原文存在定义里，与 `.morchar` 的姓名、`.morfac` 的派系名同一处理方式：对象自带称谓。中文等本地化按区间标识落地，不改定义。\n\n验收：定义可脱离本地化资源独立渲染；区间名去空白后为空时报错；描述允许为空。\n\n### R-6 域是七值封闭枚举\n\n域取 `physical`、`status`、`education`、`sexual`、`combat`、`personality`、`experience` 之一。新增域改代码。\n\n验收：七个取值往返一致；其它取值报错；`asset` 不是域。\n\n### R-7 程度值是整数且 0 合法\n\n特质值是统一整数，`TraitValue` 包一层 `i32`，构造不夹取。0 是合法值，表示该维度处在低端；「没有这条特质」等于映射里没有这个键。\n\n验收：写入 0 后可读回 0；删除只经显式删除路径表达；解码接受 0。\n\n### R-8 角色文件的 traits 段\n\n段必填，元素为 `{ \"id\", \"value\" }`，`id` 是定义标识（如 `aggression`），不是区间标识。元素键集固定。编码按标识升序，解码接受任意顺序但内部有序。重复标识报错。\n\n验收：缺段报错；空数组合法；重复标识报错；元素多键报错；两条乱序写入后编码结果按标识升序。\n\n### R-9 编解码接口与既有组件同构\n\n定义的编解码接口与 `CharacterCodec`、`FactionCodec` 同形：方法取 `&self`、写入调用方缓冲、错误为关联类型。格式归属由文件后缀决定，接口与文件都不带格式标识。\n\n验收：接口签名与 `engine/character/src/codec.rs` 的 `CharacterCodec` 逐项对照；新增实现不改接口。\n\n### R-10 二进制格式的边界明确\n\n角色二进制格式本期不承载特质。编码时若角色带有非空特质映射，返回明确错误，不静默丢弃。\n\n验收：非空映射的二进制编码返回 `UnsupportedTraits`；空映射的往返与既有跨格式一致性用例不受影响。\n\n### R-11 组件不依赖 Godot，也不做 IO\n\n本组件是纯 Rust：不引 `godot`，不读文件，不依赖引擎模块；只依赖标识原语。\n\n验收：`Cargo.toml` 的依赖只有 `mor_registry`；crate 内无文件读写调用；`cargo test` 无需 Godot。\n\n### R-12 未定义标识不在本组件校验\n\n存档中出现的标识是否存在于定义集合，属加载层职责；本组件与编解码器不因未知标识而失败。\n\n验收：含未知标识的存档能被解码；注册表就绪后由加载层负责拒绝（另立需求）。\n\n### R-13 角色对象以面板方式承载特质\n\n角色对象把特质映射作为一块面板，与属性、状态、技能并列；只读快照携带一份拷贝，与来源解耦。新建角色的映射为空。\n\n验收：新建角色的映射为空；写入后可读取；改角色后既有快照不变；相等比较包含特质。\n\n### R-14 区间按值解析\n\n定义提供按程度值取区间的方法：值落在某段闭区间内即命中该段，落在空洞里返回无。区间的顺序、重叠与重复由构造期保证。\n\n验收：相邻区间的边界值各命中正确的一段；落在空洞里的值返回无；重叠或乱序的定义构造失败。\n\n### R-15 界面按区间渲染\n\n界面组件接收「定义 + 程度值」，解析出区间后取该区间的名称与图标；值落在空洞时不显示图标与名称，只保留底板与域徽章。图标路径为 `assets/traits/<域>/<定义标识>/<区间图标>.svg`。\n\n验收：同一份定义换不同值能切换图标与名称；空洞值不显示图标；域徽章始终来自域。\n\n## 6 数据约束\n\n### 6.1 记录形状\n\n```\nTraitDefinition   version、id、domain、ranges\nTraitRange        id、min、max、name、description、icon\nTraitValue        i32 的新类型包装\nCharacter.traits  BTreeMap<TraitId, TraitValue>\n```\n\n### 6.2 字段与取值\n\n| 字段 | 类型 | 约束 |\n|---|---|---|\n| `version` | 整数 | 恒等于当前定义版本（1） |\n| `id`（定义） | 词头 | 小写字母开头，1～32 字符，仅小写字母、数字、下划线 |\n| `domain` | 枚举 | 七值之一 |\n| `ranges` | 数组 | 至少一段；按下界升序；互不重叠；区间标识不重复 |\n| `id`（区间） | 词头 | 同上 |\n| `min` / `max` | 整数 | i32 范围内；`min` 不大于 `max` |\n| `name` | 字符串 | 去空白后非空 |\n| `description` | 字符串 | 允许空串 |\n| `icon` | 词头 | 图标文件名，通常是区间标识 |\n| `value` | 整数 | i32 范围内；0 合法 |\n\n### 6.3 约束\n\n1. 定义的区间数组非空，组内互不重叠并按下界升序。\n2. 区间标识在一条定义内唯一。\n3. 区间的名称去空白后非空。\n4. 持有映射的迭代顺序即标识升序，编码顺序与之相同。\n5. 角色文件的 `traits` 段必填，元素键集固定为 `id` 与 `value`。\n6. 0 不是「没有」的标记；没有该特质等于键不存在。\n\n## 7 接口\n\n组件向调用方暴露的类型与函数。标识类型 `TraitId` 定义在 `mor_registry`，与 `CharacterId`、`FactionId` 并列。\n\n| 接口 | 作用 |\n|---|---|\n| `TraitId::parse` | 按词头语法构造特质标识 |\n| `Domain::parse` / `Domain::code` | 域与字符串互转 |\n| `TraitValue::new` / `get` | 包装与读取程度值，不夹取 |\n| `TraitRange::new` 与访问器 | 构造与读取一段区间 |\n| `TraitDefinition::new` 与访问器 | 构造与读取一条定义 |\n| `TraitDefinition::range_for` | 按值取命中的区间 |\n| `BTreeMap<TraitId, TraitValue>` | 角色的特质映射，唯一与排序由标准库保证 |\n| `TraitDefinitionCodec` | 定义的编解码接口（`&self`、写缓冲、关联错误） |\n| `CharacterJsonCodec` 的 traits 分支 | `.morchar` 的 `traits` 段读写 |\n\n## 8 验收标准\n\n| 编号 | 判据 |\n|---|---|\n| A-1 | 新增一份定义文件即可被读入，crate 代码不改；标识语法非法时构造失败 |\n| A-2 | 定义类型不含角色数据；持有映射的键是标识、值是 `TraitValue` |\n| A-3 | 六个定义的文件名与定义标识一致，扫描用例逐份核对 |\n| A-4 | 缺任一必填字段、出现多余字段各报错；区间缺键报错 |\n| A-5 | 区间名称空白报错；描述为空可读入 |\n| A-6 | 七域往返一致；`asset`、大写、空串各报错 |\n| A-7 | 写入 0 后可读回 0；空映射编码为 `[]`；解码接受 0 |\n| A-8 | 缺段、空数组、重复标识、元素多键各有用例；乱序写入后编码按标识升序 |\n| A-9 | 编解码接口与 `CharacterCodec` 逐项对照通过；新增实现不改接口 |\n| A-10 | 非空映射的二进制编码返回明确错误；空映射往返与跨格式一致性用例不受影响 |\n| A-11 | 依赖只有 `mor_registry`；无文件读写；无 Godot 依赖 |\n| A-12 | 含未知标识的存档可解码，不因未知标识失败 |\n| A-13 | 五个 crate（registry、traits、character、两个 codec）的 `cargo test` 与 `cargo clippy --all-targets -- -D warnings` 通过；四份 `.morchar` 样本原样往返；`godot\\rust` 重建后 Godot 测试通过 |\n| A-14 | 新建角色的映射为空；写入后可读取；改角色后既有快照不变；角色与快照的相等比较包含特质 |\n| A-15 | 边界值命中正确区间；空洞值不命中；重叠、乱序、重复区间标识各报错 |\n| A-16 | 页面按 Lovisa 的五条特质渲染五个图标；其余三人为空网格；超出可视高度出现纵向滚动 |\n\n## 9 未决项\n\n| 项 | 现状 |\n|---|---|\n| 定义注册表与加载时机 | 未设计；本切片不涉及 |\n| 未定义标识的处置 | 推迟到注册表切片；本切片不校验 |\n| 区间之外的显示条件（性别、年龄） | 归规则层，定义里不表达 |\n| 特质行为与效果的作用域 | 未定；本切片不设计 |\n| 特质与生命上限等派生值的关系 | 未定；本切片不改派生值 |\n| 空态与错误态的界面 | 行为未定 |\n\n## 10 对既有文档的影响\n\n| 文档 | 影响 |\n|---|---|\n| `engine/README.md` | 组件表新增 `mor_traits` 一行 |\n| `engine/character/README.md` | 概念树去掉「后续：特质」；F05 输入清单、看板与测试数同步 |\n| `project/architecture.md` | 组件表新增 `mor_traits`；「业务逻辑与组件的映射」中特质一行由「无组件」改为「已支撑标识、区间与持有值」 |\n| `engine/registry/src/lib.rs` | 导出 `TraitId`，与 `CharacterId`、`FactionId` 并列 |\n| 计划文档 | 新增 `.context/plans/特质组件计划.md` |\n\n## 11 依据\n\n- 游戏本体 `start_game.html`：NPC 与玩家两份特质展示列表、`trait*` 变量与阈值。\n- 离线 wiki `Traits (NPCs)`：各特质的区间划分与效果原文。\n- `doc/data/root/dictionary/`：特质词条与中文术语。\n- `engine/character/README.md`、`engine/character/src/codec.rs`：组件层口径与编解码接口形状。\n- `engine/factions/PRD.md`、`engine/relations/PRD.md`：本 PRD 的章节格式来源。\n\n## 12 附注：文件不带 `codec` 键\n\n编码文件里曾有一个 `codec` 字段，用来在解码时核对写入者。它不能用于选择解码器：解不开时读不到它，读得到时已经用对了实现；它只能事后断言身份，价值窄而成本明确。\n\n格式的归属由后缀决定（`.morchar`／`.morcharb`／`.mortrait`），解析失败本身就能发现误命名。因此定义文件只带 `version`；`.morchar` 与 `.morfac` 也已去掉该字段，头部只剩 `version` 与 `field_count`。\n\n## 修订记录\n\n| 日期 | 变更 |\n|---|---|\n| 2026-10-24 | 初稿：从实施计划中拆出需求与验收 |\n| 2026-10-24 | 按 SRS 审查整改：新增 R-13 与 A-14；A-3 降级为加载层职责；标识类型归属改为 `mor_registry` |\n| 2026-10-24 | 模型改为「一条特质 + 若干区间」：删除 `TraitSet`、`group` 与「0 即无」；新增 R-14、R-15、A-15、A-16 |\n"
+  },
+  {
+   "slug": "dictionary-letter-s-stryker-squad",
+   "title": "stryker squad",
+   "body": "\n\n# stryker squad\n\n- 中文术语：斯崔克小队\n\n势力与宗教。[斯托克堡](/dictionary/f#fort%20stokke)的常驻[帮派](/dictionary/b#bandits)之一。wiki 说它是群以高科技武器出名的雇佣兵。守门五人：GUNNER 与 MERCENARY 各一名，STRYKER 三名。清空可拾得[等离子步枪](/dictionary/p#plasma%20rifle)与强化剂，[影响力](/dictionary/i#influence) +600。队名里的 Stryker 与[斯崔克植入体](/dictionary/s#stryker%20implant)同名。\n"
+  },
+  {
+   "slug": "dictionary-letter-h-haalu",
+   "title": "haalu",
+   "body": "\n\n# haalu\n\n- 中文术语：哈鲁高原\n\n地点。位于伊卡诺斯以西约 120 英里的巨大高原，近 1,000 平方公里，多为密林与峭壁。2240 与 2264 年两次测绘均因地形与野兽而中止。拉纳已知唯一的油田位于此地。拾荒者、学院考察队与冒险队常在其外围活动。当地凶兽曾全灭武装齐全的队伍。灾变前此地无人问津，共和国近年才开始开发。高原上流传着异象、怪谈与失踪的传说，达戈萨教团据称在此建有村落或神龛。\n"
+  },
+  {
+   "slug": "dictionary-letter-f-fasteners",
+   "title": "fasteners",
+   "body": "\n\n# fasteners\n\n- 中文术语：紧固件\n\n材料。制作各类器械与武器所需的通用小件。\n"
+  },
+  {
+   "slug": "dictionary-letter-p-proposal",
+   "title": "proposal",
+   "body": "\n\n# proposal\n\n- 中文术语：求婚\n\n对象需意志低于 5，或好感达到 Loving 以上。\n"
+  },
+  {
+   "slug": "dictionary-letter-k-kalmani-cyker",
+   "title": "kalmani cyker",
+   "body": "\n\n# kalmani cyker\n\n- 中文术语：卡尔马尼·赛克\n\n剧情 NPC。赛克家族成员。他的儿子 Karl Cyker 是[西区](/dictionary/w#westside)[护甲店](/dictionary/a#armor%20store)的店主。\n"
+  },
+  {
+   "slug": "dictionary-letter-h-index",
+   "title": "letter-h",
+   "body": "\n"
+  },
+  {
+   "slug": "dictionary-letter-m-marston-fort",
+   "title": "marston fort",
+   "body": "\n\n# marston fort\n\n- 中文术语：马斯顿堡\n\n地点。坐落在[马斯顿大道](/dictionary/m#marston%20avenue)与[科尔峡谷](/dictionary/c#cole%27s%20canyon)交界荒边的破败堡垒，与稍小的[斯托克堡](/dictionary/f#fort%20stokke)是姊妹堡。名字在游戏里有两个写法。战斗、事件与地图标签都用 Marston Fort，食物短缺那条任务里写作 Fort Aboor。[天空守卫](/dictionary/s#skyguard)判定守它不划算而撤走，却也没拆，于是[帮派](/dictionary/b#bandits)常趁共和国兵力分散时占为据点。玩家可从大门强攻。守门的五人组受城墙保护，近战无效，远程命中减 50。也可砸墙，结构值 1,000。普通近战武器只造成 20% 伤害，远程 100%，[榴弹发射器](/dictionary/g#grenade%20launcher)、[赛博炮](/dictionary/c#cyber%20cannon%20%28w.e.g.a%29)与[博福斯 40mm 高射炮](/dictionary/b#bofors%2040mm) 250%。不必一次打完，但守军每晚修回数百点。清空后可得额外战利品。占堡的[帮派](/dictionary/b#bandits)可能是[黑森帮](/dictionary/h#the%20hessian%20crew)、[“藏好女儿”帮](/dictionary/h#the%20hide%20your%20daughters%20crew)、[孤游骑兵连](/dictionary/l#the%20lonely%20rangers%20company)或[赤潮](/dictionary/r#the%20red%20tide)的一支分队。他们常索要保护费，每日约一两百元。付了钱，袭击你家的风险也大降，代价是成为他们的摇钱树。\n"
+  },
+  {
+   "slug": "dictionary-letter-g-galdar",
+   "title": "galdar",
+   "body": "\n\n# galdar\n\n- 中文术语：加尔达\n\n生物。拉纳版的鹿。有毛、有蹄、有角，食草，可重过成人，遇险多逃不战。寿命可达 30 年，长 1.2 米，重 60 到 80 公斤。是皮革与肉食的来源，在生物大灭绝范围之外的森林、丛林与沼泽里猎取。游戏里在消灭查鲁克后开放的[黑牙谷](/dictionary/b#blackfang%20valley)北部可以猎到，食物里也有加尔达火腿。\n"
+  },
+  {
+   "slug": "dictionary-letter-c-combat-staff",
+   "title": "combat staff",
+   "body": "\n\n# combat staff\n\n- 中文术语：长棍\n\n近战武器。伤害加 9。基础价 30 元。攻速中等，[攻击范围](/dictionary/r#reach) 1。不具[护甲穿透](/dictionary/a#armor%20piercing)。[击倒概率](/dictionary/i#incapacitation%20chance) +70。伤害另按[力量](/dictionary/s#strength)与[近战](/dictionary/m#melee%20combat)技能修正。杖芯用 haalwood，两端加固。变量 ownstaff。\n"
+  },
+  {
+   "slug": "dictionary-letter-w-wakizashi",
+   "title": "wakizashi",
+   "body": "\n\n# wakizashi\n\n- 中文术语：胁差\n\n近战武器。伤害加 12。基础价 500 元。攻速快，[攻击范围](/dictionary/r#reach) 1。不具[护甲穿透](/dictionary/a#armor%20piercing)。[击倒概率](/dictionary/i#incapacitation%20chance) +0。长约 65 厘米，由[雷坎](/dictionary/r#raikan)的前代匠师锻造。变量 ownwaki。\n"
+  },
+  {
+   "slug": "dictionary-letter-w-workshop-jobs",
+   "title": "workshop jobs",
+   "body": "\n\n# workshop jobs\n\n- 中文术语：工坊岗位\n\n城市产业岗位。自有工坊可派 10 名工人，另可派 1 名工头。工人必须是 Issid、[奴隶](/dictionary/s#slave)或[罪奴](/dictionary/c#convict)。工头按[智力](/dictionary/i#intelligence)与对玩家的[好感](/dictionary/a#affection)提高工坊产出。工人的[纪律](/dictionary/d#discipline)越高产出越高。工坊可设三种方针：把杂货加工成材料、制造装备与弹药、以血汗作坊的方式生产。\n"
+  },
+  {
+   "slug": "dictionary-letter-t-touch-of-kali",
+   "title": "touch of kali",
+   "body": "\n\n# touch of kali\n\n- 中文术语：迦梨之触\n\nNPC 特质。由一百次以上的传说级高潮累积而成。[性兴奋](/dictionary/a#arousal)低于 18 时无法主动达到高潮。每次高潮有 20% 概率使污染减 1 点。性兴奋 25 以上达到高潮可使本特质加 1 点。\n"
+  },
+  {
+   "slug": "dictionary-letter-p-philip-lancour",
+   "title": "philip lancour",
+   "body": "\n\n# philip lancour\n\n- 中文术语：菲利普·朗库尔\n\nNPC。伊卡诺斯的市长，为共和国参议院治理殖民地。他的正式头衔是 Skyguard 最高指挥官，日常事务多交给 The Lord Commander。他名义上在[市政厅](/dictionary/t#town%20hall)办公，多数时间待在皇宫区的[共和国宫](/dictionary/r#republic%20palace)。属 新世界秩序（New World Order） 任务。\n"
+  },
+  {
+   "slug": "dictionary-letter-t-talika",
+   "title": "talika",
+   "body": "\n\n# talika\n\n- 中文术语：塔莉卡\n\nNPC。武术家 Haruto Pai 的爱徒，也是他有些勉强的女友。玩家在[凯西公园](/dictionary/k#kasey%27s%20park)遇到他们时可掳获。\n"
+  },
+  {
+   "slug": "dictionary-letter-h-the-helm-family",
+   "title": "the helm family",
+   "body": "\n\n# the helm family\n\n- 中文术语：舵手家族\n\n人物委托。[露维莎·舵手](/dictionary/l#lovisa%20helm)与[托丽·舵手](/dictionary/t#tori%20helm)的父母被共和国海军陆战队扣押。玩家可在[市政厅](/dictionary/t#town%20hall)查到罗伯特先生名下产业被没收的记录，再花 10,000 元买下两人的奴籍。\n"
+  },
+  {
+   "slug": "dictionary-letter-s-spheremaster",
+   "title": "spheremaster",
+   "body": "\n\n# spheremaster\n\n- 中文术语：球上老爷\n\n统治共和国的精英，出自伊卡诺斯的建国家族。住在[老爷球](/dictionary/m#the%20mastersphere)上，靠 space marines 与离子炮维持对地表的统治。亦称元老。\n"
+  },
+  {
+   "slug": "dictionary-letter-s-scrap-heap",
+   "title": "scrap heap",
+   "body": "\n\n# scrap heap\n\n- 中文术语：废料堆\n\n机制。宅邸后院的一堆旧物，是玩家的兄弟 Joseph 生前囤下的。玩家可雇[强盗](/dictionary/f#freebooter)整车拉走换地皮，也可自己一件件翻。每次「搜寻」2 小时、10 点[体力值](/dictionary/s#stamina%20points)，只能在白天做，翻完全部约需 60 小时。产出顺序固定，约 30 次。多数是废金属、杂货、C-board、黄金与 durasteel 一类的材料，另有几次空手。看得上的东西有：一件普通 Artifact，即 22 世纪地球的 DuraGlass 汽水瓶。5 支[再生剂](/dictionary/r#revital)。12 罐 W.E.G.A. cannisters。3 块[能量电池](/dictionary/e-1#energy%20cells)。一把[战斗匕首](/dictionary/c#combat%20knife)。12 支弩矢与少量 9mm、.30-06、7.62 子弹。一片 H.U.L.C. 护甲部件，集满 15 片可组装一件。一条贵价项链。350 元现金。另有 2 只泰迪熊与 1 条 NECO 巧克力，可作礼物。压轴的是传奇饰品 Red River Circlet 与一把[胁差](/dictionary/w#wakizashi)。过程中还会顺带加 1 点[力量](/dictionary/s#strength)、1 点体力与 1 点[近战](/dictionary/m#melee%20combat)，另有两次让玻璃划伤，各扣 4 到 5 点[生命值](/dictionary/h#health%20points)。变量 .mch.yardslot3.other1，从 30 递减到 0。\n"
+  },
+  {
+   "slug": "dictionary-letter-d-dukkas",
+   "title": "dukkas",
+   "body": "\n\n# dukkas\n\n- 中文术语：杜卡\n\n生物。拉纳小型猎物，寿命 5 到 6 年，长 30 到 40 厘米。杂食，住洞穴，家庭群最多十余只。某些方面像獾，但成群觅食，对人无危险，是皮毛与肉食的好来源。游戏里是狩猎目标，猎人会说把一群杜卡惊起来。\n"
+  },
+  {
+   "slug": "dictionary-letter-r-index",
+   "title": "letter-r",
+   "body": "\n"
+  },
+  {
+   "slug": "dictionary-letter-d-divine-juices",
+   "title": "divine juices",
+   "body": "\n\n# divine juices\n\n- 中文术语：神圣汁液\n\n地点。[水眼区](/dictionary/w#watery%20eyes)的大客栈，人称能照顾到一个人的全部需要：吃、喝、[赌博](/dictionary/g#gambling)、社交、按摩与性。当地人称它的妓女为 The Healers of Watery Eyes。堂子里满是焦油味，坐着各色怪人、强盗与走投无路的工人。只为追赏金进来，半小时就能走。想把项目都试一遍，可能要待九个多小时。陪人攒够 30 点社交可触发 Connor Sunderland 的剧情。\n"
+  },
+  {
+   "slug": "dictionary-letter-s-sangrin-wemara-group",
+   "title": "sangrin wemara group",
+   "body": "\n\n# sangrin wemara group\n\n- 中文术语：桑格林·维玛拉集团\n\n势力与宗教。2251 年经[亚特兰蒂卡](/dictionary/a#atlantica)的代理人来到拉纳的科技公司，在安防与无线传输两项上曾居前列。如今[特雷斯托家族](/dictionary/h#house%20teresto)与[学院](/dictionary/a#the%20academy)的学者还记得这个牌子，伊卡诺斯城里已少有它的痕迹。残存设施有[洛德敏塔](/dictionary/l#lodmin%20tower)、[风暴大楼](/dictionary/t#tempest%20building)与 S.W.G. R22 号设施等，游戏内常缩写作 SWG。\n"
+  },
+  {
+   "slug": "dictionary-letter-b-battles-fought",
+   "title": "battles fought",
+   "body": "\n\n# battles fought\n\n- 中文术语：历战\n\nNPC 战绩。量纲为「场」。NPC 面板的 `Battles fought` 一行，统计她作为随从或参加竞技场时的参战场次。游戏内悬停提示原文：`As Follower or in the Arena`。变量 `battles`。与宅邸统计页的[胜仗](/dictionary/w#won%20battles)、[败仗](/dictionary/l#lost%20battles)不是一回事，后者记的是玩家的战绩。\n"
+  },
+  {
+   "slug": "dictionary-letter-d-dixon",
+   "title": "dixon",
+   "body": "\n\n# dixon\n\n- 中文术语：迪克森\n\nNPC。在[水晶丘](/dictionary/c#crystal%20hills)奴隶市场拍卖得到，是 Dixon 双胞胎之一。她的名由系统随机决定。\n"
+  },
+  {
+   "slug": "dictionary-letter-a-aesir",
+   "title": "aesir",
+   "body": "\n\n# aesir\n\n- 中文术语：阿萨神教\n\n玩家可选的宗教。信奉北欧旧神，信徒约占 3%。大部落在城郊小神龛礼拜，[米尔达伦](/dictionary/m#myrdalen)的 Grand Temple of Odin 例外。加入后妻室上限为五。虔诚 25 以上加 5 点战斗伤害，每日减 2 点[影响力](/dictionary/i#influence)。50 以上加 8 点，每日减 5 点。100 以上加 11 点，每日减 15 点，并给同信者 25 点[魅力](/dictionary/c#charisma)加成。与[基督教](/dictionary/c#christianity)、[伊斯兰教](/dictionary/i#islam)互相敌视。游戏里归为 Aesir，变量 mcrel.faith 取值 4。因[誓约者](/dictionary/o#oathsworn)特质入教的玩家即此教信徒。\n"
+  },
+  {
+   "slug": "dictionary-letter-c-caitlin-s-clinic",
+   "title": "caitlin's clinic",
+   "body": "\n\n# caitlin's clinic\n\n- 中文术语：凯特琳诊所\n\n地点。位于[西区](/dictionary/w#westside)。完成[凯特琳·坦瑟](/dictionary/c#caitlin%20tensor)的私人任务并放她自由后解锁。她在此行医，诊所可升级：诊室四档，帮手三档，器材四档。把她召回宅邸会减少诊所的每日收入，留下医生则收入更高。\n"
+  },
+  {
+   "slug": "dictionary-letter-o-the-orient",
+   "title": "the orient",
+   "body": "\n\n# the orient\n\n- 中文术语：东方厅\n\n地点。[皇宫区](/dictionary/p#palace%20district)的宴会厅，[翡翠城](/dictionary/e-1#emerald%20city)老一辈眼中最体面的派对宫殿。维多利亚式装修与盛装女侍让[翡翠子弟](/dictionary/e-1#emkids)觉得太不时髦，因此空气安静，适合谈话。24 小时营业，晚间表演 8 点到 10 点。可在吧台喝酒，也可带追随者入席用餐。菜单有三道菜与四款酒。Trendor 排骨 150 元，家制鹿鱼 140 元，东方素食碗 120 元，点两份与四份各有[宫殿评级](/dictionary/p#palace%20rating)加成。与[金龙](/dictionary/g#the%20golden%20dragon)不同，这里没有着装要求。\n"
+  },
+  {
+   "slug": "dictionary-letter-m-misandrist",
+   "title": "misandrist",
+   "body": "\n\n# misandrist\n\n- 中文术语：厌男者\n\n玩家负面特质。Points +30，Requirements 无。全部成年男性 NPC 每日掉 2 点[好感](/dictionary/a#affection)，最低到 Unfriendly。同一批人每日有 25% 概率涨 1 点 Anger，上限 5。成年男性[随从](/dictionary/f#followers)在[生命值](/dictionary/h#health%20points)满时命中减 15 点。玩家不能与成年男性 Hang out。有成年男性在场的派对有 40% 到 70% 概率起争执。成年男性参加泳池派对时不获基础好感。变量 mctraitmis。\n"
+  },
+  {
+   "slug": "dictionary-letter-m-mor-enhanced",
+   "title": "mor enhanced",
+   "body": "\n\n# mor enhanced\n\n- 中文术语：MoR Enhanced\n\n其它机制。Masters of Raana 的 Tier4+ 版本，额外提供一批专属选项。它既方便快速测试，也能用来优化通关。开局模板（Legacy）含 Silver tongue、Master Scholar、Übermenschen、Master of War、Magnate 与 Rise from Ashes。词典里标着「MoR Enhanced 专属」的玩家特质只有在它上面才拿得到，各条注明 Cost 与 Requirements。\n"
+  },
+  {
+   "slug": "dictionary-letter-s-the-shrouded-house",
+   "title": "the shrouded house",
+   "body": "\n\n# the shrouded house\n\n- 中文术语：灭门惨案\n\n主线任务。[基曼托辛迪加](/dictionary/k#the%20kymanto%20syndicate)的主线。到[汉密尔顿广场](/dictionary/h#hamilton%20square)的[基曼托府邸](/dictionary/k#kymanto%20hall)即可开始。\n\n第一章是替[基曼托府邸](/dictionary/k#kymanto%20hall)的德温先生送一袋 stem grains 到白天堂区的格兰德威尔宅，收件人是[杰夫·格兰德威尔](/dictionary/j#jeff%20grandwell)。玩家到场只见到一栋石屋，屋顶长满邓加苔，看似数十年无人居住。三名佣兵随即伏击，夺走包裹。回报后德温查明：[格兰德威尔家族](/dictionary/h#house%20grandwell)已被撕碎至无法辨认，追随者尽数消失，下手的是[赛克家族](/dictionary/h#house%20cyker)。\n"
+  },
+  {
+   "slug": "dictionary-letter-o-occult-affinity",
+   "title": "occult affinity",
+   "body": "\n\n# occult affinity\n\n- 中文术语：通灵\n\nNPC 特质。该 NPC 对[玄学](/dictionary/o#occult)有天然亲和，闲时钻研拉纳与超验之物的联系。一旦她信任玩家，且仍是处女，陪玩家逛街时可能吐露秘辛。揭开的内容按[好感](/dictionary/a#affection)与其后庭使用程度而定，最多四次。每次提升玩家的玄学知识。目前只有 Seve Pásztor 有。\n"
+  },
+  {
+   "slug": "dictionary-letter-p-political-event",
+   "title": "political event",
+   "body": "\n\n# political event\n\n- 中文术语：政治事件\n\n其它机制。每日结算时在 `Autosave2` 段落掷一次点数，点数记在 `$pollroll`。取值为 1 到 130，难度 3 以上再加 2。106 到 130 当日无事发生。\n\n结果以标题为 `POLITICAL EVENTS` 的面板显示。面板有两块页签。IKAANOS 页列四项城市指标：[繁荣度](/dictionary/p#prosperity)、[控制度](/dictionary/c#control)、[腐化](/dictionary/c#corruption)与[自由](/dictionary/l#liberty)。FACTIONS 页列各派系兵力，另有一栏 POLITICAL POWER 列派系势力。事件在面板内逐个列出，含事件名（大写）、一段叙述与 `EFFECTS` 效果行。效果行形如 `Control (Ikaanos): -1`、`Power (Bandits): +1`，即城市指标与派系势力的增减。\n\n按作用分三类。\n\n- **改指标**：占绝大多数。只动城市指标、派系势力、兵员、税率或国库。\n- **生成敌人**：`MARSTON FORT!`、`FORT STOKKE` 与 `THE TERROR FROM THE DEEP` 会在地图上生成据点与守军。`THE SCOURGE OF RAANA!` 一次加二十处敌人据点。\n- **任务链**：`THE RED TIDE RISES!`、`RISE OF THE CONFEDERATION!`、`THE ADLERS`、`NEW WORLD ORDER` 与 `THE SCOURGE OF RAANA!` 五条按幕推进，幕号记在各自的计数器里。\n\n同一桩事只结算一次，判据是 `$pollapp`。下表按点数升序，点数即 `$pollroll` 的取值。\n\n- **1** `RAIDER SWARM!` 劫掠者蜂拥：城外劫掠者成灾，官府不作为。控制 −1，[帮派](/dictionary/b#bandits)权力 +1。\n- **2** `RECKLESS MERCENARIES` 亡命佣兵：球上老爷招募一批旧劫掠者以恢复治安。控制 +3，兵员 +150，繁荣 −3，国库 −3 万。\n- **3** `RAIDERS IN WHITEHAVEN!` 白天堂劫掠：劫掠者放火烧了白天堂的住宅。控制 −2，繁荣 −2。\n- **4** `IMS ULTHAR` IMS Ulthar 下水：共和国海军新增一艘战巡舰，巡防红河与伊伦多里亚海岸。控制 +12，国库 −1.1 亿。\n- **5** `PUSH FOR POWER (HOUSE CYKER)!` 权力扩张（赛克家族）：[赛克家族](/dictionary/h#house%20cyker)花大钱扩权。该家族权力 +5，资金 −12.5 万到 60 万。\n- **6** `PUSH FOR POWER (KYMANTO)!` 权力扩张（基曼托）：[基曼托辛迪加](/dictionary/k#the%20kymanto%20syndicate)花大钱扩张奴隶生意。该派系权力 +5，资金 −12.5 万到 30 万。\n- **7** `PUSH FOR POWER (BELLEMME)!` 权力扩张（贝勒姆家族）：[贝勒姆家族](/dictionary/h#house%20bellemme)在北境扩张。该家族权力 +5，兵员 +500，资金 −12.5 万到 30 万。\n- **8** `PUSH FOR POWER ($serafort)!` 权力扩张（前哨）：你的军事前哨扩权，面板按 `$serafort` 显示其名。该前哨权力 +3，资金 −1.4 万到 3 万。\n- **9** `PUSH FOR POWER (REBELS)!` 权力扩张（叛军）：[叛军](/dictionary/r#the%20rebels)扩充队伍。叛军权力 +3，战士 +50，共和国兵员 −24。\n- **10** `PUSH FOR POWER (AESIR TRIBE)!` 权力扩张（阿萨部族）：[阿萨部族](/dictionary/a#the%20aesir%20tribe)劫掠红河海盗与帮派。该部族权力 +3，战士 +50，资金 +2 万，帮派战士 −24。\n- **11** `NEW RECRUITS!` 新兵入伍：共和国军获增援。共和国权力 +15，兵员 +250，国库 −55 万到 72.5 万。\n- **12** `HURRICANE` 飓风：飓风掠过海岸、北境或伊伦多里亚海。繁荣 −1 到 5，天气转暴风雨。\n- **13** `CORRUPTED FESTIVITIES!` 腐化庆典：一批名流为享乐之神 Adonis 办狂欢。腐化 +5。\n- **14** `WAVES OF PURITY!` 净化浪潮：双月教会出手清理伤风败俗。腐化 −5。\n- **15** `CULTIST ACTIVITY!` 教团袭击：赤潮、黄衣女王或某个部族教派袭击城外民兵营。兵员 −12。\n- **16** `FOOD FOR THE MASSES!` 赈济贫民：世家向穷人放粮。繁荣 +2。\n- **17** `DROUGHT!` 旱灾：红河流域歉收。繁荣 −2，[扎平田野](/dictionary/z#zapin%20fields) −1。\n- **18** `BANDIT ATTACK!` 帮派袭击：帮派与共和国军在要塞或红河流域激战。兵员 −10，帮派战士 −10。\n- **19** `SCANDINAVIAN MERCENARIES` 北欧佣兵：共和国招募一队北欧战士。兵员 +60，国库 −2.5 万，阿萨部族战士 −60，该部族资金 +2.5 万。\n- **20** `COMPANY READY!` 连队交付：你的军事前哨一支连队编入共和国军。兵员 +20，该前哨兵员 −20，你的共和国立场 +1。\n- **21** `PREACHING THE TRUE WAYS!` 正道布道：一名未经许可的教士痛斥城内恶俗。腐化 −1 到 3。\n- **22** `SCANDAL!` 教授丑闻：学院一名教授闹出丑闻。学院权力 −2。\n- **23** `STATE CORRUPTION` 国家腐败：公款流入权贵私囊。共和国权力 −5，繁荣 −1，国库 −100 万。\n- **24** `SPONSORED FESTIVAL!` 官办庆典：议长下令办庆典。控制 +1，腐化 +1 或 +3，国库 −50 万。\n- **25** `JUSTICE STRIKES!` 铁腕清算：公开处决叛乱支持者或腐化的球上老爷。控制 +2，腐化 +3。\n- **26** `FOR THE PEOPLE!` 为民施政：议长变卖牧场与农田，把钱投进军备。共和国权力 +5，兵员 +300，繁荣 −3，国库 −100 万。\n- **27** `VOLUNTEERS` 志愿者：一支连队加入共和国军。兵员 +20 到 80。\n- **28** `GOOD HARVEST` 丰收：湖区、漂流者峡谷、喂食者峡谷与平地的收成远超预期。繁荣 +3，腐化 +3，国库 −30 万。\n- **29** `GOOD TIMES` 好时光：一批无关的善行让人心稍安。繁荣 +1，控制 +1，腐化 −1。\n- **30** `POLITICAL TURMOIL` 政局动荡：[共和国](/dictionary/r#the%20republic)政坛分裂。议长镇压谋反成功则控制 +1，失败则控制 −1。\n- **31** `ART EXHIBITION` 艺展：某位前球上老爷赞助一场露骨的活体艺术展。腐化 +1 到 3。\n- **32** `MARSTON FORT!` 马斯顿堡争夺：官军收复[马斯顿堡](/dictionary/m#marston%20fort)则控制 +1、帮派战士 −20。帮派夺取则控制 −2，并在该地生成一处据点与守军。\n- **33** `FORT STOKKE` 斯托克堡争夺：官军收复[斯托克堡](/dictionary/f#fort%20stokke)则控制 +1、帮派战士 −25。帮派夺取则控制 −1，并在该地生成一处据点与守军。\n- **34** `THE RED TIDE RISES!` 赤潮崛起（第 1 幕）、`THE RED CAMPAIGN` 赤潮战役（第 2 到 7 幕）：[赤潮](/dictionary/r#the%20red%20tide)向共和国宣战，逐幕消耗双方。共和国兵员 −250 到 1,600、权力 −45 到 2,500，赤潮战士与权力相应减少。\n- **35** `FOR THE REPUBLIC` 为了共和国：议长推行社会投资。西区有了孤儿院，贫民区有了医院，另有一所女童矫正院。中学的技术设备也一并升级。腐化 +1，控制 +1，国库 −15 万。\n- **36** `RELIGIOUS PERSECUTION` 宗教迫害：某一信仰的信徒遭敌对势力迫害。受损方折损信徒与势力值，控制 +1。\n- **37** `POLITICAL SCANDAL!` 议长丑闻：议长或新上任的战争统领传出淫乱与腐败的传闻。腐化 +1，控制 −1。\n- **38** `STRANGE TIMES` 怪世：夜空出现不明飞行物，或一伙皮包骨的怪人夜里游荡于西区。控制 −1。\n- **39** `TECH BREAKDOWN` 技术崩坏：往来老爷球的穿梭机坠毁一台，或某座服役三百年的中型聚变电厂停摆。控制 −1，繁荣 −1。\n- **40~41** `NEW DECREE` 新法令：[议长](/dictionary/c#chancellor)颁布新法。或推动双月教会扩张，使该教会权力 +15，天主教、伊斯兰教与上古崇拜各 −5。或以「国内威胁」为名加税。或在行省设新军事基地。\n- **42~43** `DOMESTIC TROUBLE` 家务纠纷：某一派系在与敌人的冲突中折损人手与势力。受损方可为阿萨部族、穆斯林、贝勒姆家族或赛克家族。也可为基督徒、大卫派、双月教会或共和国。\n- **44~48** `URGENT DIRECTIVE` 紧急指令：议长召集[参议院](/dictionary/s#the%20senate)，紧急投资军备、要塞与火炮。控制 +3，国库 −95 万到 125 万。\n- **49~50** `REBEL ATTACK!` 叛军突袭：叛军袭击共和国军基地或运输队。控制 −2，兵员 −75 到 700，叛军战士 −25。\n- **51~52** `REBELS UNDER ATTACK!` 叛军遇袭：共和国军伏击叛军。控制 +2，兵员 −30，叛军战士 −15 到 65。\n- **53** `CONSOLIDATION` 整合：[学院](/dictionary/a#the%20academy)吞并一所小学校，双月教会靠传教扩张。帮派首领把手伸进新生意，普罗社的穆斯林改宗了一座别墅。学院权力 +3，双月教会 +2，帮派、穆斯林与俄裔各 +4。\n- **54** `WAVES OF DEPRAVITY` 堕落狂潮：[莫莉·佩恩](/dictionary/m#molly%20paine)组织「百名处女游行」，或某位球上老爷府上发生公开淫乱。腐化 +8 或 +1。\n- **55~56** `RESEARCH PROJECT` 研究计划：共和国推进一项研究。可取繁荣 +3、控制 +5 与国库 −200 万，也可修好一台聚变电厂或一艘穿梭机。\n- **57** `CORRUPTING THE SWALLOW` 腐化燕子：你腐化[燕子](/dictionary/s#the%20swallow)的作为在上层传开。[影响力](/dictionary/i#influence) +1,000。\n- **58** `SCHOLARLY ACKNOWLEDGEMENT` 学界褒扬：你与[凯特琳·坦瑟](/dictionary/c#caitlin%20tensor)因扑灭腐皮盲症获学院医学系颁匾。影响力 +1,000。\n- **59** `OMINOUS TIMES` 凶兆：机器失灵、法纪松弛、丛林威胁不绝。控制 −1，繁荣 −1。\n- **60~61** `NEW GANG ESTABLISHED!` 新帮派崛起：一伙劫掠者立起山头。帮派权力 +4，战士 +125 到 300。\n- **62** `GANG DESTROYED!` 帮派覆灭：共和国军清掉一伙劫掠者。帮派权力 −4，战士 −125 到 300。\n- **63** `SWARMING RAIDER GANGS!` 劫掠者盘踞：某区落进劫掠者手里。控制 −1，当日穿行该区有 50% 概率遭伏击。\n- **64** `HOLIDAY CELEBRATION!` 节日庆典：议长订下一个节日。繁荣 +1。节期内宅邸心情、好感与控制每日各 +1，腐化每日 +1。\n- **65** `RAIDERS!` 商路遇劫：斯托克丘陵的劫掠者打劫商队。繁荣 −1 到 2，控制 −1 到 2。\n- **66** `RAIDER ATTACK!` 劫掠者袭击：马斯顿大道的劫掠者打劫牲畜或粮仓。繁荣与控制各 −1 到 2，兵员 −7，帮派战士 −10。\n- **67** `VILLAGE ESTABLISHED!` 新村落成：城外添了一座村子。繁荣 +1。\n- **68** `DIRTY CONFESSIONS` 政治黑幕：议长、[球上老爷](/dictionary/s#spheremaster)或战争统领传出淫乱与腐败的传闻。腐化 +1。\n- **69** `RISE OF THE CONFEDERATION!` 邦联崛起（第 1 幕）、`PEACE NEGOTIATIONS` 和平谈判（第 8 幕）：北方城邦在[湖城](/dictionary/l#lake%20city)与新东京带领下独立，与共和国开战。全链共 8 幕，只有 7 个标题。第 4 幕与第 5 幕同题。标题依次为邦联崛起、拉莫拉平原之战、游击战与鲍雷斯围城。此后是喂食者峡谷之战、普罗米修斯之战与和平谈判。共和国兵员与权力逐幕大减，末幕邦联覆灭。\n- **70** `TERRORIST ATTACK` 恐怖袭击：[赤潮](/dictionary/r#the%20red%20tide)、[黄衣女王](/dictionary/y#the%20yellow%20queen)或某个部族教派对政府建筑发动袭击。控制 −3，兵员 −20。\n- **71** `DEVASTATING LOSSES!` 惨重损失：共和国与某个教派火并。共和国权力 −15，兵员 −225，帮派战士 −25。\n- **72** `ALIEN VERMIN!` 害兽成灾：维默鼠、邓加爬虫、奇科蝇或罗达害兽毁了城里的存粮。共和国权力 −25，繁荣 −10，宅邸的园圃与[扎平田野](/dictionary/z#zapin%20fields)各 −1。\n- **73** `RAIDER ATTACK!` 劫掠者进犯：大队劫掠者袭击要塞或北境。共和国权力 −35，控制 −3，兵员 −75 到 300，帮派战士 −150。\n- **74** `VILLAGE UNDER ATTACK!` 部落民村遇袭：帮派抢掠[部落民村](/dictionary/b#burakumin%20village)。村兵 −1 到 3，村储粮 −50 到 200，帮派战士 −7，帮派权力 +2。\n- **75** `THE TERROR FROM THE DEEP` 深渊恐兽：放出[深渊恐兽](/dictionary/t#the%20terror%20from%20the%20deep)。控制 −5，繁荣 −5，并在[凯西公园](/dictionary/k#kasey%27s%20park)生成一处敌人据点。\n- **76** `MONSOON GIFTS` 季风馈赠：贝里尔山脉暴雨使红河与普罗米修斯湖泛滥，淤泥肥田。繁荣 +5。\n- **77** `THE GREAT HAMILTON FIRE!` 汉密尔顿大火：大断绝前的地标 Riverwood Center 烧毁。繁荣 −2。\n- **78** `THE GOLD STANDARD` 金价调整：伊卡诺斯银行调整金价，拉纳一切产业受其影响。金价修正 ±5。\n- **79** `IN THE NAME OF CHRIST!` 以基督之名：天主教会出手打击城里的腐化。腐化 −3。\n- **80** `CRACKDOWN!` 清剿卡罗扎：共和国打击[卡罗扎家族](/dictionary/c#the%20carozza%20family)的产业。该家族权力 −25 到 90。\n- **81** `INCREASED TAXES` 加税：议会为筹款提高房产税。税率 +1，控制 +1，繁荣 −1，国库 +200 万。\n- **82** `DECREASED TAXES` 减税：财政好转，议会下调房产税。税率 −1，繁荣 +1。\n- **83** `A NOTICEABLE TRANSACTION` 大额交易：某位知名冒险者从[运输部](/dictionary/t#transit%20department)购得一套 [H.U.L.C. 动力甲](/dictionary/h#h.u.l.c.%20armor)。该部库存 −1。\n- **84** `FAILED COUP ATTEMPT!` 刺杀未遂：阿米尔·哈桑领主行刺议长，卫士把他击毙。控制 +1。\n- **85** `EMERGENCY MEASURES!` 紧急措施：共和国议会追加基建与军备投资。共和国权力 +500，国库 −900 万。\n- **86** `A POWERFUL BLOW (AESIR)!` 重创阿萨部族：阿萨部族的敌人重创其基业。该部族权力 −50，战士 −5。\n- **87** `A POWERFUL BLOW (CATHOLICS)!` 重创天主教会：天主教会的敌人重创其基业。该教会权力 −20 或 −2。\n- **88** `ASSASSINATION!` 刺杀！：赏金猎人克莱娅·瓦拉斯除掉一名共和国的「敌人」。控制 −1。\n- **89** `REBEL INVESTMENTS!` 叛军武装：叛军购得榴弹炮、护甲、弹药或炮艇。叛军权力 +50，资金 −10 万。\n- **90** `FOR THE FREEDOM ALLIANCE!` 叛军募兵：叛军补充一队雇佣兵。叛军战士 +25，资金 −5 万。\n- **91** `UNJUSTIFIED PURGE` 无端清洗：议长以含糊的「敌视政府」罪名囚禁一家人。他把孩子送去边远营地做苦役，又把长女收进私宅。共和国权力 +2。\n- **91** `CHANCELLOR BIANCHI` 比安基议长：比安基当政时，上一桩改出此事件。她走访贫民、保障妇女孤儿与重残者权利，或拉拢一批效忠士兵。共和国权力 +500，或自由 +1，或兵员 +55，或腐化 ±1。\n- **92** `THE ADLERS` 阿德勒家族：议长不再露面，掌控力逐幕下滑。第 1 幕控制 −2，第 2 幕 −3，第 3 幕 −1 且共和国权力 +500，第 4 幕 −3 且权力 −100。\n- **92** `THE FALL OF HOUSE LANCOUR` 朗库尔家族覆灭：第 3 幕改用的标题。共和国在水晶广场公开绞死了前市长[菲利普·朗库尔](/dictionary/p#philip%20lancour)。控制 −1，共和国权力 +500。\n- **92** `THE COLLECTION` 后宫：议长把又一名女子收进后宫。腐化 +1，国库 −1 万，奴隶市场需求 +2。\n- **92** `THE MARRIAGE OF EZRA WAYLEN` 埃兹拉·韦伦的婚礼：比安基当政时，马歇尔[埃兹拉·韦伦](/dictionary/e-1#ezra%20waylen)成婚。腐化 +1，国库 −5 万。\n- **93** `ORBITAL BOMBARDMENT!` 轨道轰炸：[塞内卡号](/dictionary/u#uss%20seneca)发射恒星级导弹或离子束，打击叛军据点。第三共和国战士 −213 或 −40，权力 −300 或 −50。\n- **93** `REBEL REINFORCEMENTS` 叛军增援：叛军雇佣一支百人连队。叛军兵员 +100，资金 −30 万。\n- **94** `NEW WORLD ORDER` 新世界秩序：阿丽亚任务线的收束链，逐幕抬升共和国的权力、控制与国库。名录见[新世界秩序](/dictionary/n#new%20world%20order)。\n- **95** `LIBERTARIAN CLASHES!` 自由派冲突：自由派与当权者冲突。自由 −1 或 +1。\n- **96~97** `SCANDALOUS ACTIVITIES` 丑闻：西区修道院的修女带见习修女举行渎神仪式，[尤文缇娅女院长](/dictionary/a#abbess%20juventia)迅速惩处。另一种情形是某位腐化贵妇把邪说传给同修。天主教会权力 −3，在册 NPC 的腐化上升。\n- **98** `THE SCOURGE OF RAANA!` 拉纳之鞭（第 1 幕）到 `THE FALL OF THE DENGI KING` 天罡王陨落（第 6 幕）：[天罡入侵](/dictionary/d#dengi%20invasion)的战报链。六幕标题依次为拉纳之鞭、新东京之围与达孔堡陷落。此后是天罡王崛起、塞内卡号之怒与天罡王陨落。开链时一次加二十处敌人据点。\n- **99** `DEPRAVED EVENTS` 堕落事件：秘密之书任务推进后，学院女学生举行带宗教色彩的淫乱集会。翡翠城另有年轻女子为无名神祇办降神会。腐化 +2 或控制 −2。\n- **99** `FIRE!` 火灾：西区、汉密尔顿广场、码头区或南红天堂起火。繁荣 −1。\n- **100** `THE TERROR FROM THE DEEP` 深渊恐兽伏诛：陆战队把巨兽除掉。控制 +1。\n- **101** `DISTILLERY EXPLODES!` 酒厂爆炸：斯托克丘陵一座私酒厂爆炸。繁荣 −1。\n- **101** `FIRE!` 火灾：繁荣 −1。\n- **102** `THE FALL OF THE HOLY MAIDEN` 圣女陨落：双月教会在[水晶高地](/dictionary/c#crystal%20heights)公审并处决天主教女十字军战士[瑞亚·雷库索](/dictionary/r#rhea%20recuso)。双月教会权力 +200，天主教会 −50。\n- **103** `CATHOLIC SCANDAL` 天主教丑闻：[圣处女大教堂](/dictionary/c#the%20church%20of%20the%20holy%20virgin)的达克雷神父闹出丑闻。天主教会权力 −10，恶德 +1。\n- **104** `RAIDING THE UNBELIEVERS!` 劫掠异教徒：阿萨部族劫掠异教徒。该部族权力 +40，战士 −3，资金 +1.5 万。\n- **105** `SLAVE MARKET EVENT` 奴隶市场事件：水晶高地与水眼两处市场的奴隶需求突变。全球市场需求 ±20，基曼托资金 +2.5 万。\n- **106~130** `BUSINESS AS USUAL` 今日无事：前线平静，伊卡诺斯当日无重大事件。\n"
+  },
+  {
+   "slug": "dictionary-letter-b-blackfang-valley",
+   "title": "blackfang valley",
+   "body": "\n\n# blackfang valley\n\n- 中文术语：黑牙谷\n\n汉字园内的谷地。\n"
+  },
+  {
+   "slug": "dictionary-letter-c-carpenter",
+   "title": "carpenter",
+   "body": "\n\n# carpenter\n\n- 中文术语：木匠铺\n\n地点。[红天堂](/dictionary/r#redhaven)南侧的家具作坊，主人是木匠 Lombar Kai，屋里终日飘着新伐[哈尔树](/dictionary/h#haal%20trees)的香气。每日 8:30 到 22:30 营业。杂货含扶手椅 120 元、沙发 150 元、豪华沙发 1,500 元与[书架](/dictionary/b#bookshelf) 2,500 元。床分三档：单人床 300 元、双人床 1,500 元、巨型床 3,000 元。另有餐桌组 500 元与工作桌 200 元。玩家可派一名奴隶或仆役来做助手。日薪 40 元，工时 8:30 到 16:00，要求 12 岁以上。该活计每日有概率加 1 点[力量](/dictionary/s#strength)，上限 60，也有概率造成 10 点轻伤。\n"
+  },
+  {
+   "slug": "dictionary-letter-b-berserker",
+   "title": "berserker",
+   "body": "\n\n# berserker\n\n- 中文术语：狂战士\n\nNPC 特质。战斗风格凶猛。[近战](/dictionary/m#melee%20combat)攻击多掷一颗伤害骰，取 0 到 20。这些攻击同时承受 25 点命中惩罚。变量 traitber。\n"
+  },
+  {
+   "slug": "dictionary-letter-i-irish-business",
+   "title": "irish business",
+   "body": "\n\n# irish business\n\n- 中文术语：爱尔兰生意\n\n人物委托。牵涉爱尔兰裔帮派的一桩事务。\n"
+  },
+  {
+   "slug": "dictionary-letter-s-slave",
+   "title": "slave",
+   "body": "\n\n# slave\n\n- 中文术语：奴隶\n\n社会地位第二档，取值 2。这类人因[饥饿](/dictionary/h#hunger)、轻罪、自愿或出生而落入奴籍。派往工坊时[纪律](/dictionary/d#discipline)减 5，前提是好感为 Friendly 或更低。受辱时会掉中等的心情与好感。不能自行离开宅邸，可锁在房内而不掉影响力。玩家对她们的性说服判定加 20，对方为[守常](/dictionary/v#vanilla)或[女权主义者](/dictionary/f#feminist)时除外。可用 Forged Documents 降为[罪奴](/dictionary/c#convict)。\n"
+  },
+  {
+   "slug": "dictionary-letter-l-liberated",
+   "title": "liberated",
+   "body": "\n\n# liberated\n\n- 中文术语：解放者\n\nNPC 特质。Clea Vallas 专属，源自她在[伊卡诺斯](/dictionary/i#ikaanos)腐败制度下争取[解放](/dictionary/e-1#emancipation)的经历。刺杀时首回合加 30 伤害，并秒杀[生命](/dictionary/h#health)低于 75 的敌人。难以[操纵](/dictionary/m#manipulate)，也难以彻底[腐化](/dictionary/c#corruption)。腐化 50 以上时每日自降 1 到 2 点。[宅邸](/dictionary/h#household)腐化 100 以上时[心情](/dictionary/h#happiness)上限降至 Normal。\n"
+  },
+  {
+   "slug": "dictionary-letter-h-hamah-bay",
+   "title": "hamah bay",
+   "body": "\n\n# hamah bay\n\n- 中文术语：哈马湾\n\n哈马市场在此贩卖食物与毛皮。\n"
+  },
+  {
+   "slug": "dictionary-letter-l-leia-winton",
+   "title": "leia winton",
+   "body": "\n\n# leia winton\n\n- 中文术语：莉娅·温顿\n\nNPC。Professor Leebar Winton 与 Sofia Winton 之女，教养良好，懂得贵族小姐的举止。人在[鸦末](/dictionary/c#crow%27s%20end)，要价 10,250 元。\n"
+  },
+  {
+   "slug": "dictionary-letter-t-tendstims",
+   "title": "tendstims",
+   "body": "\n\n# tendstims\n\n- 中文术语：强化剂\n\n一次性愈合针剂，内装含[纳米机](/dictionary/n#nanites)的生物活性愈合液，用于回复[生命值](/dictionary/h#health%20points)，不治疗降低属性的永久[伤势](/dictionary/i#injuries)。杀菌力极强，伤口数分钟闭合，且几乎不留疤。一支即时回复 20 点生命值，医学 35 以上回复 30 点。零售价随供需与社会经济状况浮动，约 50 到 200 元。另可解酒。纳米机多来自[老爷球](/dictionary/m#the%20mastersphere)，针剂多在 Lake City 的 Hagrador 研究设施制造。数量多到[拾荒](/dictionary/s#scavenging)时偶尔能捡到，具备技能与设备时也可在家自制，配方需医学 30 以上在铁匠铺制作。居家使用取「互动」菜单，战斗中由随从施打。玩家带[强化剂过敏](/dictionary/t#tendstim%20allergy)时不能自行使用。变量 ownstimb。\n"
+  },
+  {
+   "slug": "dictionary-letter-n-nika-s-clothes-shop-assistant",
+   "title": "nika's clothes (shop assistant)",
+   "body": "\n\n# nika's clothes (shop assistant)\n\n- 中文术语：妮卡衣铺店员\n\n店铺岗位。在[西区](/dictionary/w#westside)的服装店 [妮卡衣铺](/dictionary/n#nika%27s%20clothes) 做销售、客服与文书。日薪 30 元。每日有六分之一概率加 1 点[魅力](/dictionary/c#charisma)，上限 60。老板待人宽厚，店里的气氛轻松，久做能让内向的人放开。\n"
+  },
+  {
+   "slug": "dictionary-letter-w-watery-eyes",
+   "title": "watery eyes",
+   "body": "\n\n# watery eyes\n\n- 中文术语：水眼区\n\n地点。后灾变时期形成的拥挤城区。\n"
+  },
+  {
+   "slug": "dictionary-letter-m-the-maiden-islands",
+   "title": "the maiden islands",
+   "body": "\n\n# the maiden islands\n\n- 中文术语：室女群岛\n\n地名。位于[伊卡诺斯](/dictionary/i#ikaanos)海岸外 250 到 400 英里，由三块大陆与数千小岛组成新月形群岛，属[伊伦多里亚海](/dictionary/i#irendorian%20sea)。约三十年前，两船逃亡奴隶与自由佣兵在此建立据点。殖民地靠周边丰饶的草木与沃土迅速扩张成小都会。如今这里是许多奴隶新生的指望，但路途艰险。途中还要应付走私人口的贩子，他们可能收了船钱再把人卖回原主。\n"
+  },
+  {
+   "slug": "dictionary-letter-r-redhaven-market",
+   "title": "redhaven market",
+   "body": "\n\n# redhaven market\n\n- 中文术语：红天堂市场\n\n地点。位于[北红天堂](/dictionary/n#north%20redhaven)。伊卡诺斯中下阶层的中心交易场，建在[第二波](/dictionary/s#second%20wavers)移民最早村落的旧址上，全日开放。买[绳索](/dictionary/r#rope)（五条 100 元）、廉价首饰、[渔具](/dictionary/f#fishing%20gear)、给养、糖果、金锭、木材与各类金属。也收武器、护甲、[弹药](/dictionary/a#ammunition)与杂货。市场另设[卖淫](/dictionary/p#prostitution)岗位与社会交际。\n"
+  },
+  {
+   "slug": "dictionary-letter-m-manhunter",
+   "title": "manhunter",
+   "body": "\n\n# manhunter\n\n- 中文术语：猎人者\n\nNPC 特质。她受过训练，出手意在活捉，让敌人失去行动力，从而提高[俘获](/dictionary/c#capture)概率。她的[击倒概率](/dictionary/i#incapacitation%20chance)加成取特质值的 10%，调整细节见「击倒概率」。变量 traitman。\n\n玩家特质。Cost 15，Requirements 无。玩家[击倒概率](/dictionary/i#incapacitation%20chance)加 15 点，该加成不适用于[随从](/dictionary/f#followers)。经[水眼区](/dictionary/w#watery%20eyes)与[水晶丘](/dictionary/c#crystal%20hills)拍卖行售出奴隶时，估价加 15%。变量 mctraitman。\n"
+  },
+  {
+   "slug": "dictionary-letter-k-kira-s-merch",
+   "title": "kira's merch",
+   "body": "\n\n# kira's merch\n\n- 中文术语：基拉杂货\n\n地点。位于[普罗社](/dictionary/p#the%20procoms)。面向本地人的杂货铺，卖木材、[绳索](/dictionary/r#rope)（五条 100 元）与长矛。全日营业。击败 Wrool Cat Wranglers 后可投资此店，与投资该帮派的「[迪戈里巷](/dictionary/d#diggory%20alley)」互斥。\n"
+  },
+  {
+   "slug": "dictionary-letter-f-frigid",
+   "title": "frigid",
+   "body": "\n\n# frigid\n\n- 中文术语：性冷感\n\nNPC 特质。好感不够高时，不喜欢与玩家亲昵。好感低于 Amiable 时，全部诱惑与[魅力](/dictionary/c#charisma)判定受重罚。好感达 Loving 以上或[心情](/dictionary/h#happiness) 80 以上时，每日有 15% 概率使本特质减 1 点。变量 traitfrigid。\n"
+  },
+  {
+   "slug": "dictionary-letter-i-ice-dragon",
+   "title": "ice dragon",
+   "body": "\n\n# ice dragon\n\n- 中文术语：冰龙\n\n近战武器。伤害加 30。攻速快。具[护甲穿透](/dictionary/a#armor%20piercing)。[击倒概率](/dictionary/i#incapacitation%20chance) +70。它是 Hunt Labs 一名科学家送给[克莱娅·瓦拉斯](/dictionary/c#clea%20vallas)的原型高科技剑。它用低温技术冻住对手，而不是杀死对手，该效果可绕过多种护甲。全游戏唯一一件，无售价。变量 owniceblade。\n"
+  },
+  {
+   "slug": "dictionary-letter-w-the-wetlands",
+   "title": "the wetlands",
+   "body": "\n\n# the wetlands\n\n- 中文术语：湿地带\n\n废弃的后工业公园。抽水站失效后半数成了湖与沼泽。\n"
+  },
+  {
+   "slug": "dictionary-letter-h-the-holy-virgin",
+   "title": "the holy virgin",
+   "body": "\n\n# the holy virgin\n\n- 中文术语：圣母教堂\n\n地点。[西区高地](/dictionary/w#westside%20heights)的石砌大教堂，建于近三百年前。它是拉纳天主教信仰的中心，也是共和国基督教派系的总部。旁边的女修道院把花园与走廊打理得一丝不苟。神父 Father Marinelli 与女院长 Abbess Juventia 在此主事三十多年。教堂从不关门。信徒可在此祈祷与献祭。另有 The Shrine、The Relic、The Seed、The Knight、The Iron Order 与 The Hunt 等任务，以及木匠、酒庄与萨拉森人三条经营线。\n"
+  },
+  {
+   "slug": "dictionary-letter-g-gardening",
+   "title": "gardening",
+   "body": "\n\n# gardening\n\n- 中文术语：园艺\n\n决定 NPC 照料主人作物的能力。\n"
+  },
+  {
+   "slug": "dictionary-letter-c-charuck-tail-meat",
+   "title": "charuck tail meat",
+   "body": "\n\n# charuck tail meat\n\n- 中文术语：查鲁克尾肉\n\n材料。猎杀[查鲁克](/dictionary/c#charuck)所得的尾部肉，界面显示作 `TAIL MEAT`。可入宴席菜单，也可出售。变量 tailmeat。\n"
+  },
+  {
+   "slug": "dictionary-letter-s-sir-gabriel-arwent",
+   "title": "sir gabriel arwent",
+   "body": "\n\n# sir gabriel arwent\n\n- 中文术语：加布里埃尔·阿尔文爵士\n\nNPC。[典范](/dictionary/p#paragon)，在 New Paris 长大。那是 2250 年前后随 USS Vega 抵达的南法移民建立的基督教据点。他驻[圣处女大教堂](/dictionary/c#the%20church%20of%20the%20holy%20virgin)，日薪 25 元。\n"
+  },
+  {
+   "slug": "dictionary-letter-m-the-moons-of-raana",
+   "title": "the moons of raana",
+   "body": "\n\n# the moons of raana\n\n- 中文术语：拉纳的月亮\n\n地点。拉纳有三颗天体环绕，正式名分别是 Raana-2、Raana-3 与 Orpheus。Raana-2（又名 Dravin）直径 1,658 公里，无大气，距地 186,200 公里，死寂无生命。Raana-3（又名 Govinda）直径 4,464 公里，有稀薄大气，距地 392,200 公里，可支持生命，终年被沙色云层覆盖。2245 年的 Gaius 考察队记录到多种多细胞动植物，但未发现高等生命。Raana-3 的狂暴风暴阻碍了后续考察。最后一颗科研卫星在[大断绝](/dictionary/s#the%20severance)后五年即失灵。Orpheus（Raana-I）直径 144 公里，距地 30,100 公里，由烧焦的玄武岩构成，是被引力捕获的大小行星。\n"
+  },
+  {
+   "slug": "dictionary-letter-a-anvil",
+   "title": "anvil",
+   "body": "\n\n# anvil\n\n- 中文术语：铁砧\n\n宅邸指标。宅邸里的护甲维修台，由玩家自建。装入后，[科学](/dictionary/s#science) 50 以上可让未升级的基础护甲每日恢复 1 点[吸收值](/dictionary/s#soak)，科学 80 以上再覆盖高档护甲。每恢复 1 点自动扣 80 元。\n"
+  },
+  {
+   "slug": "dictionary-letter-r-recoil",
+   "title": "recoil",
+   "body": "\n\n# recoil\n\n- 中文术语：后坐力\n\n武器的后坐力会拖累使用效果，与武器速度共同影响连射。\n"
+  },
+  {
+   "slug": "dictionary-letter-t-tough",
+   "title": "tough",
+   "body": "\n\n# tough\n\n- 中文术语：坚韧\n\n玩家特质。Cost 30，Requirements 体力 30 以上。玩家的体格让他天然吸收 8% 的全部近战与远程伤害。此效果与[护甲](/dictionary/a#armor)的[吸收值](/dictionary/s#soak)叠加。变量 mctraittough。\n"
+  },
+  {
+   "slug": "dictionary-letter-a-anger",
+   "title": "anger",
+   "body": "\n\n# anger\n\n- 中文术语：怒气\n\nNPC 状态。隐藏值，上限 30。它拉低与该 NPC 的一切协作：使其不情愿、易怒、缺敬意，也更可能逃跑或辞职。玩家对未折断、未[虔诚](/dictionary/d#devotion)的 NPC 施以恶行时它上升。发放丰厚的零用钱可降低。变量 .npc.avNNN.scarefactor，取值 0 到 30。\n"
+  },
+  {
+   "slug": "dictionary-letter-h-haze-pill",
+   "title": "haze pill",
+   "body": "\n\n# haze pill\n\n- 中文术语：迷霾丸\n\n违禁药物，学名 N,N-Dimethylpropionhydaride，21 世纪末曾用作监禁的替代刑。每丸让对象的[意志](/dictionary/w#willpower)与心情各减 2 点。只能在 Transit Department 买到，每瓶 500 元。\n"
+  },
+  {
+   "slug": "dictionary-letter-m-master-of-mares",
+   "title": "master of mares",
+   "body": "\n\n# master of mares\n\n- 中文术语：牝马之主\n\n玩家特质。Cost 不适用，Requirements 读完技能书「The Mare」。每逢结算日，玩家按（[操纵](/dictionary/m#manipulate)的一半加[魅力](/dictionary/c#charisma)的一半）除以 10 累积唤起点。与女性 NPC 互动时可把这些点转成[性兴奋](/dictionary/a#arousal)。变量 mctraitmare。\n"
+  },
+  {
+   "slug": "dictionary-letter-a-attractive",
+   "title": "attractive",
+   "body": "\n\n# attractive\n\n- 中文术语：迷人\n\n玩家特质。Cost 30，Requirements 美貌 65 以上。玩家相貌上镜，受异性欣赏。[美貌](/dictionary/b#beauty)上限升到 120。与女性 NPC 互动时，诱惑、性说服与表白三类判定各有 20% 概率出暴击。变量 mctraitat。\n"
+  },
+  {
+   "slug": "dictionary-letter-s-silfren-mine",
+   "title": "silfren mine",
+   "body": "\n\n# silfren mine\n\n- 中文术语：银白矿\n\n产铜矿石与铁矿石的[矿场](/dictionary/m#mine)。原由帮派 Dolcaar 经营，击败他后归玩家所有。可指派工头与工人。森林劫掠者会袭击它，抢走钢与铜。\n"
+  },
+  {
+   "slug": "project-index",
+   "title": "项目",
+   "body": "\n"
+  },
+  {
+   "slug": "dictionary-letter-g-grenade-launcher",
+   "title": "grenade launcher",
+   "body": "\n\n# grenade launcher\n\n- 中文术语：榴弹发射器\n\n远程[武器](/dictionary/w#weapon)，使用榴弹。基础价 10,000 元与 1,000 点[影响力](/dictionary/i#influence)。远距与近距伤害都加 40。两个距离的命中修正都是 +15。具[护甲穿透](/dictionary/a#armor%20piercing)，[后坐力](/dictionary/r#recoil)低，[击倒概率](/dictionary/i#incapacitation%20chance) +0。特殊效果为范围伤害：主目标两侧各受 0 到 49 点，平均约 11。打三人组中心时平均总伤害为 62。它也能用[瞄准](/dictionary/a#aim)动作触发狙击效果，从远距多掷一颗伤害骰，约 +17。republic soldier 与政府外勤以外的人不得使用。变量 owngl。\n"
+  },
+  {
+   "slug": "dictionary-letter-a-addiction",
+   "title": "addiction",
+   "body": "\n\n# addiction\n\n- 中文术语：成瘾\n\nNPC 特质。对某一种成瘾物质有强烈渴求，常见的是地那树脂。可选物质还有酒精、烟草、安非他明、可卡因、芬太尼与多种街头药物。成瘾者会不断想弄到所需剂量。\n"
+  },
+  {
+   "slug": "dictionary-letter-l-laika-wixx",
+   "title": "laika wixx",
+   "body": "\n\n# laika wixx\n\n- 中文术语：莱卡·维克斯\n\nNPC。北方部落出身的女孩，Loden 的姐姐。在 Yidhra 神庙，日薪 5 元。她有[维克斯组合](/dictionary/t#team%20wixx)特质。\n"
+  },
+  {
+   "slug": "dictionary-letter-v-valerie-borsow",
+   "title": "valerie borsow",
+   "body": "\n\n# valerie borsow\n\n- 中文术语：瓦莱丽·博尔索\n\nNPC。[Furry's 酒馆](/dictionary/f#furry%27s%20tavern) 的员工之一，有招募机会。以 15,000 元购入，此后无需日薪。\n"
+  },
+  {
+   "slug": "dictionary-letter-w-wealthy",
+   "title": "wealthy",
+   "body": "\n\n# wealthy\n\n- 中文术语：富裕\n\n玩家特质。Cost 25，Requirements 无。玩家开局有 5,000 元[现金](/dictionary/c#cash)，并有一份每日 15 元的终身津贴。变量 retainer。\n"
+  },
+  {
+   "slug": "engine-diplomacy-prd",
+   "title": "派系外交 PRD（草案）",
+   "body": "\n# 派系外交 PRD（草案）\n\n状态：草案。需求待设计，不进入实现。本文只记录 E-R 草图、初步形状与待决问题。\n\n上位：`doc/data/root/engine/factions/PRD.md`（派系实体）、`doc/data/root/engine/relations/PRD.md`（人物关系）。\n\n## 1 定位\n\n`mor_diplomacy` 承载 faction ↔ faction 的关系。附庸关系是 E-R 模型里的关联实体，独立于 `Faction`。\n\n本 crate 与 `mor_factions` 互不依赖。派系标识来自 `mor_registry` 的 `FactionId`。派系是否存在由调用方给的已知标识集合校验，与 `mor_relations` 不依赖 `mor_character` 同法。\n\n本 crate 只做数据与合法性校验。附庸的形成规则、加成与政治后果归规则层。\n\n## 2 背景\n\n原版的附庸是玩家派系与目标派系之间的从属关系。触发条件为立场 100 加该派系的附加条件。例如穆斯林需同信仰，土匪需伊卡诺斯的控制度不超过 89。成为附庸后，其三分之一的权力计入玩家派系的权力。\n\n原版没有派系之间的从属字段。附庸由立场与玩家派系派生，子派系则根本不在派系表里。本工程把两者统一为一条显式的从属边。\n\n## 3 术语\n\n| 术语 | 含义 |\n|---|---|\n| 附庸关系 | 一个派系对另一个派系的从属关系。 |\n| 附庸派系 | 处于从属地位的派系。 |\n| 宗主 | 附庸派系所效忠的派系。 |\n| 子派系 | 与附庸关系同一条边，本工程不单列。 |\n| `Vassalage` | 附庸关系的记录。 |\n| `VassalageStore` | 附庸边的集合接口。 |\n| 已知标识集合 | 调用方给出的现存派系标识。 |\n\n## 4 E-R 草图\n\n```text\nFaction                    Vassalage\n ├── id                     ├── overlord: FactionId\n ├── state                  └── vassal: FactionId\n ├── soldiers\n ├── power_base                唯一键：vassal\n ├── treasury                索引：by_vassal、by_overlord\n ├── focus\n └── leader\n```\n\n初步接口：\n\n- `VassalageStore`：`overlord_of`、`vassals_of`、`put`、`erase`、`erase_by_faction`、`list`、`flush`。\n- `link`：校验已知集合、自指与环，写边。\n- `unlink`：删除边，返回是否删除。\n- `has`：查询两个派系之间是否有边。\n- `vassals_of`：按宗主列出附庸派系，按字节序升序。\n\n`put` 替换该 vassal 已有的边，唯一键因此成立。\n\n## 5 待设计问题\n\n| 编号 | 问题 |\n|---|---|\n| Q-1 | 关系类型范围：只做附庸，还是同时容纳联盟、战争、条约 |\n| Q-2 | 边是否带时间、条件、义务等属性 |\n| Q-3 | 附庸的形成规则与加成放在规则层还是外交 crate |\n| Q-4 | 派系存在性由已知集合校验，还是引入只读的派系视图 trait |\n| Q-5 | 删除派系时，关系边的清理由谁协调，事务边界在哪 |\n| Q-6 | `VassalageStore` 的落盘形态与导入导出 |\n| Q-7 | 环校验放在 `link` 内，还是独立的全边集校验 |\n| Q-8 | 唯一 vassal 冲突用替换还是返回错误 |\n| Q-9 | `CharacterId` 字符串化后，外交 crate 是否同步 |\n| Q-10 | 子派系、其他政治实体与外交边的关系 |\n| Q-11 | 界面如何展示附庸树与从属关系 |\n| Q-12 | 错误码与载荷的最终形状 |\n\n## 6 先行约束\n\n- 附庸关系不写入 `Faction`。\n- `mor_diplomacy` 不依赖 `mor_factions`。\n- 外交需求定稿前，不写代码，不写 SRS。\n- 派系组件的删除只删派系记录。附庸边的清理是外交切片的事。\n- 派系组件的计划不包含附庸边、`VassalageStore`、`link` 与环校验。\n\n## 7 依据\n\n| 事实 | 来源 |\n|---|---|\n| 附庸：立场 100、计入三分之一权力、可当首领。宗主是玩家派系（`mc`） | 词典 `v.md` 的 vassal 条、wiki `Factions`、`MCPower` 第 198585 至 198894 行 |\n| 附庸条件：muslim 需信仰 8，bandit 需 ikaanos control ≤ 89，上限 70 的派系不可招 | `MCPower` 第 198866、198870 行、词典 `v.md` 的 vassal 条 |\n| 原版没有派系之间的从属字段 | 派系表的字段清单不含从属项（`FirstChecker` 第 374851 至 375168 行）；全文检索 `overlord` 仅 1 处，出现在叙事段，不是字段 |\n| 子派系各带父派系与兵员：Dockyard Punks 43、Red Tigers 56、Swamp Tribe 75 | wiki `Factions` 的 Sub-factions 一节、词典 `d.md` 的 dockyard punks 条 |\n| 原版不把子派系放进派系表 | wiki `Factions` 的 Sub-factions 一节、词典 `s.md` 的 sub-faction 条 |\n"
+  },
+  {
+   "slug": "dictionary-letter-h-hazorians",
+   "title": "hazorians",
+   "body": "\n\n# hazorians\n\n- 中文术语：哈佐尔人\n\n24 世纪初[黑暗时代](/dictionary/d#the%20dark%20age)成形的传统武士群体。他们避开人烟稠密处，在[塞利奥尔森林](/dictionary/c#celior%20forest)与[普罗米修斯湖](/dictionary/p#prometheus%20lake)沿岸结成小部落。严苛的社会信条让大量青年出走，加之倒向反共和国势力，这个群体在 2470 年代消亡。\n"
+  },
+  {
+   "slug": "dictionary-letter-e-eryn-hill",
+   "title": "eryn hill",
+   "body": "\n\n# eryn hill\n\n- 中文术语：埃林山\n\n[塞利奥尔森林](/dictionary/c#celior%20forest)中的山丘。\n"
+  },
+  {
+   "slug": "dictionary-letter-t-ternyl-grass",
+   "title": "ternyl grass",
+   "body": "\n\n# ternyl grass\n\n- 中文术语：特尼尔草\n\n生物。拉纳原生草本，热量高。与地球草不同，它没有尖锐的硅质，柔软易吃易消化，因此伊卡诺斯的花园菜畦与农场常种。游戏里[小园圃](/dictionary/s#small%20garden)即以特尼尔草为主，基础产出 2 到 4 份给养。\n"
+  },
+  {
+   "slug": "dictionary-letter-h-health",
+   "title": "health",
+   "body": "\n\n# health\n\n- 中文术语：生命\n\n上限与当前值是两个量。上限见[生命](/dictionary/h#health)上限，当前值见[生命值](/dictionary/h#health%20points)。\n"
+  },
+  {
+   "slug": "dictionary-letter-f-floor-crawler-usage",
+   "title": "floor crawler usage",
+   "body": "\n\n# floor crawler usage\n\n- 中文术语：舔狗调用\n\n性玩法。允许某名 NPC 使用宅邸的[舔狗](/dictionary/f#floor%20crawler)，会提升她的[心情](/dictionary/h#happiness)与对你的[好感](/dictionary/a#affection)，同时加重被指派舔狗的损耗与[体力](/dictionary/s#stamina)消耗。\n\n启用条件：她的[腐化](/dictionary/c#corruption) 40 以上，或带[淫癖](/dictionary/p#perverted)、[色情狂](/dictionary/n#nymphomaniac)特质。\n\n每日效果如下。\n\n- 好感加 2，上限冷淡。\n- 好感加 1，上限亲切。\n- [腐化](/dictionary/c#corruption) 60 以上者，好感再加 1，上限亲切。\n- 心情加 1。\n\n若所用舔狗的名望达 300 以上、或[艳名](/dictionary/n#notoriety) 100 以上、或[威望](/dictionary/p#prestige) 50 以上，另加好感 1 与心情 1。\n"
+  },
+  {
+   "slug": "dictionary-letter-w-weapon-store-ammo-sorter",
+   "title": "weapon store (ammo sorter)",
+   "body": "\n\n# weapon store (ammo sorter)\n\n- 中文术语：武器店分弹工\n\n店铺岗位。在[红天堂](/dictionary/r#redhaven)的枪械工坊分拣弹药，需玩家出身 Soldier level 2 以上。日薪 15 元，工时 8:00 到 16:00。这份活本身没有风险，只是长时间待在地窖里会带来[疲劳](/dictionary/t#tired)。\n"
+  },
+  {
+   "slug": "dictionary-letter-c-critical-hit",
+   "title": "critical hit",
+   "body": "\n\n# critical hit\n\n- 中文术语：暴击\n\n战斗机制。基础概率 5%。部分特质与技能会提高它，[神射手](/dictionary/c#crackshot)与[致命打击](/dictionary/d#deadly%20strike)还让它随战斗场次上升。暴击另带来约 20 点伤害。\n"
+  },
+  {
+   "slug": "dictionary-letter-p-pure",
+   "title": "pure",
+   "body": "\n\n# pure\n\n- 中文术语：小白花\n\nNPC 特质。心地与灵魂都纯洁。它会降低 NPC 的腐化倾向。\n"
+  },
+  {
+   "slug": "dictionary-letter-v-the-vetlanda-tribe",
+   "title": "the vetlanda tribe",
+   "body": "\n\n# the vetlanda tribe\n\n- 中文术语：韦特兰达战团\n\n势力与宗教。[阿萨部族](/dictionary/a#the%20aesir%20tribe)的一支战团，来自南方的遥远地方。[斯托克堡](/dictionary/f#fort%20stokke)的常驻[帮派](/dictionary/b#bandits)之一。wiki 说它恶名在外。守门五人：SKARPSKYTT 两名，MERCENARY、AESIR 与 VIKING 各一名。清空可得大笔货物与金饰，[影响力](/dictionary/i#influence) +400。\n"
+  },
+  {
+   "slug": "dictionary-letter-n-nursery",
+   "title": "nursery",
+   "body": "\n\n# nursery\n\n- 中文术语：育婴室\n\n照看[子嗣](/dictionary/o#offspring)的场所。可执行陪玩等操作，增加心情、[善意](/dictionary/k#kindness)与好感。\n"
+  }
+ ],
+ "queries": [
+  {
+   "query": "五百万",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-0-5-000-000"
+   ],
+   "note": "词条名（$5,000,000）"
+  },
+  {
+   "query": "玩家特质。[MoR Enhanced](/dictionary/m#mor%20enhanced) 专属，Cost 200，Requirements 无。玩家靠",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-0-5-000-000"
+   ],
+   "note": "词条释义去掉词条名（$5,000,000）"
+  },
+  {
+   "query": ".50 口径步枪",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-0-50-cal-rifle"
+   ],
+   "note": "词条名（.50 cal rifle）"
+  },
+  {
+   "query": "远程[武器](/dictionary/w#weapon)，使用 .50 口径[弹药](/dictionary/a#ammunition)。基础价 3,100 元",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-0-50-cal-rifle"
+   ],
+   "note": "词条释义去掉词条名（.50 cal rifle）"
+  },
+  {
+   "query": "七十五万",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-0-750-000"
+   ],
+   "note": "词条名（$750,000）"
+  },
+  {
+   "query": "玩家特质。[MoR Enhanced](/dictionary/m#mor%20enhanced) 专属，Cost 60，Requirements 无。玩家终身",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-0-750-000"
+   ],
+   "note": "词条释义去掉词条名（$750,000）"
+  },
+  {
+   "query": "9mm 手枪",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-0-9mm-pistol"
+   ],
+   "note": "词条名（9mm pistol）"
+  },
+  {
+   "query": "远程武器，使用 9mm 子弹。基础价 380 元，由 Cyker 的[西区](/dictionary/w#westside)装配厂依旧图纸生产。远距伤害加 15",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-0-9mm-pistol"
+   ],
+   "note": "词条释义去掉词条名（9mm pistol）"
+  },
+  {
+   "query": "两万五影响力",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-0-25k-influence"
+   ],
+   "note": "词条名（25k influence）"
+  },
+  {
+   "query": "玩家特质。[MoR Enhanced](/dictionary/m#mor%20enhanced) 专属，Cost 20，Requirements 无。[影响力",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-0-25k-influence"
+   ],
+   "note": "词条释义去掉词条名（25k influence）"
+  },
+  {
+   "query": "梣邑庄园",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-a-ashbury-estate"
+   ],
+   "note": "词条名（ashbury estate）"
+  },
+  {
+   "query": "[耙岛](/dictionary/h#harrow%20island)上的废弃庄园。五十年间荒废，如今草木丛生。曾属一名[球上老爷](/dictionary/s",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-a-ashbury-estate"
+   ],
+   "note": "词条释义去掉词条名（ashbury estate）"
+  },
+  {
+   "query": "学术教授",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-a-academics-professor"
+   ],
+   "note": "词条名（academics professor）"
+  },
+  {
+   "query": "城市岗位。在[学院](/dictionary/a#the%20academy)授课，需[学术](/dictionary/a#academics) 70 以上。底",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-a-academics-professor"
+   ],
+   "note": "词条释义去掉词条名（academics professor）"
+  },
+  {
+   "query": "阿丽亚·比安基",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-a-aria-bianchi"
+   ],
+   "note": "词条名（aria bianchi）"
+  },
+  {
+   "query": "NPC。[比安基家族](/dictionary/h#house%20bianchi) Desmond Bianchi 的幼女，亲眼送走家族黄金时代的最后十年，2",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-a-aria-bianchi"
+   ],
+   "note": "词条释义去掉词条名（aria bianchi）"
+  },
+  {
+   "query": "学院聘金",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-a-academic-retainer"
+   ],
+   "note": "词条名（academic retainer）"
+  },
+  {
+   "query": "玩家特质。Cost 120，Requirements 为[学者](/dictionary/s#scholar)类的 Adept 级。在开局购点界面把[学者](/",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-a-academic-retainer"
+   ],
+   "note": "词条释义去掉词条名（academic retainer）"
+  },
+  {
+   "query": "无神论",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-a-atheism"
+   ],
+   "note": "词条名（atheism）"
+  },
+  {
+   "query": "玩家可选的宗教。信徒约占伊卡诺斯的 25%。信条是真理只从科学方法得出，没有神、灵魂、鬼怪与超自然力量。[虔诚](/dictionary/d#devotion)",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-a-atheism"
+   ],
+   "note": "词条释义去掉词条名（atheism）"
+  },
+  {
+   "query": "会计",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-a-accountant"
+   ],
+   "note": "词条名（accountant）"
+  },
+  {
+   "query": "NPC 特质。Armand Blackford 与 Adrienne Keller 的出身与性格让她们精于。派为岗位时，她们的技能带来的商业收入加成再提高 45",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-a-accountant"
+   ],
+   "note": "词条释义去掉词条名（accountant）"
+  },
+  {
+   "query": "衰老",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-a-aging"
+   ],
+   "note": "词条名（aging）"
+  },
+  {
+   "query": "机制。年龄会改玩家的属性与对话选项。NPC 过 50 岁后开始掉[力量](/dictionary/s#strength)、[敏捷](/dictionary/d#",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-a-aging"
+   ],
+   "note": "词条释义去掉词条名（aging）"
+  },
+  {
+   "query": "亚特兰蒂卡",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-a-atlantica"
+   ],
+   "note": "词条名（atlantica）"
+  },
+  {
+   "query": "地点。邻近星系的行星，常被称作“拉纳的孪生兄弟”，在拉纳之后两年被发现，殖民时间也几乎相同。气候宜人，生物繁多而温和，与拉纳凶猛的原生动物形成对比。已知生物中不",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-a-atlantica"
+   ],
+   "note": "词条释义去掉词条名（atlantica）"
+  },
+  {
+   "query": "骄纵",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-b-bratty"
+   ],
+   "note": "词条名（bratty）"
+  },
+  {
+   "query": "NPC 特质。自认高于所有人，只把主人除外。不用最严[纪律](/dictionary/d#discipline)的家教课程受罚。针对她的[操纵](/dictio",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-b-bratty"
+   ],
+   "note": "词条释义去掉词条名（bratty）"
+  },
+  {
+   "query": "边境战争",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-b-the-border-wars"
+   ],
+   "note": "词条名（the border wars）"
+  },
+  {
+   "query": "历史。伊卡诺斯与[大卫王国](/dictionary/k#the%20kingdom%20of%20david)之间的战争，起因是伊卡诺斯对[第一波](/dic",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-b-the-border-wars"
+   ],
+   "note": "词条释义去掉词条名（the border wars）"
+  },
+  {
+   "query": "肛塞",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-b-butt-plug"
+   ],
+   "note": "词条名（butt plug）"
+  },
+  {
+   "query": "在 Devious Tools 出售，也可在[拉纳](/dictionary/r#raana)各地拾获。分四种，各有独立变量：小型 20 元（ownaplug1",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-b-butt-plug"
+   ],
+   "note": "词条释义去掉词条名（butt plug）"
+  },
+  {
+   "query": "束缚",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-b-bondage"
+   ],
+   "note": "词条名（bondage）"
+  },
+  {
+   "query": "类玩法。原版后来把鞭打与并入同一套引擎。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-b-bondage"
+   ],
+   "note": "词条释义去掉词条名（bondage）"
+  },
+  {
+   "query": "野猪",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-b-boars"
+   ],
+   "note": "词条名（boars）"
+  },
+  {
+   "query": "生物。地球引入种，如今在伊卡诺斯城内的湿地等处已很常见，属[生物大灭绝](/dictionary/g#the%20great%20biological%20wi",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-b-boars"
+   ],
+   "note": "词条释义去掉词条名（boars）"
+  },
+  {
+   "query": "嗜血",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-b-bloodthirsty"
+   ],
+   "note": "词条名（bloodthirsty）"
+  },
+  {
+   "query": "NPC 特质。偏爱肾上腺素飙升的战斗，胜方时尤其兴奋。战斗获胜会涨[心情](/dictionary/h#happiness)与[好感](/dictionary/",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-b-bloodthirsty"
+   ],
+   "note": "词条释义去掉词条名（bloodthirsty）"
+  },
+  {
+   "query": "锻造",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-b-blacksmithing"
+   ],
+   "note": "词条名（blacksmithing）"
+  },
+  {
+   "query": "贝拉沼泽",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-b-bela-s-marsh"
+   ],
+   "note": "词条名（bela's marsh）"
+  },
+  {
+   "query": "[汉字园](/dictionary/k#kanji%20gardens)内的沼泽。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-b-bela-s-marsh"
+   ],
+   "note": "词条释义去掉词条名（bela's marsh）"
+  },
+  {
+   "query": "康纳·桑德兰",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-c-connor-sunderland"
+   ],
+   "note": "词条名（connor sunderland）"
+  },
+  {
+   "query": "NPC。走过拉纳许多地方的精英战士，心事重重。在 [神圣汁液](/dictionary/d#divine%20juices) 攒够 30 点社交后，于[水眼区]",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-c-connor-sunderland"
+   ],
+   "note": "词条释义去掉词条名（connor sunderland）"
+  },
+  {
+   "query": "野营",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-c-camping"
+   ],
+   "note": "词条名（camping）"
+  },
+  {
+   "query": "其它机制。玩家在追随者界面右侧能看到手头的装备，随时可花钱买或升级。有装备且地形合适时，主界面的按钮才会亮。城里不行，劫匪与[天空守卫](/dictionary",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-c-camping"
+   ],
+   "note": "词条释义去掉词条名（camping）"
+  },
+  {
+   "query": "改宗",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-c-conversion"
+   ],
+   "note": "词条名（conversion）"
+  },
+  {
+   "query": "宗教机制。把手下 NPC 改成自己或他人的信仰。直接走「互动 > 交谈 > 影响 > 」，一次 2 小时，耗 10 点[虔诚](/dictionary/d#de",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-c-conversion"
+   ],
+   "note": "词条释义去掉词条名（conversion）"
+  },
+  {
+   "query": "货币",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-c-currency"
+   ],
+   "note": "词条名（currency）"
+  },
+  {
+   "query": "银元为基准。金币一元合十银元，琥珀金 50 元，金马克 100 元。零钱为 Chims 0.25 元与 Jots 0.10 元。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-c-currency"
+   ],
+   "note": "词条释义去掉词条名（currency）"
+  },
+  {
+   "query": "鸦末",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-c-crow-s-end"
+   ],
+   "note": "词条名（crow's end）"
+  },
+  {
+   "query": "瑟胡加之子",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-c-the-children-of-ser-huggah"
+   ],
+   "note": "词条名（the children of ser-huggah）"
+  },
+  {
+   "query": "NPC 专属宗教。激进的军事教团，与共和国时有武装冲突，归为帮派。成员数百人。无变量。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-c-the-children-of-ser-huggah"
+   ],
+   "note": "词条释义去掉词条名（the children of ser-huggah）"
+  },
+  {
+   "query": "控制度",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-c-control"
+   ],
+   "note": "词条名（control）"
+  },
+  {
+   "query": "表征[伊卡诺斯](/dictionary/i#ikaanos)的治安。它决定帮派与劫掠者的出现数量。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-c-control"
+   ],
+   "note": "词条释义去掉词条名（control）"
+  },
+  {
+   "query": "塞拉西",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-c-celassi"
+   ],
+   "note": "词条名（celassi）"
+  },
+  {
+   "query": "地名。[拉纳](/dictionary/r#raana)绕之公转的恒星。它在银河系中的位置与[地球](/dictionary/e-1#earth)绕行的太阳相当",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-c-celassi"
+   ],
+   "note": "词条释义去掉词条名（celassi）"
+  },
+  {
+   "query": "医疗箱",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-d-doctor-s-kit"
+   ],
+   "note": "词条名（doctor's kit）"
+  },
+  {
+   "query": "消耗品。在[医生堂](/dictionary/d#doctor%27s%20hall)出售，600 元。用后即耗。玩家医学 40 以上时，可对[倒地](/dic",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-d-doctor-s-kit"
+   ],
+   "note": "词条释义去掉词条名（doctor's kit）"
+  },
+  {
+   "query": "疏离",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-d-detached"
+   ],
+   "note": "词条名（detached）"
+  },
+  {
+   "query": "NPC 特质。很难让她在深层上喜欢你。每日掉 5 点好感，最低到 60。心情 80 以上且好感达中立以上时，每日有 1% 概率使本特质减 1 点。变量 trai",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-d-detached"
+   ],
+   "note": "词条释义去掉词条名（detached）"
+  },
+  {
+   "query": "地球直系",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-d-direct-earth-lineage"
+   ],
+   "note": "词条名（direct earth lineage）"
+  },
+  {
+   "query": "NPC 特质。该 NPC 的父母之一在地球出生长大，因此与人类摇篮有直接联系。联系或来自轶事，或来自今日伊卡诺斯已罕见的习俗。这类 NPC 多半用过[再生剂](",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-d-direct-earth-lineage"
+   ],
+   "note": "词条释义去掉词条名（direct earth lineage）"
+  },
+  {
+   "query": "大工棋",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-d-daiku"
+   ],
+   "note": "词条名（daiku）"
+  },
+  {
+   "query": "其它机制。莱坎的两人战术棋盘游戏，又称「军队木匠」，是当地赌钱的首选玩法，一局约一小时。开局用 12 点买兵，可选农民（1 点）、弓手（2 点）、矛兵（2 点）",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-d-daiku"
+   ],
+   "note": "词条释义去掉词条名（daiku）"
+  },
+  {
+   "query": "吞噬龙",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-d-devor-dragon"
+   ],
+   "note": "词条名（devor dragon）"
+  },
+  {
+   "query": "生物。拉纳原生的大型恐龙状掠食者，栖于[科拉松丛林](/dictionary/c#corazon%20jungles)。寿命可达 100 年，长 12 到 20",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-d-devor-dragon"
+   ],
+   "note": "词条释义去掉词条名（devor dragon）"
+  },
+  {
+   "query": "邓加爬虫",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-d-dungah-crawlers"
+   ],
+   "note": "词条名（dungah crawlers）"
+  },
+  {
+   "query": "生物。拉纳甲虫状无脊椎动物，不会飞，会掘洞，寿命可达 4 年，长 10 厘米。能取食地球引种的植物，繁殖极快，可成灾。在田里啃根，进了仓库与粮仓就吃粮。性成熟时",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-d-dungah-crawlers"
+   ],
+   "note": "词条释义去掉词条名（dungah crawlers）"
+  },
+  {
+   "query": "伤害",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-d-damage"
+   ],
+   "note": "词条名（damage）"
+  },
+  {
+   "query": "武器属性。武器加在 1D20 基础骰上的固定值。远程武器分远距与近距两个值，近战武器只有近距。近战另受[力量](/dictionary/s#strength)与",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-d-damage"
+   ],
+   "note": "词条释义去掉词条名（damage）"
+  },
+  {
+   "query": "码头区",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-d-the-docks"
+   ],
+   "note": "词条名（the docks）"
+  },
+  {
+   "query": "埃里希·博尔曼",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-e-erich-bormann"
+   ],
+   "note": "词条名（erich bormann）"
+  },
+  {
+   "query": "NPC。绰号“红腰带”，[斯托克丘陵](/dictionary/s#stokke%20hills)一带的疯癫劫掠者，盘踞在 Jaggernic 路上的一栋旧楼里",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-e-erich-bormann"
+   ],
+   "note": "词条释义去掉词条名（erich bormann）"
+  },
+  {
+   "query": "翡翠岛",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-e-emerald-island"
+   ],
+   "note": "词条名（emerald island）"
+  },
+  {
+   "query": "翡翠城所在，[伊卡诺斯](/dictionary/i#ikaanos)的冠冕。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-e-emerald-island"
+   ],
+   "note": "词条释义去掉词条名（emerald island）"
+  },
+  {
+   "query": "探险家公会",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-e-explorer-s-guild"
+   ],
+   "note": "词条名（explorer's guild）"
+  },
+  {
+   "query": "势力与宗教。曾是拉纳研究领域最富庶的机构，资源近乎无限。[大断绝](/dictionary/s#the%20severance)后仍是不可小觑的力量。此后它逐渐",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-e-explorer-s-guild"
+   ],
+   "note": "词条释义去掉词条名（explorer's guild）"
+  },
+  {
+   "query": "埃纳尔·科尔索",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-e-einar-corso"
+   ],
+   "note": "词条名（einar corso）"
+  },
+  {
+   "query": "NPC。战士，出身可追溯到第一波移民的家族，家族名在归入[阿萨部族](/dictionary/a#the%20aesir%20tribe)后湮没。在[西区高地]",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-e-einar-corso"
+   ],
+   "note": "词条释义去掉词条名（einar corso）"
+  },
+  {
+   "query": "环境修正",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-e-environmental-modifier"
+   ],
+   "note": "词条名（environmental modifier）"
+  },
+  {
+   "query": "在黑暗、雨中、强风或风暴甲板上作战，都会影响战斗判定。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-e-environmental-modifier"
+   ],
+   "note": "词条释义去掉词条名（environmental modifier）"
+  },
+  {
+   "query": "ESS 达莫达号",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-e-ess-damodar"
+   ],
+   "note": "词条名（ess damodar）"
+  },
+  {
+   "query": "船与飞船。人类第一艘反重力推进的飞船，2087 年升空。它是[丹尼尔·埃斯特哈齐](/dictionary/d#daniel%20esterhazy)在纳米技术",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-e-ess-damodar"
+   ],
+   "note": "词条释义去掉词条名（ess damodar）"
+  },
+  {
+   "query": "星魂石",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-e-embryl"
+   ],
+   "note": "词条名（embryl）"
+  },
+  {
+   "query": "拉纳特有而地球没有的金色矿物，比钻石更稀有，适合做首饰。极少有人出售，主要从[矿场](/dictionary/m#mine)或[勘探](/dictionary/",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-e-embryl"
+   ],
+   "note": "词条释义去掉词条名（embryl）"
+  },
+  {
+   "query": "露出癖",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-e-exhibitionist"
+   ],
+   "note": "词条名（exhibitionist）"
+  },
+  {
+   "query": "NPC 特质。不在意衣着与身体暴露的世俗规矩。要她脱衣或穿暴露衣物时，[心情](/dictionary/h#happiness)与意志损失低于常人。与[羞怯](",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-e-exhibitionist"
+   ],
+   "note": "词条释义去掉词条名（exhibitionist）"
+  },
+  {
+   "query": "闪存堡",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-f-the-flash-fort"
+   ],
+   "note": "词条名（the flash fort）"
+  },
+  {
+   "query": "地点。特雷斯托家族的存储设施，也是拉纳最后一处网络化存储。它由数百枚来自导航控制板的微型芯片拼成，剩余容量约 10 TB。每一千字节都算珍贵。家族出高价收购冒险",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-f-the-flash-fort"
+   ],
+   "note": "词条释义去掉词条名（the flash fort）"
+  },
+  {
+   "query": "拳头",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-f-fists"
+   ],
+   "note": "词条名（fists）"
+  },
+  {
+   "query": "近战武器。游戏面板列作 Unarmed。伤害加 2。攻速快，[攻击范围](/dictionary/r#reach) 0。不具[护甲穿透](/dictionary",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-f-fists"
+   ],
+   "note": "词条释义去掉词条名（fists）"
+  },
+  {
+   "query": "格调",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-f-flair"
+   ],
+   "note": "词条名（flair）"
+  },
+  {
+   "query": "宅邸指标。由管粮女仆与主厨协作产出。用途有二：宴会时作为判定依据，以及按[奢华](/dictionary/l#luxury)等级（佳肴与酒水）换算成[影响力](",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-f-flair"
+   ],
+   "note": "词条释义去掉词条名（flair）"
+  },
+  {
+   "query": "女性",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-f-females"
+   ],
+   "note": "词条名（females）"
+  },
+  {
+   "query": "宅邸指标。宅邸统计页第二页的计数，记录宅邸居住者中的人数。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-f-females"
+   ],
+   "note": "词条释义去掉词条名（females）"
+  },
+  {
+   "query": "法拉·萨马德",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-f-farah-samad"
+   ],
+   "note": "词条名（farah samad）"
+  },
+  {
+   "query": "NPC。三年前入 Amir Hasan 家做女仆，与[阿伊莎·哈桑](/dictionary/a#aisha%20hasan)成了密友。随 Amir Hasan",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-f-farah-samad"
+   ],
+   "note": "词条释义去掉词条名（farah samad）"
+  },
+  {
+   "query": "毗湿奴堡",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-f-fort-vishnu"
+   ],
+   "note": "词条名（fort vishnu）"
+  },
+  {
+   "query": "地点。共和国的边境小堡之一，位于伊卡诺斯以北约 25 英里。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-f-fort-vishnu"
+   ],
+   "note": "词条释义去掉词条名（fort vishnu）"
+  },
+  {
+   "query": "钓鱼",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-f-fishing"
+   ],
+   "note": "词条名（fishing）"
+  },
+  {
+   "query": "机制。钓点只有一处，在[北红天堂](/dictionary/n#north%20redhaven)的 Red River 岸边。渔具在[红天堂](/dictio",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-f-fishing"
+   ],
+   "note": "词条释义去掉词条名（fishing）"
+  },
+  {
+   "query": "费默兽",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-f-femmer-beasts"
+   ],
+   "note": "词条名（femmer beasts）"
+  },
+  {
+   "query": "生物。拉纳原生动物里少数适应了人类驯养的一种。寿命可达 40 年，高 170 厘米，公牛重 450 公斤，母牛 350 公斤。杂食，靠弯角与厚皮抵御[乌尔猫](",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-f-femmer-beasts"
+   ],
+   "note": "词条释义去掉词条名（femmer beasts）"
+  },
+  {
+   "query": "网格密钥",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-g-grid-key"
+   ],
+   "note": "词条名（grid key）"
+  },
+  {
+   "query": "拇指大小的古董「通用串行总线」设备，接入 The Grid 后可解密灾变前遗留的数据。每持有一把，[骇入](/dictionary/h#hacking)判定加 ",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-g-grid-key"
+   ],
+   "note": "词条释义去掉词条名（grid key）"
+  },
+  {
+   "query": "火药",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-g-gunpowder"
+   ],
+   "note": "词条名（gunpowder）"
+  },
+  {
+   "query": "制作材料，用于制作[弹药](/dictionary/a#ammunition)。可按桶购买，常见为 100 或 200 单位一桶，单价约 1 元，亦有 5,00",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-g-gunpowder"
+   ],
+   "note": "词条释义去掉词条名（gunpowder）"
+  },
+  {
+   "query": "体育馆",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-g-gymnasium"
+   ],
+   "note": "词条名（gymnasium）"
+  },
+  {
+   "query": "地点。位于[鸦末](/dictionary/c#crow%27s%20end)。伊卡诺斯头号体操赛事「大赛」的举办地。预赛每 25 天、决赛每 50 天一次，单",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-g-gymnasium"
+   ],
+   "note": "词条释义去掉词条名（gymnasium）"
+  },
+  {
+   "query": "护卫",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-g-guard"
+   ],
+   "note": "词条名（guard）"
+  },
+  {
+   "query": "宅邸岗位。守备宅邸、抵御外部威胁，并阻止不满的[奴隶](/dictionary/s#slave)逃跑。可同时有多名。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-g-guard"
+   ],
+   "note": "词条释义去掉词条名（guard）"
+  },
+  {
+   "query": "坎达里亚人",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-g-gandarians"
+   ],
+   "note": "词条名（gandarians）"
+  },
+  {
+   "query": "世界观。一万名人类殖民者的后裔，他们定居在西方大陆[坎达里亚](/dictionary/g#gandaria)，[大断绝](/dictionary/s#the%",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-g-gandarians"
+   ],
+   "note": "词条释义去掉词条名（gandarians）"
+  },
+  {
+   "query": "金矿石",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-g-gold-ore"
+   ],
+   "note": "词条名（gold ore）"
+  },
+  {
+   "query": "材料。矿场的产出之一。10 份可在[锻炉](/dictionary/s#smithery)精炼成 1 份[黄金](/dictionary/g#gold)，需[锻",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-g-gold-ore"
+   ],
+   "note": "词条释义去掉词条名（gold ore）"
+  },
+  {
+   "query": "伊卡诺斯世家",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-g-great-houses-of-ikaanos"
+   ],
+   "note": "词条名（great houses of ikaanos）"
+  },
+  {
+   "query": "派系。七个围绕显赫家族或老企业形成的组织，掌控伊卡诺斯大部分生产设施、贸易市场与社会事业。近似独立王国，名义上效忠球上老爷，实力却足以自行其是。现存五家为 Cy",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-g-great-houses-of-ikaanos"
+   ],
+   "note": "词条释义去掉词条名（great houses of ikaanos）"
+  },
+  {
+   "query": "巨剑",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-g-great-sword"
+   ],
+   "note": "词条名（great sword）"
+  },
+  {
+   "query": "玩家特质。[MoR Enhanced](/dictionary/m#mor%20enhanced) 专属，Cost 5，Requirements 无。玩家十六岁",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-g-great-sword"
+   ],
+   "note": "词条释义去掉词条名（great sword）"
+  },
+  {
+   "query": "憎恨",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-h-hate"
+   ],
+   "note": "词条名（hate）"
+  },
+  {
+   "query": "NPC 特质。遭受恶劣对待或暴力时会累积值。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-h-hate"
+   ],
+   "note": "词条释义去掉词条名（hate）"
+  },
+  {
+   "query": "后宫之主",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-h-harem-lord"
+   ],
+   "note": "词条名（harem lord）"
+  },
+  {
+   "query": "玩家特质。Cost 不适用，Requirements 参与[莫迪凯·阿德勒](/dictionary/m#mordecai%20adler)的[后宫](/dic",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-h-harem-lord"
+   ],
+   "note": "词条释义去掉词条名（harem lord）"
+  },
+  {
+   "query": "重型皮甲",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-h-heavy-leather-armor"
+   ],
+   "note": "词条名（heavy leather armor）"
+  },
+  {
+   "query": "护甲。吸收值 14，[敏捷惩罚](/dictionary/p#penalty) −15。基础价 1,000 元，维修 60 元。它是用钢板加固的皮甲。NPC 用",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-h-heavy-leather-armor"
+   ],
+   "note": "词条释义去掉词条名（heavy leather armor）"
+  },
+  {
+   "query": "特雷斯托家族",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-h-house-teresto"
+   ],
+   "note": "词条名（house teresto）"
+  },
+  {
+   "query": "派系。伊卡诺斯世家之一。427 点[权力](/dictionary/p#power%20value)，219 名兵员，资金 789,229,000，首领 The",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-h-house-teresto"
+   ],
+   "note": "词条释义去掉词条名（house teresto）"
+  },
+  {
+   "query": "卫生",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-h-hygiene"
+   ],
+   "note": "词条名（hygiene）"
+  },
+  {
+   "query": "变量 masterfilth。数值随清洁度上升。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-h-hygiene"
+   ],
+   "note": "词条释义去掉词条名（hygiene）"
+  },
+  {
+   "query": "猎手",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-h-hunter"
+   ],
+   "note": "词条名（hunter）"
+  },
+  {
+   "query": "宅邸[岗位](/dictionary/j#job)。对应狩猎产出。 技能分类。开局购点选项，分三级：Novice 20 点、Adept 加 60 点、Exper",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-h-hunter"
+   ],
+   "note": "词条释义去掉词条名（hunter）"
+  },
+  {
+   "query": "亨利·凯西安",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-h-henry-kessian"
+   ],
+   "note": "词条名（henry kessian）"
+  },
+  {
+   "query": "NPC。[双月教会](/dictionary/c#the%20church%20of%20the%20two%20moons) 2260 年代最早一批Lunae",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-h-henry-kessian"
+   ],
+   "note": "词条释义去掉词条名（henry kessian）"
+  },
+  {
+   "query": "哈马市场",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-h-hamah-market"
+   ],
+   "note": "词条名（hamah market）"
+  },
+  {
+   "query": "伊卡诺斯城郊",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-i-ikaanos-city-outskirts"
+   ],
+   "note": "词条名（ikaanos city outskirts）"
+  },
+  {
+   "query": "城外的近郊区域。含乙女冢、[牧师塘](/dictionary/p#preacher%27s%20pond)、[暗湖](/dictionary/d#darkmer",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-i-ikaanos-city-outskirts"
+   ],
+   "note": "词条释义去掉词条名（ikaanos city outskirts）"
+  },
+  {
+   "query": "遗产",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-i-inheritance"
+   ],
+   "note": "词条名（inheritance）"
+  },
+  {
+   "query": "玩家特质。[MoR Enhanced](/dictionary/m#mor%20enhanced) 专属，Cost 30，Requirements 无。玩家开局",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-i-inheritance"
+   ],
+   "note": "词条释义去掉词条名（inheritance）"
+  },
+  {
+   "query": "艾奥娜·法利",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-i-iona-farley"
+   ],
+   "note": "词条名（iona farley）"
+  },
+  {
+   "query": "NPC。[议长](/dictionary/c#chancellor)[莫迪凯·阿德勒](/dictionary/m#mordecai%20adler)[后宫](",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-i-iona-farley"
+   ],
+   "note": "词条释义去掉词条名（iona farley）"
+  },
+  {
+   "query": "击倒概率",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-i-incapacitation-chance"
+   ],
+   "note": "词条名（incapacitation chance）"
+  },
+  {
+   "query": "人类敌人[生命](/dictionary/h#health)降到 0 以下时，有 11% 基础概率变为倒地而非死亡。收尾一击的[武器](/dictionary/",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-i-incapacitation-chance"
+   ],
+   "note": "词条释义去掉词条名（incapacitation chance）"
+  },
+  {
+   "query": "植入体",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-i-implants"
+   ],
+   "note": "词条名（implants）"
+  },
+  {
+   "query": "内的装置。多数出自地球时代的技术，拉纳无法自制。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-i-implants"
+   ],
+   "note": "词条释义去掉词条名（implants）"
+  },
+  {
+   "query": "伊伦多穿梭机",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-i-the-irendor-shuttle"
+   ],
+   "note": "词条名（the irendor shuttle）"
+  },
+  {
+   "query": "地点。拉纳首次受控着陆的穿梭机，三百多年前落地。残骸现存于[红天堂市场](/dictionary/r#redhaven%20market)，当地人视之为圣物。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-i-the-irendor-shuttle"
+   ],
+   "note": "词条释义去掉词条名（the irendor shuttle）"
+  },
+  {
+   "query": "铁矿石",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-i-iron-ore"
+   ],
+   "note": "词条名（iron ore）"
+  },
+  {
+   "query": "材料。矿场的产出之一，可精炼成[钢](/dictionary/s#steel)。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-i-iron-ore"
+   ],
+   "note": "词条释义去掉词条名（iron ore）"
+  },
+  {
+   "query": "近亲繁殖",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-i-inbred"
+   ],
+   "note": "词条名（inbred）"
+  },
+  {
+   "query": "NPC 特质。家族世代近亲通婚，患有严重遗传缺陷。特质值取 0、25、50、75 或 100，不同档位给不同起始属性。25 为 Hideous，起始[美貌](/",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-i-inbred"
+   ],
+   "note": "词条释义去掉词条名（inbred）"
+  },
+  {
+   "query": "杰克·老农",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-j-jack-peasant"
+   ],
+   "note": "词条名（jack peasant）"
+  },
+  {
+   "query": "NPC。踏实的老兵，习惯苦力与荒野长途，有大家庭要养，靠当[雇佣兵](/dictionary/m#mercenary)赚钱。在红天堂市场可雇，日薪 22 元。他",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-j-jack-peasant"
+   ],
+   "note": "词条释义去掉词条名（jack peasant）"
+  },
+  {
+   "query": "麻木",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-j-jaded"
+   ],
+   "note": "词条名（jaded）"
+  },
+  {
+   "query": "NPC 特质。[心情](/dictionary/h#happiness)增长远慢于常人，好事对她影响很小。坏事对她的冲击也小于常人。玩家待她差时，掉的心情与[好",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-j-jaded"
+   ],
+   "note": "词条释义去掉词条名（jaded）"
+  },
+  {
+   "query": "杰夫·格兰德威尔",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-j-jeff-grandwell"
+   ],
+   "note": "词条名（jeff grandwell）"
+  },
+  {
+   "query": "剧情 NPC。[格兰德威尔家族](/dictionary/h#house%20grandwell)的家主，[基曼托辛迪加](/dictionary/k#the%",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-j-jeff-grandwell"
+   ],
+   "note": "词条释义去掉词条名（jeff grandwell）"
+  },
+  {
+   "query": "欢液",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-j-joycum"
+   ],
+   "note": "词条名（joycum）"
+  },
+  {
+   "query": "一种植入体，让精液带上甜味。可非法加载高成瘾成分，使接受者产生精液依赖。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-j-joycum"
+   ],
+   "note": "词条释义去掉词条名（joycum）"
+  },
+  {
+   "query": "岗位",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-j-job"
+   ],
+   "note": "词条名（job）"
+  },
+  {
+   "query": "指派给 NPC 的日常工作，与[头衔](/dictionary/t#title)是两套体系。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-j-job"
+   ],
+   "note": "词条释义去掉词条名（job）"
+  },
+  {
+   "query": "诙谐",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-j-jester"
+   ],
+   "note": "词条名（jester）"
+  },
+  {
+   "query": "NPC 特质。爱开玩笑，给周围带来喜感。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-j-jester"
+   ],
+   "note": "词条释义去掉词条名（jester）"
+  },
+  {
+   "query": "牢房",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-j-jail-cell"
+   ],
+   "note": "词条名（jail cell）"
+  },
+  {
+   "query": "其它机制。关在里的 NPC 完全落在抓捕者手里，每日承受若干惩罚。 - 基础有 70% 概率使[意志](/dictionary/w#willpower)减 1 ",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-j-jail-cell"
+   ],
+   "note": "词条释义去掉词条名（jail cell）"
+  },
+  {
+   "query": "卡希尔矿场",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-k-kahill-mine"
+   ],
+   "note": "词条名（kahill mine）"
+  },
+  {
+   "query": "地点。位于卡希尔峰下、卡希尔哨站附近的丛林谷地，有简易住所与三条浅井，正在勘探金银矿脉。产权在[旧市政厅](/dictionary/o#old%20city%2",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-k-kahill-mine"
+   ],
+   "note": "词条释义去掉词条名（kahill mine）"
+  },
+  {
+   "query": "凯西裂隙眺台",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-k-kasey-s-crack-overlook"
+   ],
+   "note": "词条名（kasey's crack overlook）"
+  },
+  {
+   "query": "地点。城墙外靠近[乙女冢](/dictionary/i#imogen%27s%20barrow)的小丘，可俯瞰「凯西裂隙」。那是切穿伊卡诺斯城墙的一道大缺口。城",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-k-kasey-s-crack-overlook"
+   ],
+   "note": "词条释义去掉词条名（kasey's crack overlook）"
+  },
+  {
+   "query": "金斯波特",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-k-kingsport"
+   ],
+   "note": "词条名（kingsport）"
+  },
+  {
+   "query": "地点。建于 2239 年，位于伊卡诺斯以北约 50 英里、伊伦多里亚海岸的一处海湾。约 500 栋建筑，10 万人口，寡头制，首府镇有 4 万人，首领是市长 H",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-k-kingsport"
+   ],
+   "note": "词条释义去掉词条名（kingsport）"
+  },
+  {
+   "query": "堪萨斯·阿德勒",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-k-kansas-adler"
+   ],
+   "note": "词条名（kansas adler）"
+  },
+  {
+   "query": "NPC。[老爷球](/dictionary/m#the%20mastersphere)上的佣兵，日薪 750 元。需走 拉纳奴隶主（Slavemasters o",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-k-kansas-adler"
+   ],
+   "note": "词条释义去掉词条名（kansas adler）"
+  },
+  {
+   "query": "卡尔斯港劫掠者",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-k-the-karlshamn-raiders"
+   ],
+   "note": "词条名（the karlshamn raiders）"
+  },
+  {
+   "query": "NPC 专属宗教。激进的军事教团，与共和国时有武装冲突，归为帮派。成员数百人。无变量。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-k-the-karlshamn-raiders"
+   ],
+   "note": "词条释义去掉词条名（the karlshamn raiders）"
+  },
+  {
+   "query": "肯·布雷登",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-k-ken-brayden"
+   ],
+   "note": "词条名（ken brayden）"
+  },
+  {
+   "query": "剧情 NPC。盘踞[码头区](/dictionary/d#the%20docks)的犯罪头目，经营一家接手数年的脱衣舞厅。他手里有[巴尔塔扎·德雷克](/dic",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-k-ken-brayden"
+   ],
+   "note": "词条释义去掉词条名（ken brayden）"
+  },
+  {
+   "query": "凯西公园",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-k-kasey-s-park"
+   ],
+   "note": "词条名（kasey's park）"
+  },
+  {
+   "query": "城市西南的区。昔日以大型公园著称。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-k-kasey-s-park"
+   ],
+   "note": "词条释义去掉词条名（kasey's park）"
+  },
+  {
+   "query": "卡希尔前哨",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-k-kahill-outpost"
+   ],
+   "note": "词条名（kahill outpost）"
+  },
+  {
+   "query": "[塞利奥尔森林](/dictionary/c#celior%20forest)中的贸易枢纽。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-k-kahill-outpost"
+   ],
+   "note": "词条释义去掉词条名（kahill outpost）"
+  },
+  {
+   "query": "奢华",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-l-luxury"
+   ],
+   "note": "词条名（luxury）"
+  },
+  {
+   "query": "宅邸指标。用于提升宅邸的居住品质。除按 NPC 数量给出[影响力](/dictionary/i#influence)加成（支出越高加成越大）之外，还影响[心情]",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-l-luxury"
+   ],
+   "note": "词条释义去掉词条名（luxury）"
+  },
+  {
+   "query": "皮革",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-l-leather"
+   ],
+   "note": "词条名（leather）"
+  },
+  {
+   "query": "材料。由[兽皮](/dictionary/s#skins)加工而来。轻甲、皮甲与大量中低阶配方的基础材料。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-l-leather"
+   ],
+   "note": "词条释义去掉词条名（leather）"
+  },
+  {
+   "query": "莱萨诺裂谷",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-l-the-lesano-chasm"
+   ],
+   "note": "词条名（the lesano chasm）"
+  },
+  {
+   "query": "地名。伊卡诺斯以北的深谷，长约 30 公里（19 英里），当地人称之为“黄色峡谷”。谷壁多为 200 码的垂直落差，只有几处凿入岩壁的阶梯可以下到谷底。谷内洞穴",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-l-the-lesano-chasm"
+   ],
+   "note": "词条释义去掉词条名（the lesano chasm）"
+  },
+  {
+   "query": "败仗",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-l-lost-battles"
+   ],
+   "note": "词条名（lost battles）"
+  },
+  {
+   "query": "宅邸指标。宅邸统计页第二页的计数。战斗结束时敌方还有至少一人站立，而我方全员倒下，计为一场。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-l-lost-battles"
+   ],
+   "note": "词条释义去掉词条名（lost battles）"
+  },
+  {
+   "query": "自由",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-l-liberty"
+   ],
+   "note": "词条名（liberty）"
+  },
+  {
+   "query": "伊卡诺斯的治理指标之一，与繁荣、控制、腐化并列。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-l-liberty"
+   ],
+   "note": "词条释义去掉词条名（liberty）"
+  },
+  {
+   "query": "路易斯安那·阿德勒",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-l-louisiana-adler"
+   ],
+   "note": "词条名（louisiana adler）"
+  },
+  {
+   "query": "NPC。[典范](/dictionary/p#paragon)，Mordecai Adler 的妹妹，20 岁时随兄长来到拉纳。在共和国宫，属 拉纳奴隶主（Sl",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-l-louisiana-adler"
+   ],
+   "note": "词条释义去掉词条名（louisiana adler）"
+  },
+  {
+   "query": "洛伦·德·马肖",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-l-loren-de-machaut"
+   ],
+   "note": "词条名（loren de machaut）"
+  },
+  {
+   "query": "NPC。天生的猎人，在伊卡诺斯城郊出生长大，泼辣无畏。在 Marston Ave. 的 Moe's Tavern 可雇，日薪 25 元。她有[猎兵](/dict",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-l-loren-de-machaut"
+   ],
+   "note": "词条释义去掉词条名（loren de machaut）"
+  },
+  {
+   "query": "体力上限",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-m-maximum-stamina"
+   ],
+   "note": "词条名（maximum stamina）"
+  },
+  {
+   "query": "变量 .npc.avNNN.maxstamina，取值 0 到 130，可略超。分档为虚弱、未训练、正常、良好、不知疲倦。它参与[生命](/dictionary",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-m-maximum-stamina"
+   ],
+   "note": "词条释义去掉词条名（maximum stamina）"
+  },
+  {
+   "query": "主机",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-m-mainframe"
+   ],
+   "note": "词条名（mainframe）"
+  },
+  {
+   "query": "世界观。大小不及冰箱的固定式计算机。玩家的宅邸有一台，可用来解密从外星飞船上提取的数据。玩家在殖民地的机房里也会遇到它，那种机器装在防辐射的 C2R 外壳里，配",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-m-mainframe"
+   ],
+   "note": "词条释义去掉词条名（mainframe）"
+  },
+  {
+   "query": "机械单位",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-m-mechanized-unit"
+   ],
+   "note": "词条名（mechanized unit）"
+  },
+  {
+   "query": "NPC 特质。载具与乘员组成的战斗单位，例如[博福斯 40mm 高射炮](/dictionary/b#bofors%2040mm)。背包不可用，不参与多数特质效",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-m-mechanized-unit"
+   ],
+   "note": "词条释义去掉词条名（mechanized unit）"
+  },
+  {
+   "query": "近战",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-m-melee-combat"
+   ],
+   "note": "词条名（melee combat）"
+  },
+  {
+   "query": "名医",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-m-master-healer"
+   ],
+   "note": "词条名（master healer）"
+  },
+  {
+   "query": "玩家特质。Cost 120，Requirements 为[医生](/dictionary/d#doctor)类的 Adept 级。在开局购点界面把[医生](/d",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-m-master-healer"
+   ],
+   "note": "词条释义去掉词条名（master healer）"
+  },
+  {
+   "query": "我亲爱的父亲",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-m-my-beloved-father"
+   ],
+   "note": "词条名（my beloved father）"
+  },
+  {
+   "query": "人物委托。[大城梅琳](/dictionary/m#mai-lynn%20oshiro)之父大城俊的园艺生意。玩家可出资买断，也可夜里潜入[水晶丘](/dict",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-m-my-beloved-father"
+   ],
+   "note": "词条释义去掉词条名（my beloved father）"
+  },
+  {
+   "query": "模块",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-m-modules"
+   ],
+   "note": "词条名（modules）"
+  },
+  {
+   "query": "不占平面图空间即可加装的设施，为宅邸提供额外能力。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-m-modules"
+   ],
+   "note": "词条释义去掉词条名（modules）"
+  },
+  {
+   "query": "生命上限",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-m-maximum-health"
+   ],
+   "note": "词条名（maximum health）"
+  },
+  {
+   "query": "亦称 Toughness。由（[力量](/dictionary/s#strength) + [体力](/dictionary/s#stamina) + [体格]",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-m-maximum-health"
+   ],
+   "note": "词条释义去掉词条名（maximum health）"
+  },
+  {
+   "query": "北美合众国（NUSA）",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-n-nusa"
+   ],
+   "note": "词条名（nusa）"
+  },
+  {
+   "query": "世界观。2130 到 2197 年的北美政权，全名见[北美合众国](/dictionary/n#north%20united%20states%20of%20a",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-n-nusa"
+   ],
+   "note": "词条释义去掉词条名（nusa）"
+  },
+  {
+   "query": "夜魔",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-n-night-stalkers"
+   ],
+   "note": "词条名（night stalkers）"
+  },
+  {
+   "query": "生物。又称 Umbra Raptor，学名 Umbrafelis raptor。大型爬行类掠食者，栖于森林与偏远荒野，多在[塞利奥尔森林](/dictionar",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-n-night-stalkers"
+   ],
+   "note": "词条释义去掉词条名（night stalkers）"
+  },
+  {
+   "query": "北红天堂",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-n-north-redhaven"
+   ],
+   "note": "词条名（north redhaven）"
+  },
+  {
+   "query": "新东京",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-n-new-tokyo"
+   ],
+   "note": "词条名（new tokyo）"
+  },
+  {
+   "query": "地点。[白山帝国](/dictionary/h#hakusan%20empire)的首都，位于[普罗米修斯湖](/dictionary/p#prometheus",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-n-new-tokyo"
+   ],
+   "note": "词条释义去掉词条名（new tokyo）"
+  },
+  {
+   "query": "复仇女神 SR-C",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-n-nemesis-sr-c"
+   ],
+   "note": "词条名（nemesis sr-c）"
+  },
+  {
+   "query": "远程[武器](/dictionary/w#weapon)，使用 NEM-50 [弹药](/dictionary/a#ammunition)。无法购买，为佣兵刺客",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-n-nemesis-sr-c"
+   ],
+   "note": "词条释义去掉词条名（nemesis sr-c）"
+  },
+  {
+   "query": "北河流域",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-n-north-river-basin"
+   ],
+   "note": "词条名（north river basin）"
+  },
+  {
+   "query": "净脑剂",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-n-neuraclean"
+   ],
+   "note": "词条名（neuraclean）"
+  },
+  {
+   "query": "The Severance 之前的精神科药物，本意是永久治愈精神分裂与重度躁郁症。2280 年因其作用范围超出预期而列入禁令。服下会立即移除对象所有非生理特质。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-n-neuraclean"
+   ],
+   "note": "词条释义去掉词条名（neuraclean）"
+  },
+  {
+   "query": "新闻记者",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-n-news-reporter"
+   ],
+   "note": "词条名（news reporter）"
+  },
+  {
+   "query": "NPC 特质。[妮可·布赖](/dictionary/n#nicole%20boulay)是记者，能帮玩家把一间房改成 News Office，并解锁她的专属岗",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-n-news-reporter"
+   ],
+   "note": "词条释义去掉词条名（news reporter）"
+  },
+  {
+   "query": "马斯顿沼泽外缘",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-o-outer-marston-swamp"
+   ],
+   "note": "词条名（outer marston swamp）"
+  },
+  {
+   "query": "[红天堂](/dictionary/r#redhaven)以西的贫困区，位于[湿地带](/dictionary/w#the%20wetlands)边缘。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-o-outer-marston-swamp"
+   ],
+   "note": "词条释义去掉词条名（outer marston swamp）"
+  },
+  {
+   "query": "玄学家",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-o-occultist"
+   ],
+   "note": "词条名（occultist）"
+  },
+  {
+   "query": "玩家特质。Cost 15，Requirements 无。玩家钻研边缘科学与冷僻仪式，开局玄学技能加 10 点。除起始技能外没有持续效果。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-o-occultist"
+   ],
+   "note": "词条释义去掉词条名（occultist）"
+  },
+  {
+   "query": "子嗣",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-o-offspring"
+   ],
+   "note": "词条名（offspring）"
+  },
+  {
+   "query": "[怀孕](/dictionary/p#pregnancy)满 280 天后分娩，产出女孩或男孩。 子女系统。玩家关掉女性 NPC 的[透她露](/diction",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-o-offspring"
+   ],
+   "note": "词条释义去掉词条名（offspring）"
+  },
+  {
+   "query": "口欲偏好",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-o-oral-fixation"
+   ],
+   "note": "词条名（oral fixation）"
+  },
+  {
+   "query": "NPC 特质。偏好口交，也喜欢点心与[接吻](/dictionary/k#kissing)。[好感](/dictionary/a#affection)达中立以上",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-o-oral-fixation"
+   ],
+   "note": "词条释义去掉词条名（oral fixation）"
+  },
+  {
+   "query": "誓约者",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-o-oathsworn"
+   ],
+   "note": "词条名（oathsworn）"
+  },
+  {
+   "query": "玩家特质。Cost 30，Requirements 无。玩家立誓信奉 Aesir 旧神，开局即为[阿萨神教](/dictionary/a#aesir)的[虔诚]",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-o-oathsworn"
+   ],
+   "note": "词条释义去掉词条名（oathsworn）"
+  },
+  {
+   "query": "旧俱乐部",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-o-old-clubhouse"
+   ],
+   "note": "词条名（old clubhouse）"
+  },
+  {
+   "query": "地点。位于[斯托克丘陵](/dictionary/s#stokke%20hills)的废弃工厂，玩家与兄弟年少时的聚会处。屋内只剩鸽粪、机油味与涂鸦，墙上有“蓝",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-o-old-clubhouse"
+   ],
+   "note": "词条释义去掉词条名（old clubhouse）"
+  },
+  {
+   "query": "旧市政厅",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-o-old-city-hall"
+   ],
+   "note": "词条名（old city hall）"
+  },
+  {
+   "query": "地点。位于[皇宫区](/dictionary/p#palace%20district)。各部会首长在此传达议长的意旨。元老院每三天在此集会一次，批准立法者法庭送",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-o-old-city-hall"
+   ],
+   "note": "词条释义去掉词条名（old city hall）"
+  },
+  {
+   "query": "口交技能",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-o-oral-skill"
+   ],
+   "note": "词条名（oral skill）"
+  },
+  {
+   "query": "卖淫",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-p-prostitution"
+   ],
+   "note": "词条名（prostitution）"
+  },
+  {
+   "query": "性玩法。伊卡纳斯的系统，从 NPC 菜单的「」界面操作，与「岗位与头衔」分开。任何[奴隶](/dictionary/s#slave)或[仆役](/diction",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-p-prostitution"
+   ],
+   "note": "词条释义去掉词条名（prostitution）"
+  },
+  {
+   "query": "宫殿评级",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-p-palace-rating"
+   ],
+   "note": "词条名（palace rating）"
+  },
+  {
+   "query": "类似影响力，但只针对[伊卡诺斯](/dictionary/i#ikaanos)的上流社会。玩家靠[宅邸](/dictionary/h#household)中的高",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-p-palace-rating"
+   ],
+   "note": "词条释义去掉词条名（palace rating）"
+  },
+  {
+   "query": "完美主义者",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-p-perfectionist"
+   ],
+   "note": "词条名（perfectionist）"
+  },
+  {
+   "query": "NPC 特质。凡事极端投入，不接受半途而废。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-p-perfectionist"
+   ],
+   "note": "词条释义去掉词条名（perfectionist）"
+  },
+  {
+   "query": "普罗米修斯共和国",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-p-the-prometheus-republic"
+   ],
+   "note": "词条名（the prometheus republic）"
+  },
+  {
+   "query": "政权。2230 年建，55 万人口，首都[湖城](/dictionary/l#lake%20city)，元首为大市长 Brynn Seigler（2482 年生",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-p-the-prometheus-republic"
+   ],
+   "note": "词条释义去掉词条名（the prometheus republic）"
+  },
+  {
+   "query": "威望",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-p-prestige"
+   ],
+   "note": "词条名（prestige）"
+  },
+  {
+   "query": "衡量 NPC 的民间事迹。在 [体育馆](/dictionary/g#gymnasium) 赢下决赛可提升。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-p-prestige"
+   ],
+   "note": "词条释义去掉词条名（prestige）"
+  },
+  {
+   "query": "子嗣处理",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-p-process-offspring"
+   ],
+   "note": "词条名（process offspring）"
+  },
+  {
+   "query": "孩子约满 3000 天即 9 岁后，可经随机 NPC 流程处理。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-p-process-offspring"
+   ],
+   "note": "词条释义去掉词条名（process offspring）"
+  },
+  {
+   "query": "勘探工具",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-p-prospecting-gear"
+   ],
+   "note": "词条名（prospecting gear）"
+  },
+  {
+   "query": "在[红天堂](/dictionary/r#redhaven)的 Roo's General Store 出售，700 元一套，含淘盘、工具、绳与一盏简易纳米灯。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-p-prospecting-gear"
+   ],
+   "note": "词条释义去掉词条名（prospecting gear）"
+  },
+  {
+   "query": "空教授",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-p-professor-hemme"
+   ],
+   "note": "词条名（professor hemme）"
+  },
+  {
+   "query": "NPC。[学院](/dictionary/a#the%20academy)教授，开课 Know-It-All，学费 950 元，智力 60 以上可拿到最高收益。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-p-professor-hemme"
+   ],
+   "note": "词条释义去掉词条名（professor hemme）"
+  },
+  {
+   "query": "量子门",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-q-quantum-gates"
+   ],
+   "note": "词条名（quantum gates）"
+  },
+  {
+   "query": "看似早已停用的异星科技，人类靠它往来星际。[伊斯兰教](/dictionary/i#islam)就是 23 世纪经传入拉纳的。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-q-quantum-gates"
+   ],
+   "note": "词条释义去掉词条名（quantum gates）"
+  },
+  {
+   "query": "行尸",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-q-quelled"
+   ],
+   "note": "词条名（quelled）"
+  },
+  {
+   "query": "NPC 特质。几乎完全脑死，只剩一具会动的躯壳。认知功能大多停止，需要人下指令才能行动。战斗中可以参战，但无法使用[武器](/dictionary/w#weap",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-q-quelled"
+   ],
+   "note": "词条释义去掉词条名（quelled）"
+  },
+  {
+   "query": "军需官",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-q-quartermaster"
+   ],
+   "note": "词条名（quartermaster）"
+  },
+  {
+   "query": "[宅邸](/dictionary/h#household)[头衔](/dictionary/t#title)。是玩家的副官。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-q-quartermaster"
+   ],
+   "note": "词条释义去掉词条名（quartermaster）"
+  },
+  {
+   "query": "任务",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-q-quest"
+   ],
+   "note": "词条名（quest）"
+  },
+  {
+   "query": "与进度。玩家接受的目标。游戏用 `$quest_` 前缀的变量逐条记录状态。开始时会弹一面横幅，写明名，并提示去看[日记簿](/dictionary/j#jou",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-q-quest"
+   ],
+   "note": "词条释义去掉词条名（quest）"
+  },
+  {
+   "query": "拉克辛",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-r-raxin-speed"
+   ],
+   "note": "词条名（raxin speed）"
+  },
+  {
+   "query": "街头兴奋剂，又名 Raxophedrine 或 rexar。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-r-raxin-speed"
+   ],
+   "note": "词条释义去掉词条名（raxin speed）"
+  },
+  {
+   "query": "步枪专精",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-r-rifleman"
+   ],
+   "note": "词条名（rifleman）"
+  },
+  {
+   "query": "NPC 特质。擅长[铁管枪](/dictionary/p#pipe%20gun)、[霰弹枪](/dictionary/s#shotgun)与步枪，包括 [.50",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-r-rifleman"
+   ],
+   "note": "词条释义去掉词条名（rifleman）"
+  },
+  {
+   "query": "罗达害兽",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-r-rodar-vermin"
+   ],
+   "note": "词条名（rodar vermin）"
+  },
+  {
+   "query": "生物。拉纳原生小动物，寿命不到三个月，长 5 厘米。数量会周期性暴增成灾，摧毁人类作物与储粮。游戏里是「异星虫害」事件四种虫之一。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-r-rodar-vermin"
+   ],
+   "note": "词条释义去掉词条名（rodar vermin）"
+  },
+  {
+   "query": "蕾切尔·斯特普尔顿",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-r-rachel-stapleton"
+   ],
+   "note": "词条名（rachel stapleton）"
+  },
+  {
+   "query": "NPC。在[汉密尔顿广场](/dictionary/h#hamilton%20square)的 Kymanto Hall 以 3,000 元购入。她常出现在[水",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-r-rachel-stapleton"
+   ],
+   "note": "词条释义去掉词条名（rachel stapleton）"
+  },
+  {
+   "query": "罗塞娜",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-r-rosena"
+   ],
+   "note": "词条名（rosena）"
+  },
+  {
+   "query": "NPC。「红腰带」Erich Bormann 的性奴。Bormann 是个独行法外之徒，常出没[斯托克丘陵](/dictionary/s#stokke%20hi",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-r-rosena"
+   ],
+   "note": "词条释义去掉词条名（rosena）"
+  },
+  {
+   "query": "远程战斗",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-r-ranged-combat"
+   ],
+   "note": "词条名（ranged combat）"
+  },
+  {
+   "query": "决定用远程武器命中概率的首要因素。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-r-ranged-combat"
+   ],
+   "note": "词条释义去掉词条名（ranged combat）"
+  },
+  {
+   "query": "遗物",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-r-relics"
+   ],
+   "note": "词条名（relics）"
+  },
+  {
+   "query": "物品大类。比[文物](/dictionary/a#artifacts)更古老、更神秘、也更贵的旧物，多与[玄学](/dictionary/o#occult)相关",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-r-relics"
+   ],
+   "note": "词条释义去掉词条名（relics）"
+  },
+  {
+   "query": "给养",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-r-rations"
+   ],
+   "note": "词条名（rations）"
+  },
+  {
+   "query": "经济与产业。宅邸的食物按「份」计，游戏内以 food ration 为单位追踪存量（变量 foodstuff），界面上简写作 R，故一条即 1R。存量不足时游戏",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-r-rations"
+   ],
+   "note": "词条释义去掉词条名（rations）"
+  },
+  {
+   "query": "颜控",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-s-superficial"
+   ],
+   "note": "词条名（superficial）"
+  },
+  {
+   "query": "NPC 特质。只看外貌，不管其它。玩家[美貌](/dictionary/b#beauty)低于 50 时，每日掉 1 点好感，最低到 Amiable。低于 30",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-s-superficial"
+   ],
+   "note": "词条释义去掉词条名（superficial）"
+  },
+  {
+   "query": "索菲亚·奥尔特加",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-s-sofia-ortega"
+   ],
+   "note": "词条名（sofia ortega）"
+  },
+  {
+   "query": "NPC。奴隶，26 岁，西班牙裔，高 5 尺 7 寸，重 132 磅。在[汉密尔顿广场](/dictionary/h#hamilton%20square)的[基",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-s-sofia-ortega"
+   ],
+   "note": "词条释义去掉词条名（sofia ortega）"
+  },
+  {
+   "query": "糖爹",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-s-the-sugar-daddy"
+   ],
+   "note": "词条名（the sugar daddy）"
+  },
+  {
+   "query": "宴会事件。只请[露维莎·舵手](/dictionary/l#lovisa%20helm)一人吃晚饭。她未动怒也未恨你，且在宅邸住满十四天以上时，会请你替她收拾一",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-s-the-sugar-daddy"
+   ],
+   "note": "词条释义去掉词条名（the sugar daddy）"
+  },
+  {
+   "query": "萨克拉帮",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-s-sacra-gang"
+   ],
+   "note": "词条名（sacra gang）"
+  },
+  {
+   "query": "势力与宗教。[斯托克堡](/dictionary/f#fort%20stokke)的常驻[帮派](/dictionary/b#bandits)之一。wiki 说",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-s-sacra-gang"
+   ],
+   "note": "词条释义去掉词条名（sacra gang）"
+  },
+  {
+   "query": "草图",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-s-schematic"
+   ],
+   "note": "词条名（schematic）"
+  },
+  {
+   "query": "经济与产业。[制作](/dictionary/c#crafting)系统的前置。没有就做不出指定物品。获得途径有三：任务奖励、商店购买、技能值达标。部分还要求先",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-s-schematic"
+   ],
+   "note": "词条释义去掉词条名（schematic）"
+  },
+  {
+   "query": "奴隶主",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-s-slaver"
+   ],
+   "note": "词条名（slaver）"
+  },
+  {
+   "query": "技能分类。开局购点选项，分三级：Novice 20 点、Adept 加 60 点、Expert 加 120 点，练满共 200 点。Novice 给[操纵](/",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-s-slaver"
+   ],
+   "note": "词条释义去掉词条名（slaver）"
+  },
+  {
+   "query": "小园圃",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-s-small-garden"
+   ],
+   "note": "词条名（small garden）"
+  },
+  {
+   "query": "地点。玩家后院专用小槽位的可建设施，与[雕像](/dictionary/s#statue)在同一槽位二选一。主要种[特尼尔草](/dictionary/t#te",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-s-small-garden"
+   ],
+   "note": "词条释义去掉词条名（small garden）"
+  },
+  {
+   "query": "“银剑”",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-s-the-silver-sword"
+   ],
+   "note": "词条名（the silver sword）"
+  },
+  {
+   "query": "近战武器。伤害加 13。攻速快，[攻击范围](/dictionary/r#reach) 0。不具[护甲穿透](/dictionary/a#armor%20pie",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-s-the-silver-sword"
+   ],
+   "note": "词条释义去掉词条名（the silver sword）"
+  },
+  {
+   "query": "织物",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-t-textiles"
+   ],
+   "note": "词条名（textiles）"
+  },
+  {
+   "query": "材料。由[碎布](/dictionary/s#scrap%20cloth)精纺而成，是[织机](/dictionary/l#loom)工序的成品。用于衣物与高级",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-t-textiles"
+   ],
+   "note": "词条释义去掉词条名（textiles）"
+  },
+  {
+   "query": "酒馆岗位",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-t-tavern-jobs"
+   ],
+   "note": "词条名（tavern jobs）"
+  },
+  {
+   "query": "城市产业岗位。自有酒馆可派 7 名工人与 1 名酒保。工人分服务员、保镖与表演者三类，胜任分分别取[魅力](/dictionary/c#charisma)与[家",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-t-tavern-jobs"
+   ],
+   "note": "词条释义去掉词条名（tavern jobs）"
+  },
+  {
+   "query": "酒馆",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-t-taverns"
+   ],
+   "note": "词条名（taverns）"
+  },
+  {
+   "query": "经济与产业。在[红天堂](/dictionary/r#redhaven)买下外部地块后可以自建，共两处地块可选。基础造价 32,000 元，建成后给你所属势力的",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-t-taverns"
+   ],
+   "note": "词条释义去掉词条名（taverns）"
+  },
+  {
+   "query": "焦油蛇",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-t-tar-snakes"
+   ],
+   "note": "词条名（tar snakes）"
+  },
+  {
+   "query": "生物。拉纳原生的小型毒蛇，多见于[生物大灭绝](/dictionary/g#the%20great%20biological%20wipe)之后形成的焦油状水洼",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-t-tar-snakes"
+   ],
+   "note": "词条释义去掉词条名（tar snakes）"
+  },
+  {
+   "query": "深渊恐兽",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-t-the-terror-from-the-deep"
+   ],
+   "note": "词条名（the terror from the deep）"
+  },
+  {
+   "query": "生物。同名事件放出的一头独特巨兽。它从[塞利奥尔森林](/dictionary/c#celior%20forest)深处闯入伊卡诺斯，在[凯西公园](/dict",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-t-the-terror-from-the-deep"
+   ],
+   "note": "词条释义去掉词条名（the terror from the deep）"
+  },
+  {
+   "query": "维克斯组合",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-t-team-wixx"
+   ],
+   "note": "词条名（team wixx）"
+  },
+  {
+   "query": "NPC 特质。Laika 与 Loden Wixx 都有[拾荒者](/dictionary/s#scavenger)特质，且兄妹配合极好。同日派两人出去拾荒，会",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-t-team-wixx"
+   ],
+   "note": "词条释义去掉词条名（team wixx）"
+  },
+  {
+   "query": "严师",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-t-taskmaster"
+   ],
+   "note": "词条名（taskmaster）"
+  },
+  {
+   "query": "玩家特质。Cost 20，Requirements 无。家教课程会额外消耗学生的[体力](/dictionary/s#stamina)。课程另有 15% 概率提",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-t-taskmaster"
+   ],
+   "note": "词条释义去掉词条名（taskmaster）"
+  },
+  {
+   "query": "风暴大楼",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-t-tempest-building"
+   ],
+   "note": "词条名（tempest building）"
+  },
+  {
+   "query": "地点。位于[水眼区](/dictionary/w#watery%20eyes)工业区，[桑格林·维玛拉集团](/dictionary/s#sangrin%20w",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-t-tempest-building"
+   ],
+   "note": "词条释义去掉词条名（tempest building）"
+  },
+  {
+   "query": "上流社会",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-u-the-upper-class"
+   ],
+   "note": "词条名（the upper class）"
+  },
+  {
+   "query": "世界观。伊卡诺斯城及周边邦国的社会群体，约占伊卡诺斯人口的 5%。同为，两家的财富与地位也可能相差极大。当地有句老话：上等人就是拥有一处四间以上房产的人。他还要",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-u-the-upper-class"
+   ],
+   "note": "词条释义去掉词条名（the upper class）"
+  },
+  {
+   "query": "不屈",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-u-unbreakable"
+   ],
+   "note": "词条名（unbreakable）"
+  },
+  {
+   "query": "NPC 特质。Cultist monk 的精神。[意志](/dictionary/w#willpower)低于 60 时，每日有 85% 概率使意志加 2 到 ",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-u-unbreakable"
+   ],
+   "note": "词条释义去掉词条名（unbreakable）"
+  },
+  {
+   "query": "地下世界",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-u-the-underworld"
+   ],
+   "note": "词条名（the underworld）"
+  },
+  {
+   "query": "地点。入口在[斯托克丘陵](/dictionary/s#stokke%20hills)。灾变前是巨型地下燃料仓，如今已改造成地底社区，居民两千余人。他们是付不起",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-u-the-underworld"
+   ],
+   "note": "词条释义去掉词条名（the underworld）"
+  },
+  {
+   "query": "USS 戈文达号",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-u-uss-govinda"
+   ],
+   "note": "词条名（uss govinda）"
+  },
+  {
+   "query": "船与飞船。飞船。2098 年在火星背后发现异星量子传送门，人类由此进入太空探索时代。它的舰名也是拉纳第三颗卫星 Raana-3 的别名。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-u-uss-govinda"
+   ],
+   "note": "词条释义去掉词条名（uss govinda）"
+  },
+  {
+   "query": "膂力不足",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-u-unwieldy"
+   ],
+   "note": "词条名（unwieldy）"
+  },
+  {
+   "query": "武器属性。[近战武器](/dictionary/m#melee%20weapon)对[力量](/dictionary/s#strength)设门槛，便使不动，扣",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-u-unwieldy"
+   ],
+   "note": "词条释义去掉词条名（unwieldy）"
+  },
+  {
+   "query": "厄运",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-u-unlucky"
+   ],
+   "note": "词条名（unlucky）"
+  },
+  {
+   "query": "玩家负面特质。Points +20，Requirements 无。它开启一条可重复的[宅邸](/dictionary/h#household)事件链，内容是小灾",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-u-unlucky"
+   ],
+   "note": "词条释义去掉词条名（unlucky）"
+  },
+  {
+   "query": "乌瓦克石碑",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-u-the-uwlak-monument"
+   ],
+   "note": "词条名（the uwlak monument）"
+  },
+  {
+   "query": "地点。位于[南红天堂](/dictionary/s#south%20redhaven)与[斯托克丘陵](/dictionary/s#stokke%20hills",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-u-the-uwlak-monument"
+   ],
+   "note": "词条释义去掉词条名（the uwlak monument）"
+  },
+  {
+   "query": "乌伯人",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-u-bermenschen"
+   ],
+   "note": "词条名（übermenschen）"
+  },
+  {
+   "query": "学院任务。起于[狼教授](/dictionary/p#professor%20wolf)在[学院](/dictionary/a#the%20academy)开的",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-u-bermenschen"
+   ],
+   "note": "词条释义去掉词条名（übermenschen）"
+  },
+  {
+   "query": "密室",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-v-the-vault"
+   ],
+   "note": "词条名（the vault）"
+  },
+  {
+   "query": "人物委托。[露维莎·舵手](/dictionary/l#lovisa%20helm)的专属线，须把她的好感到亲切，再问起身世。她会带你回[北红天堂](/dict",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-v-the-vault"
+   ],
+   "note": "词条释义去掉词条名（the vault）"
+  },
+  {
+   "query": "阴道技能",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-v-vaginal-skill"
+   ],
+   "note": "词条名（vaginal skill）"
+  },
+  {
+   "query": "反映女性 NPC 的总体性经验与骑乘熟练度。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-v-vaginal-skill"
+   ],
+   "note": "词条释义去掉词条名（vaginal skill）"
+  },
+  {
+   "query": "虚空兽",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-v-void-beast"
+   ],
+   "note": "词条名（void beast）"
+  },
+  {
+   "query": "生物。游戏里的一场首领战对手，来自虚空。生命值 2,800，武技 160，护甲为天生。击败它加 5 点[意志](/dictionary/w#willpower)",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-v-void-beast"
+   ],
+   "note": "词条释义去掉词条名（void beast）"
+  },
+  {
+   "query": "瓦莱里娅·舵手",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-v-valeria-helm"
+   ],
+   "note": "词条名（valeria helm）"
+  },
+  {
+   "query": "NPC。Gregory Helm 的妻子，Tori 与 Helm 家姐妹的母亲。出现在 The Helm Family 任务里，人在 Kymanto Hall。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-v-valeria-helm"
+   ],
+   "note": "词条释义去掉词条名（valeria helm）"
+  },
+  {
+   "query": "贞女情结",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-v-vestal-complex"
+   ],
+   "note": "词条名（vestal complex）"
+  },
+  {
+   "query": "NPC 特质。该 NPC 想把子宫留给某件神圣之事。只要她仍是阴道处女，每日加 3 点[心情](/dictionary/h#happiness)，上限 75。肛",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-v-vestal-complex"
+   ],
+   "note": "词条释义去掉词条名（vestal complex）"
+  },
+  {
+   "query": "瓦孔荒域",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-v-the-vakon-expanse"
+   ],
+   "note": "词条名（the vakon expanse）"
+  },
+  {
+   "query": "[伊卡诺斯](/dictionary/i#ikaanos)之外的荒原地区。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-v-the-vakon-expanse"
+   ],
+   "note": "词条释义去掉词条名（the vakon expanse）"
+  },
+  {
+   "query": "Virax 温泉",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-v-virax-springs"
+   ],
+   "note": "词条名（virax springs）"
+  },
+  {
+   "query": "地点。位于[水晶丘](/dictionary/c#crystal%20hills)。2245 年由 Ilmar Delmer 在一处天然自流泉上创立，2401 ",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-v-virax-springs"
+   ],
+   "note": "词条释义去掉词条名（virax springs）"
+  },
+  {
+   "query": "工坊",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-w-workshop"
+   ],
+   "note": "词条名（workshop）"
+  },
+  {
+   "query": "地点。可建在自家后院或[红天堂](/dictionary/r#redhaven)两处可购地块的作坊，建造费 95,000 元。任命工头后最多派 7 名 NPC ",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-w-workshop"
+   ],
+   "note": "词条释义去掉词条名（workshop）"
+  },
+  {
+   "query": "西区高地",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-w-westside-heights"
+   ],
+   "note": "词条名（westside heights）"
+  },
+  {
+   "query": "地点。别称荒原之门。城区最西的边缘地带。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-w-westside-heights"
+   ],
+   "note": "词条释义去掉词条名（westside heights）"
+  },
+  {
+   "query": "意志薄弱",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-w-weak-willed"
+   ],
+   "note": "词条名（weak-willed）"
+  },
+  {
+   "query": "玩家负面特质。Points +25，Requirements 无。玩家性格敏感，[意志](/dictionary/w#willpower)永远不能超过 70。变",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-w-weak-willed"
+   ],
+   "note": "词条释义去掉词条名（weak-willed）"
+  },
+  {
+   "query": "木材",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-w-wood"
+   ],
+   "note": "词条名（wood）"
+  },
+  {
+   "query": "材料。用于制作，也可烧来取暖：在宅邸管理界面每次加 10 单位，会提高宅邸的[心情](/dictionary/h#happiness)指标。可在[红天堂市场](",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-w-wood"
+   ],
+   "note": "词条释义去掉词条名（wood）"
+  },
+  {
+   "query": "William Hanbard 杂货铺",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-w-william-hanbard-s-general-store"
+   ],
+   "note": "词条名（william hanbard's general store）"
+  },
+  {
+   "query": "地点。位于[马斯顿大道](/dictionary/m#marston%20avenue)。表面是中下层的杂货铺，卖甜菜、谷物、米与玉米等。完成 Professo",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-w-william-hanbard-s-general-store"
+   ],
+   "note": "词条释义去掉词条名（william hanbard's general store）"
+  },
+  {
+   "query": "妻室上限",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-w-wife-limit"
+   ],
+   "note": "词条名（wife limit）"
+  },
+  {
+   "query": "宗教规则。各[宗教](/dictionary/r#religion)对可娶[妻子](/dictionary/w#wife)数量各有上限。[无神论](/dicti",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-w-wife-limit"
+   ],
+   "note": "词条释义去掉词条名（wife limit）"
+  },
+  {
+   "query": "瘦弱",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-w-weak-boned"
+   ],
+   "note": "词条名（weak-boned）"
+  },
+  {
+   "query": "玩家负面特质。Points +25，Requirements 无。玩家骨架小，[力量](/dictionary/s#strength)永远不能超过 70。变量 ",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-w-weak-boned"
+   ],
+   "note": "词条释义去掉词条名（weak-boned）"
+  },
+  {
+   "query": "意志",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-w-willpower"
+   ],
+   "note": "词条名（willpower）"
+  },
+  {
+   "query": "衡量服从、自信与主动性。低于 1 的[奴隶](/dictionary/s#slave)会答应一切请求。高于 30 且心情好的奴隶有小概率自我提升[魅力](/di",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-w-willpower"
+   ],
+   "note": "词条释义去掉词条名（willpower）"
+  },
+  {
+   "query": "黄衣女王",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-y-the-yellow-queen"
+   ],
+   "note": "词条名（the yellow queen）"
+  },
+  {
+   "query": "NPC 专属宗教。信徒以女性为主，把当作与拉纳宇宙力量相连的女性神格原型。仪式以处子性力换取异能，强调[纯洁](/dictionary/p#purity)与荒野",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-y-the-yellow-queen"
+   ],
+   "note": "词条释义去掉词条名（the yellow queen）"
+  },
+  {
+   "query": "后院",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-y-the-yard"
+   ],
+   "note": "词条名（the yard）"
+  },
+  {
+   "query": "地点。环绕主楼与围墙的院落，含五个可开发槽位、西侧的[哨塔](/dictionary/g#guard%20tower)与围墙、北侧的小[神龛](/diction",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-y-the-yard"
+   ],
+   "note": "词条释义去掉词条名（the yard）"
+  },
+  {
+   "query": "扎平田野",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-z-zapin-fields"
+   ],
+   "note": "词条名（zapin fields）"
+  },
+  {
+   "query": "地点。[耙岛](/dictionary/h#harrow%20island)上的田野。",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-z-zapin-fields"
+   ],
+   "note": "词条释义去掉词条名（zapin fields）"
+  },
+  {
+   "query": "双手武器专精",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-z-zweihander"
+   ],
+   "note": "词条名（zweihander）"
+  },
+  {
+   "query": "NPC 特质。擅长双手重型[近战](/dictionary/m#melee%20combat)[武器](/dictionary/w#weapon)，即 Sled",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-z-zweihander"
+   ],
+   "note": "词条释义去掉词条名（zweihander）"
+  },
+  {
+   "query": "泽诺比娅",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-z-zenobia"
+   ],
+   "note": "词条名（zenobia）"
+  },
+  {
+   "query": "NPC。街头孩子，父母是常年不在的拾荒者，由姐姐带大。她实际掌管 Baltor 帮，直到玩家在 The Ring 任务里把它打掉。人在 Baltor Hotel",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-z-zenobia"
+   ],
+   "note": "词条释义去掉词条名（zenobia）"
+  },
+  {
+   "query": "Z 印记",
+   "kind": "substring",
+   "relevant": [
+    "dictionary-letter-z-z-mark"
+   ],
+   "note": "词条名（z-mark）"
+  },
+  {
+   "query": "玩家特质。Cost 50，Requirements 无。母亲怀着玩家时服用了非法强效药 Denaar-X，药力透过了胎儿。医生 Thomas Redburn 在",
+   "kind": "paraphrase",
+   "relevant": [
+    "dictionary-letter-z-z-mark"
+   ],
+   "note": "词条释义去掉词条名（z-mark）"
+  },
+  {
+   "query": "量子退火",
+   "kind": "negative",
+   "relevant": [],
+   "note": "库中不应出现"
+  },
+  {
+   "query": "光合作用",
+   "kind": "negative",
+   "relevant": [],
+   "note": "库中不应出现"
+  },
+  {
+   "query": "猫粮配方",
+   "kind": "negative",
+   "relevant": [],
+   "note": "库中不应出现"
+  },
+  {
+   "query": "火箭发射窗口",
+   "kind": "negative",
+   "relevant": [],
+   "note": "库中不应出现"
+  },
+  {
+   "query": "围棋定式",
+   "kind": "negative",
+   "relevant": [],
+   "note": "库中不应出现"
+  },
+  {
+   "query": "氦锕晶体",
+   "kind": "negative",
+   "relevant": [],
+   "note": "库中不应出现"
+  },
+  {
+   "query": "滑雪装备",
+   "kind": "negative",
+   "relevant": [],
+   "note": "库中不应出现"
+  }
+ ]
+}

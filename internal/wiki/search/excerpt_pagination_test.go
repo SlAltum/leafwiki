@@ -42,7 +42,7 @@ func setupExcerptPages(tb testing.TB, count int) (*SearchUseCase, []string) {
 	if err := svc.LoadTree(); err != nil {
 		tb.Fatal(err)
 	}
-	return NewSearchUseCase(nil, tags, svc), ids
+	return NewSearchUseCase(nil, tags, svc, nil), ids
 }
 func TestSearchUseCase_SearchByTags_PaginationPreservesExcerptsAndFacets(t *testing.T) {
 	uc, ids := setupExcerptPages(t, 5)

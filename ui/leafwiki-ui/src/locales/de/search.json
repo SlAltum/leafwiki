@@ -16,6 +16,7 @@
   "results": {
     "loading": "Ergebnisse werden geladen...",
     "noResults": "Keine Ergebnisse gefunden.",
+    "suggestion": "Stattdessen nach \"{{query}}\" suchen",
     "resultSummary_one": "<bold>{{count}}</bold> Ergebnis gefunden für",
     "resultSummary_other": "<bold>{{count}}</bold> Ergebnisse gefunden für",
     "filterQuery": "„{{query}}“",

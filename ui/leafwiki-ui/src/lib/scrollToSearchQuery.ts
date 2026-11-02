@@ -1,3 +1,5 @@
+import { hasMinQueryLength } from './searchQuery'
+
 const HIGHLIGHT_CLASS = 'search-query-highlight'
 const CONTENT_SELECTOR = '.page-viewer__content'
 const SCROLL_CONTAINER_ID = 'scroll-container'
@@ -121,7 +123,7 @@ export function scrollToSearchQuery(
   }: ScrollToSearchQueryOptions = {},
 ): () => void {
   const trimmed = query.trim()
-  if (trimmed.length < 3) return () => {}
+  if (!hasMinQueryLength(trimmed)) return () => {}
 
   const scrollContainer = document.getElementById(
     SCROLL_CONTAINER_ID,

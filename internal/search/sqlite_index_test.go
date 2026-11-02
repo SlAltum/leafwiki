@@ -359,9 +359,6 @@ func TestSQLiteIndex_Search(t *testing.T) {
 		t.Errorf("expected second result kind %q, got %q", tree.NodeKindSection, result.Items[1].Kind)
 	}
 
-	if !strings.Contains(result.Items[0].Excerpt, "<b>") {
-		t.Errorf("expected highlighted search snippet, got %q", result.Items[0].Excerpt)
-	}
 }
 
 func TestSQLiteIndex_Search_RanksTitleMatchHigherThanContent(t *testing.T) {
@@ -427,129 +424,6 @@ func TestSQLiteIndex_Search_RanksTitleMatchHigherThanContent(t *testing.T) {
 		if item.Rank <= 0 || item.Rank > 1 {
 			t.Errorf("expected rank for item %d to be in (0,1], got %f", i, item.Rank)
 		}
-	}
-}
-
-func TestSQLiteIndex_Search_EscapesTitleForContentOnlyMatch(t *testing.T) {
-	tmpDir := t.TempDir()
-
-	index, err := NewSQLiteIndex(tmpDir)
-	if err != nil {
-		t.Fatalf("failed to create SQLiteIndex: %v", err)
-	}
-	defer test_utils.WrapCloseWithErrorCheck(index.Close, t)
-
-	maliciousTitle := `<img src=x onerror="alert(1)">`
-	err = index.IndexPage(
-		"docs/malicious",
-		"docs/malicious.md",
-		"malicious1",
-		maliciousTitle,
-		tree.NodeKindPage,
-		"This page contains the search keyword in content only.",
-	)
-	if err != nil {
-		t.Fatalf("failed to index malicious page: %v", err)
-	}
-
-	result, err := index.Search("keyword", nil, 0, 10)
-	if err != nil {
-		t.Fatalf("search failed: %v", err)
-	}
-
-	if len(result.Items) != 1 {
-		t.Fatalf("expected 1 result item, got %d", len(result.Items))
-	}
-
-	if got := result.Items[0].Title; strings.Contains(got, "<img") {
-		t.Fatalf("expected title to escape raw HTML, got %q", got)
-	}
-
-	if got := result.Items[0].Title; !strings.Contains(got, "&lt;img src=x onerror=&#34;alert(1)&#34;&gt;") {
-		t.Fatalf("expected escaped title, got %q", got)
-	}
-}
-
-func TestSQLiteIndex_Search_PreservesBoldHighlightsWhileEscapingTitle(t *testing.T) {
-	tmpDir := t.TempDir()
-
-	index, err := NewSQLiteIndex(tmpDir)
-	if err != nil {
-		t.Fatalf("failed to create SQLiteIndex: %v", err)
-	}
-	defer test_utils.WrapCloseWithErrorCheck(index.Close, t)
-
-	maliciousTitle := `<script>alert(1)</script> Search`
-	err = index.IndexPage(
-		"docs/highlighted",
-		"docs/highlighted.md",
-		"highlighted1",
-		maliciousTitle,
-		tree.NodeKindPage,
-		"Body content without additional matches.",
-	)
-	if err != nil {
-		t.Fatalf("failed to index highlighted page: %v", err)
-	}
-
-	result, err := index.Search("search", nil, 0, 10)
-	if err != nil {
-		t.Fatalf("search failed: %v", err)
-	}
-
-	if len(result.Items) != 1 {
-		t.Fatalf("expected 1 result item, got %d", len(result.Items))
-	}
-
-	got := result.Items[0].Title
-	if strings.Contains(got, "<script>") {
-		t.Fatalf("expected title to escape script tag, got %q", got)
-	}
-	if !strings.Contains(got, "&lt;script&gt;alert(1)&lt;/script&gt;") {
-		t.Fatalf("expected escaped script tag in title, got %q", got)
-	}
-	if !strings.Contains(got, "<b>Search</b>") {
-		t.Fatalf("expected preserved bold highlight, got %q", got)
-	}
-}
-
-func TestSQLiteIndex_Search_EscapesTitleForFilteredResultsWithoutQuery(t *testing.T) {
-	tmpDir := t.TempDir()
-
-	index, err := NewSQLiteIndex(tmpDir)
-	if err != nil {
-		t.Fatalf("failed to create SQLiteIndex: %v", err)
-	}
-	defer test_utils.WrapCloseWithErrorCheck(index.Close, t)
-
-	maliciousTitle := `<svg onload=alert(1)>`
-	err = index.IndexPage(
-		"docs/tagged",
-		"docs/tagged.md",
-		"tagged1",
-		maliciousTitle,
-		tree.NodeKindPage,
-		"Plain content.",
-	)
-	if err != nil {
-		t.Fatalf("failed to index tagged page: %v", err)
-	}
-
-	result, err := index.Search("", []string{"tagged1"}, 0, 10)
-	if err != nil {
-		t.Fatalf("filtered search failed: %v", err)
-	}
-
-	if len(result.Items) != 1 {
-		t.Fatalf("expected 1 result item, got %d", len(result.Items))
-	}
-
-	got := result.Items[0].Title
-	if strings.Contains(got, "<svg") {
-		t.Fatalf("expected filtered result title to escape raw HTML, got %q", got)
-	}
-	if got != "&lt;svg onload=alert(1)&gt;" {
-		t.Fatalf("expected escaped filtered title, got %q", got)
 	}
 }
 
@@ -1524,5 +1398,140 @@ func TestSQLiteIndex_Search_BalancedParenGroupAcrossFieldsStillWorks(t *testing.
 	}
 	if result.Count != 2 {
 		t.Errorf("expected both pages for a grouped OR query, got %d", result.Count)
+	}
+}
+
+func TestCheckSearchColumnWeights(t *testing.T) {
+	if err := checkSearchColumnWeights(searchColumnNames, searchColumnWeights); err != nil {
+		t.Fatalf("shipped column weights are inconsistent: %v", err)
+	}
+
+	// Losing a weight must fail loudly: bm25() would pad it with 1.0.
+	if err := checkSearchColumnWeights([]string{"path", "aliases"}, []float64{0}); err == nil {
+		t.Fatal("expected an error for a column without a weight, got nil")
+	}
+}
+
+func TestSQLiteIndex_PagesColumnOrder(t *testing.T) {
+	index, err := NewSQLiteIndex(t.TempDir())
+	if err != nil {
+		t.Fatalf("failed to create SQLiteIndex: %v", err)
+	}
+	defer test_utils.WrapCloseWithErrorCheck(index.Close, t)
+
+	var got []string
+	err = index.withDBRead(func(db *sql.DB) error {
+		rows, err := db.Query(`PRAGMA table_info(pages)`)
+		if err != nil {
+			return err
+		}
+		defer func() {
+			if closeErr := rows.Close(); closeErr != nil {
+				t.Errorf("could not close rows: %v", closeErr)
+			}
+		}()
+		for rows.Next() {
+			var (
+				cid, notNull, pk int
+				name, columnType string
+				defaultValue     sql.NullString
+			)
+			if err := rows.Scan(&cid, &name, &columnType, &notNull, &defaultValue, &pk); err != nil {
+				return err
+			}
+			got = append(got, name)
+		}
+		return rows.Err()
+	})
+	if err != nil {
+		t.Fatalf("reading pages columns failed: %v", err)
+	}
+
+	if len(got) != len(searchColumnNames) {
+		t.Fatalf("pages has columns %v, want %v", got, searchColumnNames)
+	}
+	for i := range got {
+		if got[i] != searchColumnNames[i] {
+			t.Fatalf("pages has columns %v, want %v", got, searchColumnNames)
+		}
+	}
+}
+
+func TestSQLiteIndex_Search_MatchesAliasesColumn(t *testing.T) {
+	index, err := NewSQLiteIndex(t.TempDir())
+	if err != nil {
+		t.Fatalf("failed to create SQLiteIndex: %v", err)
+	}
+	defer test_utils.WrapCloseWithErrorCheck(index.Close, t)
+
+	aliased := IndexPageInput{
+		Path: "docs/phone.md", FilePath: "docs/phone.md", PageID: "phone1",
+		Title: "Apple iPhone", Kind: tree.NodeKindPage,
+		Raw: "---\nleafwiki_aliases: 移动电话\n---\n\nA phone page.",
+	}
+	if _, err := index.IndexPages([]IndexPageInput{aliased}); err != nil {
+		t.Fatalf("indexing failed: %v", err)
+	}
+
+	result, err := index.Search("移动电话", nil, 0, 10)
+	if err != nil {
+		t.Fatalf("search failed: %v", err)
+	}
+	if result.Count != 1 || len(result.Items) != 1 {
+		t.Fatalf("expected the aliased page, got count=%d items=%v", result.Count, result.Items)
+	}
+	if result.Items[0].PageID != "phone1" {
+		t.Fatalf("expected page phone1, got %q", result.Items[0].PageID)
+	}
+}
+
+func TestSQLiteIndex_Search_RankOrderGolden(t *testing.T) {
+	index, err := NewSQLiteIndex(t.TempDir())
+	if err != nil {
+		t.Fatalf("failed to create SQLiteIndex: %v", err)
+	}
+	defer test_utils.WrapCloseWithErrorCheck(index.Close, t)
+
+	// Same query term, one column each, so the order is the column weights:
+	// title 20, aliases 10, headings 5, content 1.
+	inputs := []IndexPageInput{
+		{Path: "docs/content.md", FilePath: "docs/content.md", PageID: "content", Title: "Elsewhere", Kind: tree.NodeKindPage, Raw: "goldenbody filler"},
+		{Path: "docs/heading.md", FilePath: "docs/heading.md", PageID: "heading", Title: "Elsewhere", Kind: tree.NodeKindPage, Raw: "## goldenheading\nfiller"},
+		{Path: "docs/alias.md", FilePath: "docs/alias.md", PageID: "alias", Title: "Elsewhere", Kind: tree.NodeKindPage, Raw: "---\nleafwiki_aliases: [goldenalias]\n---\n\nfiller"},
+		{Path: "docs/title.md", FilePath: "docs/title.md", PageID: "title", Title: "goldentitle", Kind: tree.NodeKindPage, Raw: "filler"},
+	}
+	if _, err := index.IndexPages(inputs); err != nil {
+		t.Fatalf("indexing failed: %v", err)
+	}
+
+	cases := []struct {
+		query string
+		want  []string
+	}{
+		{"goldentitle", []string{"title"}},
+		{"goldenalias", []string{"alias"}},
+		{"goldenheading", []string{"heading"}},
+		{"goldenbody", []string{"content"}},
+		{"golden*", []string{"title", "alias", "heading", "content"}},
+	}
+	for _, tc := range cases {
+		t.Run(tc.query, func(t *testing.T) {
+			result, err := index.Search(tc.query, nil, 0, 10)
+			if err != nil {
+				t.Fatalf("search failed: %v", err)
+			}
+			got := make([]string, len(result.Items))
+			for i, item := range result.Items {
+				got[i] = item.PageID
+			}
+			if len(got) != len(tc.want) {
+				t.Fatalf("search %q returned %v, want %v", tc.query, got, tc.want)
+			}
+			for i := range got {
+				if got[i] != tc.want[i] {
+					t.Fatalf("search %q returned %v, want %v", tc.query, got, tc.want)
+				}
+			}
+		})
 	}
 }

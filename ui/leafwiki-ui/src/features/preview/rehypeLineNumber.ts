@@ -2,17 +2,10 @@ import { Element } from 'hast'
 import { Plugin } from 'unified'
 import { visit } from 'unist-util-visit'
 
-export function slugifyHeadline(text: string) {
-  return text
-    .normalize('NFKD')
-    .replace(/[ßẞ]/g, 'ss')
-    .toLowerCase()
-    .replace(/\p{Mark}+/gu, '')
-    .trim()
-    .replace(/[^\p{Letter}\p{Number}\s-]/gu, '')
-    .replace(/[\s_-]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-}
+import { slugifyHeadline } from '@/lib/headingAnchor'
+
+// Re-exported so every existing importer keeps its import path.
+export { slugifyHeadline }
 
 function getNodeText(node: Element): string {
   let text = ''

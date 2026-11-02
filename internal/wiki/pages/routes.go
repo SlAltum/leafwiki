@@ -265,6 +265,7 @@ func (r *Routes) handleUpdate(c *gin.Context) {
 		Slug       string            `json:"slug" binding:"required"`
 		Content    *string           `json:"content"`
 		Tags       []string          `json:"tags"`
+		Aliases    []string          `json:"aliases"`
 		Properties map[string]string `json:"properties"`
 	}
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -288,11 +289,18 @@ func (r *Routes) handleUpdate(c *gin.Context) {
 		normalizedTags = normalizeTagInputs(req.Tags)
 	}
 
+	// Aliases: nil means "leave them alone", an explicit list (even empty)
+	// replaces them; the same rule as tags.
+	var normalizedAliases []string
+	if req.Aliases != nil {
+		normalizedAliases = normalizeAliasInputs(req.Aliases)
+	}
+
 	kind := tree.NodeKindPage
 	out, err := r.updatePage.Execute(c.Request.Context(), UpdatePageInput{
 		UserID: user.ID, ID: id, Version: req.Version, Title: req.Title, Slug: req.Slug,
 		Content: req.Content, Kind: &kind,
-		Tags: normalizedTags, Properties: req.Properties,
+		Tags: normalizedTags, Aliases: normalizedAliases, Properties: req.Properties,
 	})
 	if err != nil {
 		respondWithPageError(c, err)
@@ -581,6 +589,7 @@ func (r *Routes) respondPage(c *gin.Context, status int, page *tree.Page) {
 func (r *Routes) respondPageView(c *gin.Context, view *PageView, depth int) {
 	apiPage := dto.ToAPIPageWithDepth(view.Page, r.userResolver, depth)
 	apiPage.Tags = view.Tags
+	apiPage.Aliases = view.Aliases
 	apiPage.Properties = view.Properties
 	c.JSON(http.StatusOK, apiPage)
 }
@@ -589,7 +598,7 @@ func (r *Routes) enrichPageMetadata(page *dto.Page) {
 	if page == nil {
 		return
 	}
-	page.Tags, page.Properties = readPageMetadata(r.treeService, page.ID)
+	page.Tags, page.Aliases, page.Properties = readPageMetadata(r.treeService, page.ID)
 }
 
 func normalizeTagInputs(tags []string) []string {

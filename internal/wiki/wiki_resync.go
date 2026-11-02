@@ -96,6 +96,18 @@ func (w *Wiki) runReloadPhases(ctx context.Context, job *wikiresync.ResyncJob) e
 	}
 	w.status.Success()
 	w.status.Finish()
+
+	// Semantic search last: a failure here must not undo the lexical reload.
+	if w.vectorService != nil {
+		job.SetPhase(wikiresync.PhaseVectors)
+		rebuilt, vectorErr := w.vectorService.ReindexIfStale()
+		switch {
+		case vectorErr != nil:
+			w.log.Warn("semantic re-index failed during reload", "error", vectorErr)
+		case rebuilt:
+			w.log.Info("semantic index rebuilt during reload")
+		}
+	}
 	return nil
 }
 

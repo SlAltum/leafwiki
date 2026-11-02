@@ -116,6 +116,15 @@ func main() {
 	// they go to stderr as plain text. Anything that fails once the logger is up
 	// logs itself and returns errLogged.
 	if err := newRootCommand().Run(context.Background(), os.Args); err != nil {
+		// A command that owns its own exit code (the vectors lock) says so
+		// explicitly; everything else goes through the one failure path.
+		var coded *exitCodeError
+		if errors.As(err, &coded) {
+			if coded.err != nil {
+				_, _ = fmt.Fprintln(os.Stderr, coded.err)
+			}
+			os.Exit(coded.code)
+		}
 		if !errors.Is(err, errLogged) && !errors.Is(err, errReported) {
 			fmt.Fprintln(os.Stderr, "Error:", err)
 		}
@@ -263,6 +272,11 @@ func runServerCommand(_ context.Context, cmd *cli.Command, cfg *serverConfig) er
 		MaxRevisionHistory:     cfg.frontend.maxRevisionHistory,
 		EditorLimit:            cfg.auth.editorLimit,
 		RevisionCoalesceWindow: cfg.frontend.revisionCoalesceWindow,
+		Vectors: wiki.VectorsOptions{
+			Mode:        cfg.vectors.vectors,
+			ModelDir:    cfg.vectors.vectorsModelDir,
+			LibraryPath: cfg.vectors.vectorsLibrary,
+		},
 		SMTP: email.Config{
 			Host:               cfg.email.smtpHost,
 			Port:               cfg.email.smtpPort,
@@ -339,15 +353,20 @@ func runServerCommand(_ context.Context, cmd *cli.Command, cfg *serverConfig) er
 
 		writeGate = restore.NewWriteGate()
 		restoreManager := restore.NewManager(restore.Config{
-			SnapshotManager:    snapshotManager,
-			DataDir:            cfg.server.dataDir,
-			WikiVersion:        Version,
-			WriteGate:          writeGate,
-			AuthService:        w.AuthService(),
-			Stores:             w.StateStores(),
-			Reloadables:        []settings.Reloadable{w.BrandingService(), publicAccessService, tocDisplayService},
-			UserResolver:       w.UserResolver(),
-			TriggerResync:      w.TriggerResyncAsync,
+			SnapshotManager: snapshotManager,
+			DataDir:         cfg.server.dataDir,
+			WikiVersion:     Version,
+			WriteGate:       writeGate,
+			AuthService:     w.AuthService(),
+			Stores:          w.StateStores(),
+			Reloadables:     []settings.Reloadable{w.BrandingService(), publicAccessService, tocDisplayService},
+			UserResolver:    w.UserResolver(),
+			TriggerResync: func() {
+				// The restored content has nothing to do with the vectors built
+				// before it: drop them, then let the resync rebuild (FR-604).
+				w.ForgetSemanticIndex()
+				w.TriggerResyncAsync()
+			},
 			MaxUploadSizeBytes: restoreUploadMaxSize,
 		})
 		// Registered after (so it runs before, defers are LIFO) the w.Close()

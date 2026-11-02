@@ -562,7 +562,7 @@ func TestNodeStore_UpsertContentAndMetadata_UpdatesBodyAndTags(t *testing.T) {
 	mustWriteFile(t, path, "---\nleafwiki_id: p1\nleafwiki_title: My Page\n---\n# old\n", 0o644)
 
 	tags := []string{"go", "react"}
-	if err := store.UpsertContentAndMetadata(page, "# new", tags, nil); err != nil {
+	if err := store.UpsertContentAndMetadata(page, "# new", tags, nil, nil); err != nil {
 		t.Fatalf("UpsertContentAndMetadata: %v", err)
 	}
 
@@ -583,6 +583,41 @@ func TestNodeStore_UpsertContentAndMetadata_UpdatesBodyAndTags(t *testing.T) {
 	}
 }
 
+func TestNodeStore_UpsertContentAndMetadata_WritesAliases(t *testing.T) {
+	tmp := t.TempDir()
+	store := NewNodeStore(tmp)
+
+	root := &PageNode{ID: "root", Slug: "root", Title: "root", Kind: NodeKindSection}
+	page := &PageNode{ID: "p1", Slug: "p", Title: "My Page", Kind: NodeKindPage, Parent: root}
+
+	path := filepath.Join(tmp, "root", "p.md")
+	mustWriteFile(t, path, "---\nleafwiki_id: p1\nleafwiki_title: My Page\n---\n# old\n", 0o644)
+
+	if err := store.UpsertContentAndMetadata(page, "# new", nil, []string{"手机", "mobile phone"}, nil); err != nil {
+		t.Fatalf("UpsertContentAndMetadata: %v", err)
+	}
+
+	fm, _, _, err := markdown.ParseFrontmatter(string(mustRead(t, path)))
+	if err != nil {
+		t.Fatalf("ParseFrontmatter: %v", err)
+	}
+	if len(fm.LeafWikiAliases) != 2 || fm.LeafWikiAliases[0] != "手机" {
+		t.Fatalf("aliases = %v, want the two written ones", fm.LeafWikiAliases)
+	}
+
+	// nil preserves what the author wrote; an empty list clears it.
+	if err := store.UpsertContentAndMetadata(page, "# again", nil, nil, nil); err != nil {
+		t.Fatalf("UpsertContentAndMetadata: %v", err)
+	}
+	fm, _, _, err = markdown.ParseFrontmatter(string(mustRead(t, path)))
+	if err != nil {
+		t.Fatalf("ParseFrontmatter: %v", err)
+	}
+	if len(fm.LeafWikiAliases) != 2 {
+		t.Fatalf("aliases = %v, want them preserved", fm.LeafWikiAliases)
+	}
+}
+
 func TestNodeStore_UpsertContentAndMetadata_UpdatesProperties(t *testing.T) {
 	tmp := t.TempDir()
 	store := NewNodeStore(tmp)
@@ -594,7 +629,7 @@ func TestNodeStore_UpsertContentAndMetadata_UpdatesProperties(t *testing.T) {
 	mustWriteFile(t, path, "---\nleafwiki_id: p1\nleafwiki_title: My Page\nstatus: draft\n---\n# old\n", 0o644)
 
 	props := map[string]string{"status": "published", "author": "alice"}
-	if err := store.UpsertContentAndMetadata(page, "# updated", nil, props); err != nil {
+	if err := store.UpsertContentAndMetadata(page, "# updated", nil, nil, props); err != nil {
 		t.Fatalf("UpsertContentAndMetadata: %v", err)
 	}
 
@@ -626,7 +661,7 @@ func TestNodeStore_UpsertContentAndMetadata_TitleAsCustomPropertyRoundtrips(t *t
 
 	// The editor sends title back in properties (because Phase 1 makes it visible).
 	props := map[string]string{"title": "My Custom Title", "status": "published"}
-	if err := store.UpsertContentAndMetadata(page, "# edited", nil, props); err != nil {
+	if err := store.UpsertContentAndMetadata(page, "# edited", nil, nil, props); err != nil {
 		t.Fatalf("UpsertContentAndMetadata: %v", err)
 	}
 
@@ -655,7 +690,7 @@ func TestNodeStore_UpsertContentAndMetadata_UnsentFieldsAreDropped(t *testing.T)
 	mustWriteFile(t, path, "---\nleafwiki_id: p1\nleafwiki_title: My Page\nstatus: draft\npermalink: /my-page\n---\n# body\n", 0o644)
 
 	// User saves without "permalink" — it was deleted in the editor.
-	if err := store.UpsertContentAndMetadata(page, "# body", nil, map[string]string{"status": "draft"}); err != nil {
+	if err := store.UpsertContentAndMetadata(page, "# body", nil, nil, map[string]string{"status": "draft"}); err != nil {
 		t.Fatalf("UpsertContentAndMetadata: %v", err)
 	}
 
@@ -681,7 +716,7 @@ func TestNodeStore_UpsertContentAndMetadata_RemovedPropertyDoesNotPersist(t *tes
 	mustWriteFile(t, path, "---\nleafwiki_id: p1\nleafwiki_title: My Page\nstatus: draft\nauthor: alice\n---\n# body\n", 0o644)
 
 	// User removed "author"; only "status" is sent back.
-	if err := store.UpsertContentAndMetadata(page, "# body", nil, map[string]string{"status": "draft"}); err != nil {
+	if err := store.UpsertContentAndMetadata(page, "# body", nil, nil, map[string]string{"status": "draft"}); err != nil {
 		t.Fatalf("UpsertContentAndMetadata: %v", err)
 	}
 
@@ -708,7 +743,7 @@ func TestNodeStore_UpsertContentAndMetadata_NilTagsPreservesExistingTags(t *test
 	mustWriteFile(t, path, "---\nleafwiki_id: p1\nleafwiki_title: My Page\ntags:\n  - go\n  - wiki\nstatus: draft\n---\n# body\n", 0o644)
 
 	// Save with properties only — no tags field (nil means "leave unchanged").
-	if err := store.UpsertContentAndMetadata(page, "# body", nil, map[string]string{"status": "published"}); err != nil {
+	if err := store.UpsertContentAndMetadata(page, "# body", nil, nil, map[string]string{"status": "published"}); err != nil {
 		t.Fatalf("UpsertContentAndMetadata: %v", err)
 	}
 
@@ -736,7 +771,7 @@ func TestNodeStore_UpsertContentAndMetadata_NonStringFieldsPreserved(t *testing.
 	mustWriteFile(t, path, "---\nleafwiki_id: p1\nleafwiki_title: My Page\npublished: true\npriority: 42\naliases:\n  - /old-path\nstatus: draft\n---\n# body\n", 0o644)
 
 	// Editor only sends back the string property; non-string fields are absent.
-	if err := store.UpsertContentAndMetadata(page, "# body", nil, map[string]string{"status": "published"}); err != nil {
+	if err := store.UpsertContentAndMetadata(page, "# body", nil, nil, map[string]string{"status": "published"}); err != nil {
 		t.Fatalf("UpsertContentAndMetadata: %v", err)
 	}
 

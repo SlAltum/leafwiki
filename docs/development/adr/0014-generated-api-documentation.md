@@ -13,7 +13,7 @@ write ([#1662](https://github.com/perber/leafwiki/pull/1662)). The roadmap
 at a time without a big-bang rewrite.
 
 Constraints: the binary must stay free of documentation tooling (one binary for Linux, Windows,
-macOS and Raspberry Pi, including linux/386); the existing routes, auth rules and error shapes
+macOS and Raspberry Pi); the existing routes, auth rules and error shapes
 must not change; and the response shapes are inconsistent today (localized, flat and validation
 errors), which the documentation must show instead of hiding.
 

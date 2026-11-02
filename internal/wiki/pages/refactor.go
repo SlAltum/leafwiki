@@ -293,13 +293,14 @@ func (uc *PreviewPageRefactorUseCase) getAffectedPages(oldPath string, pageTitle
 
 // ApplyPageRefactorUseCase applies a rename or move with optional link rewriting.
 type ApplyPageRefactorUseCase struct {
-	tree     *tree.TreeService
-	slug     *tree.SlugService
-	revision *revision.Service
-	links    *links.LinkService
-	log      *slog.Logger
-	preview  *PreviewPageRefactorUseCase
-	metrics  *httpmetrics.HTTPMetrics
+	tree         *tree.TreeService
+	slug         *tree.SlugService
+	revision     *revision.Service
+	links        *links.LinkService
+	log          *slog.Logger
+	preview      *PreviewPageRefactorUseCase
+	metrics      *httpmetrics.HTTPMetrics
+	orchestrator *pagesave.PageSaveOrchestrator
 }
 
 // NewApplyPageRefactorUseCase constructs an ApplyPageRefactorUseCase.
@@ -310,15 +311,17 @@ func NewApplyPageRefactorUseCase(
 	l *links.LinkService,
 	log *slog.Logger,
 	metrics *httpmetrics.HTTPMetrics,
+	o *pagesave.PageSaveOrchestrator,
 ) *ApplyPageRefactorUseCase {
 	return &ApplyPageRefactorUseCase{
-		tree:     t,
-		slug:     s,
-		revision: r,
-		links:    l,
-		log:      log,
-		preview:  NewPreviewPageRefactorUseCase(t, s, l, log),
-		metrics:  metrics,
+		tree:         t,
+		slug:         s,
+		revision:     r,
+		links:        l,
+		log:          log,
+		preview:      NewPreviewPageRefactorUseCase(t, s, l, log),
+		metrics:      metrics,
+		orchestrator: o,
 	}
 }
 
@@ -344,11 +347,13 @@ func (uc *ApplyPageRefactorUseCase) Execute(ctx context.Context, in RefactorAppl
 		incomingRule.NewTitle = in.Title
 	}
 
-	o := pagesave.NewPageSaveOrchestrator(
-		uc.metrics,
-		pagesave.NewLinkIndexSideEffect(uc.links, uc.log, uc.metrics),
-		pagesave.NewRevisionSideEffect(uc.revision, uc.log, uc.metrics),
-	)
+	// The same orchestrator every other page mutation uses, so the target
+	// page's update or move reaches the search index, the tag index and the
+	// property index as well (FR-601).
+	if uc.orchestrator == nil {
+		return nil, fmt.Errorf("refactor: no page-save orchestrator configured")
+	}
+	o := uc.orchestrator
 
 	switch in.Kind {
 	case RefactorKindRename:
@@ -618,7 +623,34 @@ func (uc *ApplyPageRefactorUseCase) persistContentRewrites(userID string, rewrit
 			}
 		}
 	}
+	uc.reindexRewrittenPages(updatedPages)
 	return updatedPages
+}
+
+// reindexRewrittenPages runs the page-save side effects for pages a refactor
+// rewrote in place. Those writes go through BulkUpdateContent, which fires no
+// save event, so without this a renamed page's body would stay findable by its
+// old text and a moved subtree would keep its old paths in the index
+// (FR-601, FR-602).
+func (uc *ApplyPageRefactorUseCase) reindexRewrittenPages(pages []*tree.Page) {
+	if uc.orchestrator == nil || len(pages) == 0 {
+		return
+	}
+
+	ids := make([]string, len(pages))
+	for i, page := range pages {
+		ids[i] = page.ID
+	}
+	// Reload: the bulk write left the nodes with the new content but no raw
+	// page, and the side effects index what is on disk.
+	fresh, errs := uc.tree.GetPages(ids)
+	for i, page := range fresh {
+		if errs[i] != nil || page == nil {
+			uc.log.Warn("failed to reload page for the side effects after a rewrite", "pageID", ids[i], "error", errs[i])
+			continue
+		}
+		uc.orchestrator.Run(pagesave.PageSaveEvent{Operation: pagesave.PageOperationUpdate, After: page})
+	}
 }
 
 func (uc *ApplyPageRefactorUseCase) refreshAffectedPageLinks(pageIDs []string) error {

@@ -29,6 +29,7 @@ const (
 	catGitBackup = "Git backup"
 	catSnapshots = "Snapshots & restore"
 	catEmail     = "Email (SMTP)"
+	catVectors   = "Semantic search"
 )
 
 const rootUsageText = `leafwiki --jwt-secret <SECRET> --admin-password <PASSWORD> [--host <HOST>] [--port <PORT>] [--unix-socket <PATH>] [--data-dir <DIR>]
@@ -61,6 +62,7 @@ type serverConfig struct {
 	metrics  metricsOptions
 	backup   backupOptions
 	email    emailOptions
+	vectors  vectorsOptions
 }
 
 // flags collects the groups. A group missing from this list would silently
@@ -74,6 +76,7 @@ func (c *serverConfig) flags() []cli.Flag {
 		c.metrics.Flags(),
 		c.backup.Flags(),
 		c.email.Flags(),
+		c.vectors.Flags(),
 	)
 }
 
@@ -102,6 +105,7 @@ func newRootCommandWithConfig(cfg *serverConfig) *cli.Command {
 		Commands: []*cli.Command{
 			newResetAdminPasswordCommand(cfg),
 			newRestoreSnapshotCommand(cfg),
+			newVectorsCommand(cfg),
 		},
 		Before: func(ctx context.Context, cmd *cli.Command) (context.Context, error) {
 			// The log-format validator has already rejected anything parseLogFormat

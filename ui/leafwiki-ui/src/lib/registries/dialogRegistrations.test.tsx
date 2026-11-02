@@ -38,6 +38,7 @@ describe('application dialog registrations', () => {
       'shortcuts-help',
       'page-refactor-confirmation',
       'page-permalink',
+      'page-semantic-index',
       'link-insert',
       'restore-revision-confirmation',
       'wikilink-disambiguation',

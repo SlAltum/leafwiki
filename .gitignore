@@ -59,3 +59,10 @@ internal/http/dist/*
 /.claude/settings.local.json
 /.claude/worktrees/
 # Maintainer-only skills and data are excluded via .git/info/exclude, not listed here.
+
+# arch-dev agent workspace
+.context/
+
+# Local model + ONNX Runtime downloads (never committed)
+assets/tokenizer/
+assets/tokenizer-*/

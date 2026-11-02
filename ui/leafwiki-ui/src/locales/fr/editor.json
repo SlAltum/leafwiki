@@ -95,7 +95,9 @@
     "internalFieldsToggle": "Champs internes",
     "addPropertyButton": "Ajouter une propriété",
     "flatHint": "Gardez les champs plats pour le moment. Si vous avez besoin de métadonnées imbriquées plus tard, utilisez des clés à points comme <code>seo.title</code>.",
-    "unsupportedNotice": "Le frontmatter avancé existant est conservé en arrière-plan mais n'est pas encore modifiable dans cette vue compacte."
+    "unsupportedNotice": "Le frontmatter avancé existant est conservé en arrière-plan mais n'est pas encore modifiable dans cette vue compacte.",
+    "aliasesHeading": "Alias",
+    "addAliasPlaceholder": "Ajouter un alias"
   },
   "tagInput": {
     "loading": "Chargement…",

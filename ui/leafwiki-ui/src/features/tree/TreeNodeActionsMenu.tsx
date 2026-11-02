@@ -205,6 +205,7 @@ export default function TreeNodeActionsMenu({
             slug,
             page.content,
             page.tags ?? [],
+            page.aliases ?? [],
             page.properties ?? {},
           )
         }

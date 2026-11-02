@@ -288,6 +288,22 @@ describe('MarkdownLink tree updates', () => {
     )
   })
 
+  it('keeps the fragment of a link to another page', () => {
+    // The fragment names a section of the target page and must survive the
+    // path normalization (FR-501).
+    useTreeStore.setState({ byId: { t: target }, byPath: { target } })
+    render(
+      <MemoryRouter>
+        <MarkdownLink href="/target#%E5%9B%9E%E6%BB%9A">Target</MarkdownLink>
+      </MemoryRouter>,
+    )
+
+    expect(screen.getByRole('link', { name: 'Target' })).toHaveAttribute(
+      'href',
+      '/target#%E5%9B%9E%E6%BB%9A',
+    )
+  })
+
   it('stops navigating when the target disappears after render (editor)', () => {
     useTreeStore.setState({ byId: { t: target }, byPath: { target } })
     render(

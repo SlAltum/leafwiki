@@ -1,0 +1,71 @@
+{
+  "comment": "Shared fixture: internal/core/markdown/headinganchor_test.go reads this file, and the TS test imports it. A change on one side fails the other (FR-502, FR-506).",
+  "cases": [
+    {
+      "input": "Hello World",
+      "want": "hello-world"
+    },
+    {
+      "input": "  Spaced  Out  ",
+      "want": "spaced-out"
+    },
+    {
+      "input": "a_b-c",
+      "want": "ab-c",
+      "note": "the underscore is removed, not turned into a dash"
+    },
+    {
+      "input": "Café Résumé",
+      "want": "cafe-resume"
+    },
+    {
+      "input": "Straße",
+      "want": "strasse"
+    },
+    {
+      "input": "Ünïcödé",
+      "want": "unicode"
+    },
+    {
+      "input": "Nika's clothes",
+      "want": "nikas-clothes"
+    },
+    {
+      "input": "100% done!",
+      "want": "100-done"
+    },
+    {
+      "input": "C++ / Rust",
+      "want": "c-rust"
+    },
+    {
+      "input": "---",
+      "want": ""
+    },
+    {
+      "input": "v1.2.3",
+      "want": "v123"
+    },
+    {
+      "input": "回滚流程",
+      "want": "回滚流程"
+    },
+    {
+      "input": "中文 开发 Guide",
+      "want": "中文-开发-guide"
+    },
+    {
+      "input": "カタカナ",
+      "want": "カタカナ"
+    },
+    {
+      "input": "エンジニア ガイド",
+      "want": "エンシニア-カイト",
+      "note": "NFKD splits voiced kana and the mark is dropped (FR-502 sequence); an existing consequence of the frontend implementation, pinned so both sides keep agreeing."
+    },
+    {
+      "input": "",
+      "want": ""
+    }
+  ]
+}

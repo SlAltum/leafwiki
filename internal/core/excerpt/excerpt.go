@@ -3,7 +3,9 @@ package excerpt
 import (
 	"bytes"
 	"regexp"
+	"sort"
 	"strings"
+	"unicode/utf8"
 
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/perber/wiki/internal/core/markdown"
@@ -203,4 +205,134 @@ func getFenceState(line string, currentFence *fenceState) *fenceState {
 	}
 
 	return currentFence
+}
+
+// HighlightTerms wraps every case-insensitive occurrence of any term in text
+// with open and close, leaving the rest of the text untouched. Matching folds
+// ASCII letters only, so the byte offsets used to splice stay valid for every
+// other script.
+func HighlightTerms(text string, terms []string, open, close string) string {
+	folded := foldASCII(text)
+	type span struct{ start, end int }
+	var spans []span
+	for _, term := range terms {
+		t := foldASCII(term)
+		if t == "" {
+			continue
+		}
+		for off := 0; off < len(folded); {
+			idx := strings.Index(folded[off:], t)
+			if idx < 0 {
+				break
+			}
+			start := off + idx
+			spans = append(spans, span{start, start + len(t)})
+			off = start + len(t)
+		}
+	}
+	if len(spans) == 0 {
+		return text
+	}
+	sort.Slice(spans, func(i, j int) bool { return spans[i].start < spans[j].start })
+
+	var b strings.Builder
+	b.Grow(len(text) + len(spans)*(len(open)+len(close)))
+	pos := 0
+	for _, s := range spans {
+		if s.start < pos {
+			// Inside a span this term overlaps; the first match already covers it.
+			continue
+		}
+		b.WriteString(text[pos:s.start])
+		b.WriteString(open)
+		b.WriteString(text[s.start:s.end])
+		b.WriteString(close)
+		pos = s.end
+	}
+	b.WriteString(text[pos:])
+	return b.String()
+}
+
+// ContainsTerm reports whether text contains any of the terms, with the same
+// case folding HighlightTerms uses.
+func ContainsTerm(text string, terms []string) bool {
+	folded := foldASCII(text)
+	for _, term := range terms {
+		t := foldASCII(term)
+		if t != "" && strings.Contains(folded, t) {
+			return true
+		}
+	}
+	return false
+}
+
+// HighlightedExcerpt returns at most MaxRunes of plain text taken around the
+// first term occurrence, with the occurrences inside that window wrapped in
+// <b></b>, the same tags the index used to inject, so the client renders the
+// same HTML. Text that contains no term falls back to the opening window of
+// FromBody.
+func HighlightedExcerpt(body string, terms []string) string {
+	plain := PlainTextFromMarkdown(body)
+	if plain == "" {
+		return ""
+	}
+
+	runes := []rune(plain)
+	start := 0
+	if idx := firstTermRuneIndex(plain, terms); idx > MaxRunes/3 {
+		// A third of a window of lead-in, so the match is not at the edge.
+		start = idx - MaxRunes/3
+	}
+	end := start + MaxRunes
+	if end > len(runes) {
+		end = len(runes)
+		if start = end - MaxRunes; start < 0 {
+			start = 0
+		}
+	}
+	if start >= end {
+		return ""
+	}
+
+	highlighted := HighlightTerms(strings.TrimSpace(string(runes[start:end])), terms, "<b>", "</b>")
+	if start > 0 {
+		highlighted = "..." + highlighted
+	}
+	if end < len(runes) {
+		highlighted += "..."
+	}
+	return highlighted
+}
+
+// firstTermRuneIndex returns the rune index of the earliest term occurrence in
+// text, or -1 when no term occurs.
+func firstTermRuneIndex(text string, terms []string) int {
+	folded := foldASCII(text)
+	best := -1
+	for _, term := range terms {
+		t := foldASCII(term)
+		if t == "" {
+			continue
+		}
+		idx := strings.Index(folded, t)
+		if idx < 0 {
+			continue
+		}
+		if runeIdx := utf8.RuneCountInString(folded[:idx]); best < 0 || runeIdx < best {
+			best = runeIdx
+		}
+	}
+	return best
+}
+
+// foldASCII lowercases A-Z and leaves every other byte alone, so the result has
+// the same length as its input and byte offsets into it address the original.
+func foldASCII(s string) string {
+	b := []byte(s)
+	for i, c := range b {
+		if c >= 'A' && c <= 'Z' {
+			b[i] = c + ('a' - 'A')
+		}
+	}
+	return string(b)
 }

@@ -94,7 +94,8 @@
     "printButton": "Imprimer {{item}}",
     "copyButton": "Copier {{item}}",
     "deleteButton": "Supprimer {{item}}",
-    "historyButton": "Historique de {{item}}"
+    "historyButton": "Historique de {{item}}",
+    "semanticIndexButton": "Index sémantique"
   },
   "treeActions": {
     "loading": "Chargement…",

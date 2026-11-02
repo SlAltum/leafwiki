@@ -8,6 +8,7 @@ import {
   DIALOG_COPY_PAGE,
   DIALOG_DELETE_PAGE_CONFIRMATION,
   DIALOG_PAGE_PERMALINK,
+  DIALOG_PAGE_SEMANTIC_INDEX,
 } from '@/lib/registries'
 import { buildHistoryUrl } from '@/lib/routePath'
 import { FavoriteToggleButton } from '@/features/favorites/FavoriteToggleButton'
@@ -72,6 +73,14 @@ export default function PageViewer() {
     page ? (s.byId[page.id]?.pinned ?? false) : false,
   )
   const isLoggedIn = useSessionStore((s) => s.user !== null)
+  const isAdmin = useSessionStore((s) => s.user?.role === 'admin')
+
+  const showSemanticIndex = useCallback(() => {
+    if (!page) return
+    openDialog(DIALOG_PAGE_SEMANTIC_INDEX, {
+      page: { id: page.id, title: page.title },
+    })
+  }, [page, openDialog])
 
   const actions = {
     pageKind: page?.kind,
@@ -101,6 +110,7 @@ export default function PageViewer() {
       if (!page) return
       openDialog(DIALOG_COPY_PAGE, { sourcePage: page })
     }, [page, openDialog]),
+    showSemanticIndex: isAdmin ? showSemanticIndex : undefined,
     isPinned,
     onPinToggle: useCallback(() => {
       if (!page) return

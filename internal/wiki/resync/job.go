@@ -5,10 +5,11 @@ import "sync"
 type Phase string
 
 const (
-	PhaseTree   Phase = "tree"
-	PhaseLinks  Phase = "links"
-	PhaseTags   Phase = "tags"
-	PhaseSearch Phase = "search"
+	PhaseTree    Phase = "tree"
+	PhaseLinks   Phase = "links"
+	PhaseTags    Phase = "tags"
+	PhaseSearch  Phase = "search"
+	PhaseVectors Phase = "vectors"
 )
 
 // JobStatus is the snapshot returned by Status().

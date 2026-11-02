@@ -94,7 +94,8 @@
     "printButton": "打印{{item}}",
     "copyButton": "复制{{item}}",
     "deleteButton": "删除{{item}}",
-    "historyButton": "{{item}}历史"
+    "historyButton": "{{item}}历史",
+    "semanticIndexButton": "语义索引"
   },
   "treeActions": {
     "loading": "加载中…",
@@ -177,32 +178,84 @@
       "dialog": "对话框"
     },
     "items": {
-      "goToPage": { "action": "跳转到页面" },
-      "openShortcutsHelp": { "action": "打开键盘快捷键" },
-      "editPage": { "action": "编辑页面" },
-      "sharePage": { "action": "分享页面" },
-      "printPage": { "action": "打印页面" },
-      "copyPage": { "action": "复制页面" },
-      "deletePage": { "action": "删除页面" },
-      "pageHistory": { "action": "页面历史" },
-      "toggleToc": { "action": "切换目录" },
-      "openExplorer": { "action": "打开导航" },
-      "openSearch": { "action": "打开搜索" },
-      "savePage": { "action": "保存页面" },
-      "closeEditor": { "action": "关闭编辑器" },
-      "formatBold": { "action": "加粗" },
-      "formatItalic": { "action": "斜体" },
-      "insertHeadingOne": { "action": "插入一级标题" },
-      "insertHeadingTwo": { "action": "插入二级标题" },
-      "insertHeadingThree": { "action": "插入三级标题" },
-      "formatInlineCode": { "action": "行内代码" },
-      "insertLink": { "action": "插入链接" },
-      "backToPage": { "action": "返回页面" },
-      "exitSettings": { "action": "退出设置" },
-      "closeDialog": { "action": "关闭对话框" },
-      "confirmDialog": { "action": "对话框默认操作" },
-      "confirmRename": { "action": "确认重命名" },
-      "cancelRename": { "action": "取消重命名" }
+      "goToPage": {
+        "action": "跳转到页面"
+      },
+      "openShortcutsHelp": {
+        "action": "打开键盘快捷键"
+      },
+      "editPage": {
+        "action": "编辑页面"
+      },
+      "sharePage": {
+        "action": "分享页面"
+      },
+      "printPage": {
+        "action": "打印页面"
+      },
+      "copyPage": {
+        "action": "复制页面"
+      },
+      "deletePage": {
+        "action": "删除页面"
+      },
+      "pageHistory": {
+        "action": "页面历史"
+      },
+      "toggleToc": {
+        "action": "切换目录"
+      },
+      "openExplorer": {
+        "action": "打开导航"
+      },
+      "openSearch": {
+        "action": "打开搜索"
+      },
+      "savePage": {
+        "action": "保存页面"
+      },
+      "closeEditor": {
+        "action": "关闭编辑器"
+      },
+      "formatBold": {
+        "action": "加粗"
+      },
+      "formatItalic": {
+        "action": "斜体"
+      },
+      "insertHeadingOne": {
+        "action": "插入一级标题"
+      },
+      "insertHeadingTwo": {
+        "action": "插入二级标题"
+      },
+      "insertHeadingThree": {
+        "action": "插入三级标题"
+      },
+      "formatInlineCode": {
+        "action": "行内代码"
+      },
+      "insertLink": {
+        "action": "插入链接"
+      },
+      "backToPage": {
+        "action": "返回页面"
+      },
+      "exitSettings": {
+        "action": "退出设置"
+      },
+      "closeDialog": {
+        "action": "关闭对话框"
+      },
+      "confirmDialog": {
+        "action": "对话框默认操作"
+      },
+      "confirmRename": {
+        "action": "确认重命名"
+      },
+      "cancelRename": {
+        "action": "取消重命名"
+      }
     }
   }
 }

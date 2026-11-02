@@ -107,7 +107,10 @@ Rules:
 7. **Optional features can be switched off**: a flag or setting, read in one place (the
    composition root or a `Provider`), never checked all over the code.
 
-`internal/architecture_test.go` enforces the import side of this; the rest is checked in review.
+`internal/architecture_test.go` enforces the import side of this, and
+`internal/http/search_routes_test.go` the mounted side of rule 5 for the search API: it must be
+served by the search slice at `/api/search` only, never from inside the scoped read layer. The
+rest is checked in review.
 
 ## Reuse: extract what is used more than once
 
@@ -304,7 +307,7 @@ the slice you are in, don't invent a new one.
 
 ## Cross-platform
 
-LeafWiki ships for Linux (amd64, 386, arm64), Windows, macOS and Raspberry Pi as one binary.
+LeafWiki ships for Linux (amd64, arm64), Windows, macOS and Raspberry Pi as one binary.
 
 - `filepath` for OS paths, `path` for URL and slug paths; never hardcode `/` or `\`.
 - Don't assume a case-sensitive filesystem (Windows and macOS aren't): two names that differ
@@ -361,7 +364,7 @@ A new dependency (Go module or npm package) needs a reason in the PR description
   don't do.
 - **Weight:** binary size (Go) or bundle size and whether it can be lazy-loaded (frontend).
 - **Health:** maintained, licence compatible (MIT/BSD/Apache-style), no large transitive tree.
-- **Platforms:** works on linux/amd64, 386, arm64, Windows and macOS without cgo.
+- **Platforms:** works on linux/amd64, arm64, Windows and macOS without cgo.
 
 A dependency with lasting weight (a runtime service, a database, a framework, a protocol) needs
 an ADR. Dependabot bumps are not new dependencies.

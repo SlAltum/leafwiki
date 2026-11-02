@@ -21,6 +21,7 @@ type UpdatePageInput struct {
 	Content             *string
 	Kind                *tree.NodeKind
 	Tags                []string
+	Aliases             []string
 	Properties          map[string]string
 	PreserveFrontmatter bool
 }
@@ -97,6 +98,7 @@ func (uc *UpdatePageUseCase) Execute(_ context.Context, in UpdatePageInput) (out
 		Content:             in.Content,
 		ExpectedVersion:     in.Version,
 		Tags:                in.Tags,
+		Aliases:             in.Aliases,
 		Properties:          in.Properties,
 		PreserveFrontmatter: in.PreserveFrontmatter,
 	}); err != nil {

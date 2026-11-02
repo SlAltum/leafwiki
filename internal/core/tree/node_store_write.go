@@ -244,10 +244,16 @@ func (f *NodeStore) UpsertContentPreservingFrontmatter(entry *PageNode, content 
 //     leaves round-trip through the editor as dot-notation property keys.
 //   - Tags: when tags is non-nil the existing tags are replaced; when tags is
 //     nil the existing tags in the file are left unchanged.
+//
+// aliasesFrontmatterKey is the frontmatter key aliases live under; the search
+// index reads the same key (FR-203).
+const aliasesFrontmatterKey = "leafwiki_aliases"
+
 func (f *NodeStore) UpsertContentAndMetadata(
 	entry *PageNode,
 	body string,
 	tags []string,
+	aliases []string,
 	properties map[string]string,
 ) error {
 	if entry == nil {
@@ -276,7 +282,7 @@ func (f *NodeStore) UpsertContentAndMetadata(
 	// lists). The editor cannot represent these types and never sends them back,
 	// so they must survive an edit unchanged.
 	for k, v := range existing {
-		if k == "tags" {
+		if k == "tags" || k == aliasesFrontmatterKey {
 			continue // handled separately below
 		}
 		switch v.(type) {
@@ -302,6 +308,17 @@ func (f *NodeStore) UpsertContentAndMetadata(
 		extra["tags"] = tagList
 	} else if existingTags, ok := existing["tags"]; ok {
 		extra["tags"] = existingTags
+	}
+
+	// Aliases: same rule as tags - an explicit list replaces, nil preserves.
+	if aliases != nil {
+		aliasList := make([]interface{}, len(aliases))
+		for i, alias := range aliases {
+			aliasList[i] = alias
+		}
+		extra[aliasesFrontmatterKey] = aliasList
+	} else if existingAliases, ok := existing[aliasesFrontmatterKey]; ok {
+		extra[aliasesFrontmatterKey] = existingAliases
 	}
 
 	mdFile.SetExtraFields(extra)

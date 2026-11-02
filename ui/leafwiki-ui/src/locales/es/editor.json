@@ -95,7 +95,9 @@
     "internalFieldsToggle": "Campos internos",
     "addPropertyButton": "Añadir propiedad",
     "flatHint": "Por ahora, mantén los campos planos. Si más adelante necesitas metadatos anidados, usa claves con puntos como <code>seo.title</code>.",
-    "unsupportedNotice": "El frontmatter avanzado existente se conserva en segundo plano, pero todavía no se puede editar en esta vista compacta."
+    "unsupportedNotice": "El frontmatter avanzado existente se conserva en segundo plano, pero todavía no se puede editar en esta vista compacta.",
+    "aliasesHeading": "Alias",
+    "addAliasPlaceholder": "Añadir alias"
   },
   "tagInput": {
     "loading": "Cargando…",

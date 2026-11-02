@@ -35,6 +35,11 @@ export const PageQuickSwitcherDialog = lazy(() =>
     default: m.PageQuickSwitcherDialog,
   })),
 )
+export const PageSemanticIndexDialog = lazy(() =>
+  import('@/features/page/PageSemanticIndexDialog').then((m) => ({
+    default: m.PageSemanticIndexDialog,
+  })),
+)
 export const AddPageDialog = lazy(() =>
   import('@/features/page/AddPageDialog').then((m) => ({
     default: m.AddPageDialog,

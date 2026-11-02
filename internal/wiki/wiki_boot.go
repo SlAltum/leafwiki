@@ -2,8 +2,10 @@ package wiki
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"path/filepath"
+	"time"
 
 	"github.com/perber/wiki/internal/avatar"
 	"github.com/perber/wiki/internal/branding"
@@ -11,7 +13,9 @@ import (
 	"github.com/perber/wiki/internal/core/auth"
 	"github.com/perber/wiki/internal/core/email"
 	"github.com/perber/wiki/internal/core/ignore"
+	"github.com/perber/wiki/internal/core/shared/advisorylock"
 	"github.com/perber/wiki/internal/core/tree"
+	"github.com/perber/wiki/internal/embed"
 	"github.com/perber/wiki/internal/favorites"
 	"github.com/perber/wiki/internal/links"
 	"github.com/perber/wiki/internal/properties"
@@ -21,6 +25,7 @@ import (
 	"github.com/perber/wiki/internal/usersettings"
 	wikipages "github.com/perber/wiki/internal/wiki/pages"
 	"github.com/perber/wiki/internal/wiki/pagesave"
+	"github.com/perber/wiki/internal/wiki/vectors"
 )
 
 // ─── Subsystem initializers ───────────────────────────────────────────────────
@@ -218,6 +223,10 @@ func (w *Wiki) bootstrapTagsAndProperties() {
 	}
 }
 
+// vectorQueueInterval is how often a queued page is picked up. Long enough to
+// merge a burst of saves, short enough that an editor sees the result.
+const vectorQueueInterval = 5 * time.Second
+
 func (w *Wiki) initSearch() error {
 	var err error
 	w.searchIndex, err = search.NewSQLiteIndex(w.storageDir)
@@ -241,6 +250,134 @@ func (w *Wiki) initSearch() error {
 		}
 	}()
 	return nil
+}
+
+// initVectors starts semantic search when it is switched on. A missing or
+// broken model leaves the feature degraded instead of failing the boot: keyword
+// search keeps working and the status says why vectors are unavailable
+// (FR-402, FR-414). Only an untagged build is a hard error, because --vectors
+// only means something with the inference runtime compiled in (C-7).
+func (w *Wiki) initVectors(options *WikiOptions) error {
+	mode, err := vectors.ParseMode(options.Vectors.Mode)
+	if err != nil {
+		return err
+	}
+	if !mode.Enabled() {
+		return nil
+	}
+	// An untagged build has no inference runtime, and this option only means
+	// something with one: refuse the start instead of running degraded by
+	// accident (C-7).
+	if !embed.EncoderAvailable() {
+		return fmt.Errorf("semantic search needs a build with the vectors tag, but --vectors=%s was requested", mode)
+	}
+
+	// The same OS lock the offline CLI takes: a running server and an offline
+	// build must never write the same database (FR-412).
+	lock, err := advisorylock.TryAcquire(filepath.Join(w.storageDir, "vectors.db.lock"))
+	if err != nil {
+		w.log.Warn("semantic search unavailable: another process holds the vectors lock", "error", err)
+		return nil
+	}
+	w.vectorLock = lock
+
+	store, err := embed.OpenStore(filepath.Join(w.storageDir, "vectors.db"))
+	if err != nil {
+		w.log.Warn("semantic search unavailable: could not open the vectors database", "error", err)
+		return nil
+	}
+
+	encoder, encoderErr := w.openVectorEncoder(options, mode)
+	if encoderErr != nil {
+		if errors.Is(encoderErr, embed.ErrEncoderNotBuilt) {
+			if closeErr := store.Close(); closeErr != nil {
+				w.log.Warn("could not close the vectors database", "error", closeErr)
+			}
+			return fmt.Errorf("semantic search needs a build with the vectors tag: %w", encoderErr)
+		}
+		w.log.Warn("semantic search unavailable: the encoder did not start", "error", encoderErr)
+	}
+
+	// A typed nil pointer would satisfy the interface and panic on use, so the
+	// degraded case hands over an untyped nil.
+	var encoderPort vectors.Encoder
+	if encoder != nil {
+		encoderPort = encoder
+	}
+
+	w.vectorStore = store
+	w.vectorEncoder = encoder
+	w.vectorService = vectors.NewService(store, encoderPort, w.tree, w.vectorModelID(options), vectors.TokenizerVersion, mode, w.log)
+
+	w.log.Info("semantic search enabled", "mode", string(mode), "model", w.vectorModelID(options))
+	w.startQueueWorker()
+	return nil
+}
+
+// startQueueWorker drains queued pages in the background. Only auto mode queues
+// on save, so only auto mode needs a worker: a queue that nothing drains would
+// leave the semantic index frozen at the last explicit build (FR-410).
+func (w *Wiki) startQueueWorker() {
+	if w.vectorService == nil || !w.vectorService.AutoIndex() || w.vectorService.EncoderAvailable() == false {
+		return
+	}
+
+	w.reloadWG.Add(1)
+	go func() {
+		defer w.reloadWG.Done()
+		ticker := time.NewTicker(vectorQueueInterval)
+		defer ticker.Stop()
+		for {
+			select {
+			case <-w.shutdownCtx.Done():
+				return
+			case <-ticker.C:
+				if _, err := w.vectorService.Drain(0); err != nil && !errors.Is(err, vectors.ErrBuildRunning) {
+					w.log.Warn("semantic queue drain failed", "error", err)
+				}
+			}
+		}
+	}()
+}
+
+// openVectorEncoder loads the model and starts the inference runtime.
+func (w *Wiki) openVectorEncoder(options *WikiOptions, mode vectors.Mode) (*embed.Encoder, error) {
+	modelDir := options.Vectors.ModelDir
+	if modelDir == "" {
+		modelDir = filepath.Join(w.storageDir, "models")
+	}
+
+	model, err := embed.Open(modelDir)
+	if err != nil {
+		return nil, err
+	}
+	return embed.NewEncoder(model, embed.EncoderOptions{
+		SharedLibraryPath: options.Vectors.LibraryPath,
+		IntraOpThreads:    1,
+	})
+}
+
+// vectorModelID reports the model identity stored with a build, so a model
+// change makes the current build stale (FR-408).
+func (w *Wiki) vectorModelID(options *WikiOptions) string {
+	modelDir := options.Vectors.ModelDir
+	if modelDir == "" {
+		modelDir = filepath.Join(w.storageDir, "models")
+	}
+	model, err := embed.Open(modelDir)
+	if err != nil {
+		return ""
+	}
+	return model.Manifest.ModelID
+}
+
+// VectorStatus reports the semantic index state; enabled is false while the
+// feature is off.
+func (w *Wiki) VectorStatus() (vectors.Status, error) {
+	if w.vectorService == nil {
+		return vectors.Status{State: vectors.StateOff}, nil
+	}
+	return w.vectorService.Status(true)
 }
 
 func (w *Wiki) initBranding() error {

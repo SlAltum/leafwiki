@@ -13,7 +13,6 @@ LDFLAGS := -X main.Version=$(VERSION) $(EMBED_LDFLAGS)
 
 PLATFORMS := \
   linux/amd64 \
-  linux/386 \
   linux/arm64 \
   windows/amd64 \
   darwin/amd64 \
@@ -96,11 +95,11 @@ ui-test: ui-deps
 
 ui-check: ui-lint ui-test
 
-# The local subset of the pull-request checks. Not included: the linux/386
-# tests, govulncheck, Trivy (the dependency scans, and the image scan, which
-# `make scan-image` runs locally with Docker and trivy installed), the
-# install-script test, the e2e lint, the E2E suites and the Dev Container
-# build (.github/workflows/devcontainer.yml).
+# The local subset of the pull-request checks. Not included: govulncheck,
+# Trivy (the dependency scans, and the image scan, which `make scan-image`
+# runs locally with Docker and trivy installed), the install-script test,
+# the e2e lint, the E2E suites and the Dev Container build
+# (.github/workflows/devcontainer.yml).
 # CI jobs that keep their own command: test-go (go test with coverage for the
 # report artifact), lint-go (golangci-lint-action, for PR annotations and its
 # cache) and the e2e lint (npm in e2e/, which has no Make target).

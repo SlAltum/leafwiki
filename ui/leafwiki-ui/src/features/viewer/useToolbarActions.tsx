@@ -17,6 +17,7 @@ import {
   Pin,
   PinOff,
   Printer,
+  ScanSearch,
   Trash2,
 } from 'lucide-react'
 import { useEffect } from 'react'
@@ -33,6 +34,8 @@ export interface ToolbarActionsOptions {
   copyPage: () => void
   isPinned: boolean
   onPinToggle: () => void
+  // Present only for an admin: rebuilding the semantic index is an admin action.
+  showSemanticIndex?: () => void
 }
 
 export function useToolbarActions({
@@ -45,6 +48,7 @@ export function useToolbarActions({
   copyPage,
   isPinned,
   onPinToggle,
+  showSemanticIndex,
 }: ToolbarActionsOptions) {
   const { t } = useTranslation('viewer')
   const setButtons = useToolbarStore((state) => state.setButtons)
@@ -106,6 +110,18 @@ export function useToolbarActions({
         variant: 'outline',
         action: onPinToggle,
       },
+      ...(showSemanticIndex
+        ? [
+            {
+              id: 'semantic-index',
+              label: t('pageToolbar.semanticIndexButton'),
+              hotkey: '',
+              icon: <ScanSearch size={18} />,
+              variant: 'outline' as const,
+              action: showSemanticIndex,
+            },
+          ]
+        : []),
       {
         id: 'delete-page',
         label: t('pageToolbar.deleteButton', { item: itemLabel }),
@@ -193,6 +209,7 @@ export function useToolbarActions({
     showPermalink,
     isPinned,
     onPinToggle,
+    showSemanticIndex,
     registerHotkey,
     unregisterHotkey,
     itemLabel,

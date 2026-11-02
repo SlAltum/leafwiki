@@ -16,6 +16,7 @@
   "results": {
     "loading": "正在加载结果…",
     "noResults": "未找到结果。",
+    "suggestion": "改为搜索“{{query}}”",
     "resultSummary_one": "为 <bold>{{count}}</bold> 个结果",
     "resultSummary_other": "为 <bold>{{count}}</bold> 个结果",
     "filterQuery": "“{{query}}”",

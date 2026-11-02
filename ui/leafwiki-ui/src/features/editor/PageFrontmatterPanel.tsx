@@ -16,10 +16,12 @@ const METADATA_ALLOWED_HOTKEYS = 'Mod+KeyS Escape'
 
 type PageFrontmatterPanelProps = {
   tags: string[]
+  aliases: string[]
   fields: EditorFrontmatterField[]
   errors: Record<string, string>
   hasUnsupportedFields: boolean
   onTagsChange: (tags: string[]) => void
+  onAliasesChange: (aliases: string[]) => void
   onFieldsChange: (fields: EditorFrontmatterField[]) => void
 }
 
@@ -45,10 +47,12 @@ function getFieldValue(field: EditorFrontmatterField) {
 
 export function PageFrontmatterPanel({
   tags,
+  aliases,
   fields,
   errors,
   hasUnsupportedFields,
   onTagsChange,
+  onAliasesChange,
   onFieldsChange,
 }: PageFrontmatterPanelProps) {
   const { t } = useTranslation('editor')
@@ -186,6 +190,22 @@ export function PageFrontmatterPanel({
                       {errors.tags}
                     </p>
                   ) : null}
+                </div>
+              </div>
+
+              <div className="page-frontmatter-panel__row page-frontmatter-panel__row--aliases">
+                <div className="page-frontmatter-panel__section-heading page-frontmatter-panel__section-heading--inline">
+                  {t('frontmatterPanel.aliasesHeading')}
+                </div>
+                <div className="page-frontmatter-panel__tags-field">
+                  <TagInputWithSuggestions
+                    tags={aliases}
+                    onTagsChange={onAliasesChange}
+                    placeholder={t('frontmatterPanel.addAliasPlaceholder')}
+                    variant="metadata"
+                    inputTestId="page-frontmatter-alias-input"
+                    inputHotkeys={METADATA_ALLOWED_HOTKEYS}
+                  />
                 </div>
               </div>
 

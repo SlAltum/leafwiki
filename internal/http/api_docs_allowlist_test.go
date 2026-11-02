@@ -104,6 +104,14 @@ var undocumentedAPIRouteLiteral = map[string]string{
 	"POST /api/import/plan":    "importer: pending package documentation",
 	"DELETE /api/import/plan":  "importer: pending package documentation",
 
+	// vectors (internal/wiki/vectors)
+	"POST /api/admin/search/vectors/rebuild":            "vectors: pending package documentation",
+	"POST /api/admin/search/vectors/pause":              "vectors: pending package documentation",
+	"DELETE /api/admin/search/vectors":                  "vectors: pending package documentation",
+	"GET /api/admin/search/vectors/status":              "vectors: pending package documentation",
+	"GET /api/admin/search/vectors/pages/{id}":          "vectors: pending package documentation",
+	"POST /api/admin/search/vectors/pages/{id}/rebuild": "vectors: pending package documentation",
+
 	// resync (internal/wiki/resync)
 	"POST /api/admin/resync":       "resync: pending package documentation",
 	"GET /api/admin/resync/status": "resync: pending package documentation",

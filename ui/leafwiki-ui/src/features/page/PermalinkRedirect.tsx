@@ -32,7 +32,10 @@ export default function PermalinkRedirect() {
         const target = await getPermalinkTarget(id)
         if (!active) return
 
-        navigate(target.path ? `/${target.path}` : '/', {
+        // The fragment names a section of the page the id resolves to, so it
+        // survives the redirect (FR-503).
+        const targetUrl = target.path ? `/${target.path}` : '/'
+        navigate(`${targetUrl}${location.hash}`, {
           replace: true,
           state: location.state,
         })
@@ -63,7 +66,7 @@ export default function PermalinkRedirect() {
       active = false
       setLoading(false)
     }
-  }, [id, location.state, navigate, setLoading, t])
+  }, [id, location.hash, location.state, navigate, setLoading, t])
 
   if (notFound) {
     return <Page404 />

@@ -95,7 +95,9 @@
     "internalFieldsToggle": "Interne Felder",
     "addPropertyButton": "Eigenschaft hinzufügen",
     "flatHint": "Halten Sie die Felder vorerst flach. Wenn Sie später verschachtelte Metadaten benötigen, verwenden Sie Punkt-Schlüssel wie <code>seo.title</code>.",
-    "unsupportedNotice": "Vorhandene erweiterte Frontmatter bleibt im Hintergrund erhalten, ist in dieser kompakten Ansicht aber noch nicht bearbeitbar."
+    "unsupportedNotice": "Vorhandene erweiterte Frontmatter bleibt im Hintergrund erhalten, ist in dieser kompakten Ansicht aber noch nicht bearbeitbar.",
+    "aliasesHeading": "Aliasse",
+    "addAliasPlaceholder": "Alias hinzufügen"
   },
   "tagInput": {
     "loading": "Wird geladen…",

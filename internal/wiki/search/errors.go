@@ -1,6 +1,7 @@
 package search
 
 import (
+	"log/slog"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -46,6 +47,10 @@ func respondWithSearchError(c *gin.Context, err error) {
 		return
 	}
 
+	// The response stays generic (it can reach an anonymous caller), but a
+	// 500 whose cause is nowhere recorded cannot be diagnosed. The scoped and
+	// core errors carry no user-facing text; log them for the operator.
+	slog.Default().Error("search request failed", "error", err)
 	respondWithSearchStatusError(c, http.StatusInternalServerError, ErrCodeSearchInternal, "Failed to perform search", "failed to perform search")
 }
 

@@ -42,6 +42,7 @@ type Page struct {
 	Content    string            `json:"content"`
 	Path       string            `json:"path"`
 	Tags       []string          `json:"tags"`
+	Aliases    []string          `json:"aliases"`
 	Properties map[string]string `json:"properties"`
 }
 

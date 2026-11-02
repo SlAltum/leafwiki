@@ -12,6 +12,7 @@ import {
   BrandingSettings,
   Importer,
   PublicAccessSettings,
+  SemanticIndexSettings,
   SnapshotSettings,
   TocDisplaySettings,
   UserManagement,
@@ -26,6 +27,7 @@ import {
   KeyRound,
   ListTree,
   Palette,
+  ScanSearch,
   Upload,
   User,
   Users,
@@ -114,6 +116,17 @@ export const settingsSections: SettingsSection[] = [
     icon: ListTree,
     roles: ['admin'],
     Component: TocDisplaySettings,
+  },
+  {
+    id: 'semantic-index',
+    path: 'semantic-index',
+    labelKey: 'menuLabel',
+    ns: 'semanticIndex',
+    icon: ScanSearch,
+    roles: ['admin'],
+    // Visible to admins even while the feature is off: the page explains how
+    // to switch it on instead of hiding the capability.
+    Component: SemanticIndexSettings,
   },
   {
     id: 'users',

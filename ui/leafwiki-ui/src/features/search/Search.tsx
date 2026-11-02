@@ -11,6 +11,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { searchPages, SearchResultItem, SearchTagFacet } from '@/lib/api/search'
 import { deferStateUpdate } from '@/lib/deferState'
+import { hasMinQueryLength } from '@/lib/searchQuery'
 import { normalizeWikiRoutePath } from '@/lib/wikiPath'
 import { fetchTags, TagCount } from '@/lib/api/tags'
 import { useDebounce } from '@/lib/useDebounce'
@@ -54,9 +55,10 @@ export default function Search({ active = false }: SearchProps) {
   const debouncedActiveTagsKey = useDebounce(activeTagsKey, 180)
 
   const [loading, setLoading] = useState(
-    () => urlQuery.length >= 3 || activeTags.length > 0,
+    () => hasMinQueryLength(urlQuery) || activeTags.length > 0,
   )
   const [results, setResults] = useState<SearchResultItem[]>([])
+  const [suggestion, setSuggestion] = useState('')
   const [totalCount, setTotalCount] = useState(0)
   const [page, setPage] = useState(0)
   const [activeIndex, setActiveIndex] = useState(0)
@@ -77,7 +79,7 @@ export default function Search({ active = false }: SearchProps) {
       debouncedActiveTagsKey === '' ? [] : debouncedActiveTagsKey.split('\n'),
     [debouncedActiveTagsKey],
   )
-  const hasSearchQuery = debouncedQuery.length >= 3
+  const hasSearchQuery = hasMinQueryLength(debouncedQuery)
   const trimmedQuery = inputQuery.trim()
   const activeQueryLabel = hasSearchQuery ? debouncedQuery : trimmedQuery
   const isIdleMode = trimmedQuery === '' && activeTags.length === 0
@@ -151,7 +153,7 @@ export default function Search({ active = false }: SearchProps) {
     )
     setPage(0)
     setActiveIndex(0)
-    if (urlQuery.trim().length < 3) {
+    if (!hasMinQueryLength(urlQuery)) {
       setResults([])
       setTotalCount(0)
       setFacetTags([])
@@ -233,6 +235,7 @@ export default function Search({ active = false }: SearchProps) {
         setResults(data.items || [])
         setTotalCount(data.count)
         setFacetTags(data.tag_facets || [])
+        setSuggestion(data.suggestion ?? '')
       })
       .catch((err) => {
         if (latestRequestIdRef.current !== requestId) return
@@ -240,6 +243,7 @@ export default function Search({ active = false }: SearchProps) {
         setResults([])
         setTotalCount(0)
         setFacetTags([])
+        setSuggestion('')
       })
       .finally(() => {
         if (latestRequestIdRef.current !== requestId) return
@@ -252,6 +256,26 @@ export default function Search({ active = false }: SearchProps) {
     hasSearchQuery,
     page,
   ])
+
+  // applySuggestion searches the corrected spelling the server reported, so
+  // the reader can turn "results for receive" into a plain exact search
+  // (FR-304).
+  const applySuggestion = (next: string) => {
+    invalidatePendingRequests()
+    setInputQuery(next)
+    startTransition(() => {
+      setSearchParams(
+        (prev) => {
+          const params = new URLSearchParams(prev)
+          params.set('q', next)
+          return params
+        },
+        { replace: true },
+      )
+    })
+    setPage(0)
+    setActiveIndex(0)
+  }
 
   const clearSearch = () => {
     invalidatePendingRequests()
@@ -321,7 +345,7 @@ export default function Search({ active = false }: SearchProps) {
             setPage(0)
             setActiveIndex(0)
 
-            if (nextQuery.length >= 3 || activeTags.length > 0) {
+            if (hasMinQueryLength(nextQuery) || activeTags.length > 0) {
               setLoading(true)
             } else {
               setResults([])
@@ -473,6 +497,19 @@ export default function Search({ active = false }: SearchProps) {
               {t('results.loading')}
             </ListViewStatus>
           </ListView>
+        )}
+
+        {!loading && suggestion !== '' && (
+          <ListViewStatus className="search__result-summary">
+            <button
+              type="button"
+              className="search__suggestion-button"
+              data-testid="search-suggestion"
+              onClick={() => applySuggestion(suggestion)}
+            >
+              {t('results.suggestion', { query: suggestion })}
+            </button>
+          </ListViewStatus>
         )}
 
         {!loading && hasImmediateFilters && results.length === 0 && (

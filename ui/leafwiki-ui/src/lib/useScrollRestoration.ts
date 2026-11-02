@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect } from 'react'
+import { hasMinQueryLength } from './searchQuery'
 
 const DEFAULT_SCROLL_CONTAINER_ID = 'scroll-container'
 const SCROLL_STORAGE_PREFIX = 'scroll:visit:'
@@ -17,7 +18,7 @@ export function useScrollRestoration(
     const searchQuery = (
       new URLSearchParams(window.location.search).get('q') ?? ''
     ).trim()
-    if (searchQuery.length >= 3) return
+    if (hasMinQueryLength(searchQuery)) return
 
     if (isLoading) return
 
@@ -44,7 +45,7 @@ export function useScrollRestoration(
     const searchQuery = (
       new URLSearchParams(window.location.search).get('q') ?? ''
     ).trim()
-    if (searchQuery.length >= 3) return
+    if (hasMinQueryLength(searchQuery)) return
 
     return () => {
       const el = document.getElementById(containerId)

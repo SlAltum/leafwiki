@@ -27,6 +27,7 @@ type Frontmatter struct {
 	LeafWikiCreatorID    string                 `yaml:"leafwiki_creator_id,omitempty" json:"creatorId,omitempty"`
 	LeafWikiLastAuthorID string                 `yaml:"leafwiki_last_author_id,omitempty" json:"lastAuthorId,omitempty"`
 	LeafWikiPinned       bool                   `yaml:"leafwiki_pinned,omitempty" json:"pinned,omitempty"`
+	LeafWikiAliases      []string               `yaml:"leafwiki_aliases,omitempty" json:"aliases,omitempty"`
 	ExtraFields          map[string]interface{} `yaml:"-" json:"-"`
 
 	// repaired records whether parsing this frontmatter block required the
@@ -90,6 +91,7 @@ func parseFrontmatterYAML(yamlPart string) (Frontmatter, error) {
 			fm.LeafWikiPinned = b
 		}
 	}
+	fm.LeafWikiAliases = aliasesFromValue(raw["leafwiki_aliases"])
 
 	for key, value := range raw {
 		switch key {
@@ -145,6 +147,7 @@ var knownLeafWikiStringFrontmatterKeys = []string{
 	"leafwiki_updated_at",
 	"leafwiki_creator_id",
 	"leafwiki_last_author_id",
+	"leafwiki_aliases",
 }
 
 // unquotedLeafWikiStringFieldLine matches a leafwiki_* string key together
@@ -238,6 +241,34 @@ func sanitizeFrontmatterYAML(yamlPart string) (string, bool) {
 	}
 
 	return out, changedAny
+}
+
+// aliasesFromValue reads the leafwiki_aliases value in either accepted shape:
+// one scalar, or a sequence of scalars. Entries are trimmed and empty ones
+// dropped. The key stays in ExtraFields as well, so a rewrite of the page
+// writes the author's own shape back unchanged.
+func aliasesFromValue(value interface{}) []string {
+	switch typed := value.(type) {
+	case nil:
+		return nil
+	case []interface{}:
+		aliases := make([]string, 0, len(typed))
+		for _, item := range typed {
+			if alias := strings.TrimSpace(valueToString(item)); alias != "" {
+				aliases = append(aliases, alias)
+			}
+		}
+		if len(aliases) == 0 {
+			return nil
+		}
+		return aliases
+	default:
+		alias := strings.TrimSpace(valueToString(value))
+		if alias == "" {
+			return nil
+		}
+		return []string{alias}
+	}
 }
 
 func valueToString(value interface{}) string {

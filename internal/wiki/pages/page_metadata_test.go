@@ -246,7 +246,7 @@ func TestReadPageMetadata_PageFile_ReturnsNonNilMetadata(t *testing.T) {
 				pageID = tt.pageID
 			}
 
-			tags, props := readPageMetadata(ts, pageID)
+			tags, _, props := readPageMetadata(ts, pageID)
 			if tags == nil || props == nil {
 				t.Fatalf("tags and properties must be non-nil, got %#v / %#v", tags, props)
 			}

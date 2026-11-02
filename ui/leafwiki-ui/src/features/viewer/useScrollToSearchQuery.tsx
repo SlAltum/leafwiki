@@ -1,3 +1,4 @@
+import { hasMinQueryLength } from '@/lib/searchQuery'
 import { scrollToSearchQuery } from '@/lib/scrollToSearchQuery'
 import { useEffect } from 'react'
 import { useLocation, useSearchParams } from 'react-router'
@@ -17,7 +18,7 @@ export function useScrollToSearchQuery({
 
   useEffect(() => {
     // Headline hash navigation wins when both are present.
-    if (isLoading || !content || hash || query.length < 3) return
+    if (isLoading || !content || hash || !hasMinQueryLength(query)) return
     return scrollToSearchQuery(query)
   }, [content, isLoading, hash, query])
 }

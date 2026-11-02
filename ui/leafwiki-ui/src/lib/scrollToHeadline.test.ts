@@ -38,6 +38,15 @@ describe('scrollToHeadlineHash — hash update', () => {
     expect(replaceStateSpy).not.toHaveBeenCalled()
   })
 
+  it('finds the heading through the normalized fragment', () => {
+    // A hand-written fragment and the generated id name the same section
+    // (FR-502).
+    const heading = addHeading('nikas-clothes')
+    scrollToHeadlineHash("#nika's%20clothes", { waitForStableLayout: false })
+    expect(replaceStateSpy).toHaveBeenCalledWith(null, '', "#nika's%20clothes")
+    expect(heading.scrollIntoView).toHaveBeenCalled()
+  })
+
   it('passes encoded hash to replaceState as-is', () => {
     addHeading('hello world')
     scrollToHeadlineHash('#hello%20world', { waitForStableLayout: false })

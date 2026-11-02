@@ -11,6 +11,7 @@ where," those answer "how does layer X work" and "how does flow Y run." Part of 
 `cmd/leafwiki` (entrypoint) constructs an `internal/wiki.Wiki` (composition root), which wires
 `internal/core/*` (filesystem/DB primitives — tree, auth, markdown, revision) into the top-level
 derived-index packages (`internal/links`, `internal/tags`, `internal/properties`, `internal/search`,
+`internal/embed`,
 `internal/favorites`, `internal/usersettings`, `internal/avatar`, `internal/publicaccess`,
 `internal/tocdisplay`, `internal/snapshot`, `internal/restore`, `internal/backup`,
 `internal/branding`, `internal/importer`), then into the `internal/wiki/<domain>` slices (`pages`,
@@ -59,7 +60,9 @@ filesystem-canonical (`tree`, `revision`) and SQLite-derived (`links`, `tags`, `
 - **`internal/core/markdown`** — markdown-file abstraction independent of the tree: `markdown.go`
   (`MarkdownFile` — path-aware read/write with title extraction), `frontmatter.go` (YAML frontmatter
   parse/serialize), `reserved.go` (`IsSystemKey` — `tags` and any `leafwiki_`-prefixed key are
-  reserved, `title` is not and round-trips as a normal custom property).
+  reserved, `title` is not and round-trips as a normal custom property), `headinganchor.go`
+  (`NormalizeHeadingID`: the section id the reader generates, kept identical to
+  `slugifyHeadline` through one shared vector file).
 - **`internal/core/auth`** — local identity and session primitives, largest `core` package.
   `auth_service.go` (`AuthService`, password+TOTP login orchestration, `loginChallengeLifetime` =
   5 min bridging the two login steps), `session_manager.go` (`SessionManager` — JWT access/refresh
@@ -133,8 +136,13 @@ resync-derived state.
 - **`internal/properties`** — arbitrary-frontmatter-property index (custom, non-reserved
   frontmatter keys): `properties_store.go` (`properties.db`), `properties_service.go`.
 - **`internal/search`** — full-text search index: `sqlite_index.go` (`search.db`, FTS via
-  `modernc.org/sqlite`, goldmark-based content extraction + `htmlutil` sanitization),
-  `indexing_status.go`, `search_result.go`.
+  `modernc.org/sqlite`, goldmark-based content extraction), `cjk.go` (CJK bigram analysis and
+  width folding, shared by the index and the query; the stored columns hold analysed text), `indexing_status.go`, `search_result.go`.
+  Titles and excerpts are not read from the index: `internal/wiki/search` fills them from the
+  tree service and highlights them on the page's own text.
+- **`internal/core/shared/advisorylock`**: OS advisory lock (`flock`/`LockFileEx`) on a file, so the
+  running server and the offline `vectors` command cannot write the same database: one holder at a
+  time, and the kernel releases it when a process dies.
 - **`internal/usersettings`** — per-user preferences (language, auto-save, date/time format):
   `usersettings_store.go` (`usersettings.db`), `usersettings_service.go`, `language.go`
   (allowed languages), `dateformat.go`. Real state, part of full backup/restore.
@@ -154,6 +162,29 @@ resync-derived state.
   resolve a token to a `Grant`; unknown, malformed, expired and revoked tokens all give
   `share_link_not_found`), `token.go` (256-bit `lws_` tokens). What a resolved link may read is
   decided by the scoped read layer (`internal/scopedread`, ADR-0015).
+- **`internal/embed`**: the encoder model as data: `manifest.go` parses
+  `<data-dir>/models/<model_id>/manifest.json` (`model_id`, `dim`, `dtype`, `tokenizer`,
+  `max_tokens`, file digests), refuses an ambiguous or malformed model directory, and verifies
+  every file against its digest before anything loads it (FR-402, FR-403). `store.go` owns
+  `vectors.db` (`meta`, `chunks`, `queue`): a build is written under a fresh id and becomes
+  current only on commit, so an interrupted build leaves the old one answering; vectors are
+  L2-normalized and stored little-endian float32. A corrupt `vectors.db` is reported, never
+  replaced (ADR-0013). `wordpiece.go` is the BERT tokenizer every model input goes through
+  (BertNormalizer + BertPreTokenizer + WordPiece, [CLS]/[SEP], truncation), read straight from
+  the model's `tokenizer.json`; it accepts only that shape and refuses anything else. `chunk.go`
+  is the pure `SplitPage`; `encoder_vectors.go` (behind `//go:build vectors`) is the ONNX Runtime
+  encoder - session, batching, mean pooling over the attention mask and L2 normalization - and
+  `encoder_stub.go` keeps the default build compiling with no inference runtime at all.: the introduction, then one group per
+  `##`-or-deeper heading (path `Deploy > Rollback`, duplicates numbered), long sections split to
+  `ChunkMaxChars` with every piece keeping the section's anchor. `queue.go` is the page queue:
+  one row per page, so repeated saves collapse into one encode. The inference runtime itself sits
+  behind a build tag and does not live here.
+- **`internal/wiki/vectors`**: semantic indexing slice: `routes.go` is the admin surface
+  (rebuild/pause/delete/status under `/api/admin/search/vectors`, 503 while the feature is off),
+  `mode.go` the off/auto/manual switch, `state.go` the state enum; `service.go` owns the build loop behind an
+  `Encoder` interface, so the queue, the pause flag, single-page and full rebuilds are testable
+  without a model. A page that fails is recorded and skipped; the rest still commit, and the
+  previous generation keeps answering until the new one commits.
 - **`internal/tocdisplay`** — the instance-wide "always show table of contents" flag, same
   provider pattern (`Provider` interface, `Fixed` for flag-pinned values).
 - **`internal/favorites`** — per-user private favorited-pages list. `favorites_store.go`
@@ -493,7 +524,9 @@ building new ones.
   (combo normalization), `useDebounce.ts`, `useIsMobile.ts`, `useAppMode.ts`,
   `useIsReadOnly.ts`, `bootstrapAuth.ts`, `handleFieldErrors.ts`, `deferState.ts`,
   `scrollToHeadline.ts`, `useScrollRestoration.ts`, `useAutoCloseSidebarOnMobile.ts`,
-  `redirectToExternal.ts`, `navigationVisit.ts`, `dateLocale.ts`/`useDateTimeFormat.ts` (date
+  `redirectToExternal.ts`, `navigationVisit.ts`, `headingAnchor.ts` (the heading → id rule every
+  section link, TOC entry and search anchor follows), `searchQuery.ts` (the one minimum query
+  length predicate), `dateLocale.ts`/`useDateTimeFormat.ts` (date
   formatting per user setting), `roles.ts`, `assetSrc.ts`, `dynamicImportError.ts` (recovery
   from stale lazy chunks after a deploy), `config.ts` (frontend-side constant defaults, e.g.
   `DEFAULT_MAX_ASSET_UPLOAD_SIZE_BYTES`). `*.bench.ts` files are Vitest benchmarks.

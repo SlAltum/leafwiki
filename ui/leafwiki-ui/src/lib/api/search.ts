@@ -28,6 +28,8 @@ export type SearchResult = {
   limit: number
   offset: number
   tag_facets: SearchTagFacet[]
+  /** The query with its typos corrected; absent when nothing was corrected. */
+  suggestion?: string
 }
 
 export async function searchPages(

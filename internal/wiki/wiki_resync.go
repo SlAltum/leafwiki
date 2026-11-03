@@ -111,6 +111,12 @@ func (w *Wiki) runReloadPhases(ctx context.Context, job *wikiresync.ResyncJob) e
 	return nil
 }
 
+// ResyncStatus reports the state of the current (or last) reload. An in-process
+// front end follows a refresh through it without importing the job type itself.
+func (w *Wiki) ResyncStatus() wikiresync.JobStatus {
+	return w.resyncJob.Status()
+}
+
 // TriggerResyncAsync starts a background filesystem reload if none is already running.
 // Used by the signal handler so SIGUSR1/SIGHUP also goes through the shared ResyncJob.
 func (w *Wiki) TriggerResyncAsync() {

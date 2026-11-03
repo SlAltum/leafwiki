@@ -9,6 +9,18 @@ HTTP_DIST := internal/http/dist
 # .github/workflows/backend.yml reads the same file.
 GOLANGCI_LINT_VERSION ?= $(shell cat .golangci-lint-version)
 EMBED_LDFLAGS := -X github.com/perber/wiki/internal/http.EmbedFrontend=true -X github.com/perber/wiki/internal/http.Environment=production
+# Semantic search release: the model directory name inside the package, and the
+# ONNX Runtime shared library the cgo binding must load (C API 1.31).
+VECTORS_MODEL_ID ?= bge-small-zh-v1.5
+VECTORS_ORT_DLL ?=
+# The window icon is a Windows resource: windres (MinGW) turns icon.rc into a
+# .syso the Go build picks up. Without windres the binary simply has no icon.
+WINDRES ?= $(shell command -v windres 2>/dev/null)
+ICON_RC := cmd/leafwiki/icon.rc
+ICON_SYSO := cmd/leafwiki/rsrc_windows_amd64.syso
+
+$(ICON_SYSO): $(ICON_RC)
+	$(WINDRES) -O coff -i $(ICON_RC) -o $(ICON_SYSO)
 LDFLAGS := -X main.Version=$(VERSION) $(EMBED_LDFLAGS)
 
 PLATFORMS := \
@@ -41,6 +53,42 @@ build: ui
 # API-only binary for local Vite-proxied development (no embedded SPA).
 build-api:
 	go build -ldflags "-X main.Version=$(VERSION)" -o $(BINARY_NAME) $(CMD_DIR)
+
+# Windows desktop launcher: the server binary plus the window (SRS §6.10).
+# -H=windowsgui keeps a console from flashing up on a double click; the
+# launcher tag is what puts the window in, so this target is the only place it
+# is set. CGO stays off like everywhere else.
+desktop-windows: ui $(ICON_SYSO)
+	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -tags launcher \
+		-ldflags "-X main.Version=$(VERSION) $(EMBED_LDFLAGS) -H=windowsgui -s -w" \
+		-o "$(RELEASE_DIR)/LeafWiki/leafwiki.exe" $(CMD_DIR)
+
+# Windows desktop launcher WITH semantic search (this fork's point).
+# The encoder is a cgo binding (onnxruntime_go), so this target needs a C
+# toolchain (MinGW on Windows) and stays separate from the CGO_ENABLED=0
+# server builds. The model is data, not code: it ships next to the executable
+# in models/<id>/ and is deliberately NOT embedded in the binary. ONNX Runtime
+# itself is version-locked to the binding (C API 1.31): set VECTORS_ORT_DLL to
+# a libonnxruntime 1.31.x win-x64 onnxruntime.dll.
+desktop-windows-vectors: ui $(ICON_SYSO)
+	@test -n "$(VECTORS_ORT_DLL)" || (echo "set VECTORS_ORT_DLL to onnxruntime.dll (1.31.x win-x64)" && exit 1)
+	@test -f "$(VECTORS_ORT_DLL)" || (echo "VECTORS_ORT_DLL not found: $(VECTORS_ORT_DLL)" && exit 1)
+	@test -f assets/tokenizer-bge/model.onnx || (echo "model missing: assets/tokenizer-bge/model.onnx (gitignored, see docs/install/desktop.md)" && exit 1)
+	CGO_ENABLED=1 GOOS=windows GOARCH=amd64 go build -tags "launcher vectors" \
+		-ldflags "-X main.Version=$(VERSION) $(EMBED_LDFLAGS) -H=windowsgui -s -w" \
+		-o "$(RELEASE_DIR)/LeafWiki/leafwiki.exe" $(CMD_DIR)
+	mkdir -p "$(RELEASE_DIR)/LeafWiki/models/$(VECTORS_MODEL_ID)"
+	cp assets/tokenizer-bge/model.onnx assets/tokenizer-bge/tokenizer.json assets/tokenizer-bge/manifest.json \
+		"$(RELEASE_DIR)/LeafWiki/models/$(VECTORS_MODEL_ID)/"
+	cp "$(VECTORS_ORT_DLL)" "$(RELEASE_DIR)/LeafWiki/onnxruntime.dll"
+	@echo "✅ desktop-windows-vectors ready (exe + models/ + onnxruntime.dll)"
+
+# Compile-only check for the launcher tag: no frontend, no release directory.
+# It is its own CI step; it is deliberately not part of `make ci` or `make
+# cross` (the cross matrix includes darwin, where the launcher tag is not a
+# supported target).
+verify-launcher:
+	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -tags launcher -o /dev/null $(CMD_DIR)
 
 # npm dependencies for the frontend (ui-deps) and the e2e tests. Install
 # scripts stay off, like in CI and `make ui`.

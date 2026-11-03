@@ -21,7 +21,6 @@ import (
 	"time"
 
 	"github.com/dustin/go-humanize"
-	"github.com/gin-gonic/gin"
 	"github.com/perber/wiki/internal/backup"
 	"github.com/perber/wiki/internal/core/auth"
 	"github.com/perber/wiki/internal/core/email"
@@ -56,6 +55,13 @@ const (
 )
 
 func setupLogger(w io.Writer, format string) {
+	SetupLoggerWith(w, format, nil)
+}
+
+// SetupLoggerWith is setupLogger with an extra handler that also receives every
+// record. The desktop launcher passes its ring buffer and log file here, so the
+// window, stdout and the file see the same lines (FR-601).
+func SetupLoggerWith(w io.Writer, format string, extra slog.Handler) {
 	level := slog.LevelInfo
 	switch os.Getenv("LEAFWIKI_LOG_LEVEL") {
 	case "debug":
@@ -77,13 +83,74 @@ func setupLogger(w io.Writer, format string) {
 	} else {
 		handler = slog.NewTextHandler(w, opts)
 	}
+	if extra != nil {
+		handler = teeHandler{primary: handler, extra: extra}
+	}
 
 	slog.SetDefault(slog.New(handler))
 }
 
+// teeHandler hands every record to both handlers, which is how the launcher
+// keeps its own sink next to the normal log stream (FR-601).
+type teeHandler struct {
+	primary slog.Handler
+	extra   slog.Handler
+}
+
+func (h teeHandler) Enabled(ctx context.Context, level slog.Level) bool {
+	return h.primary.Enabled(ctx, level) || h.extra.Enabled(ctx, level)
+}
+
+func (h teeHandler) Handle(ctx context.Context, record slog.Record) error {
+	// Each handler keeps its own level filter: the injected sink may want more
+	// or less than the stream, and Enabled above only decides whether the
+	// record reaches Handle at all.
+	var errs []error
+	if h.primary.Enabled(ctx, record.Level) {
+		errs = append(errs, h.primary.Handle(ctx, record.Clone()))
+	}
+	if h.extra.Enabled(ctx, record.Level) {
+		errs = append(errs, h.extra.Handle(ctx, record.Clone()))
+	}
+	return errors.Join(errs...)
+}
+
+func (h teeHandler) WithAttrs(attrs []slog.Attr) slog.Handler {
+	return teeHandler{primary: h.primary.WithAttrs(attrs), extra: h.extra.WithAttrs(attrs)}
+}
+
+func (h teeHandler) WithGroup(name string) slog.Handler {
+	return teeHandler{primary: h.primary.WithGroup(name), extra: h.extra.WithGroup(name)}
+}
+
+// fail logs a startup failure and exits. main is its only caller: everything
+// below it returns a fatalError instead, so the same message can reach a window
+// (FR-111).
 func fail(msg string, args ...any) {
 	slog.Default().Error(msg, args...)
 	os.Exit(1)
+}
+
+// fatalError is a startup failure: main logs it the way the CLI always has and
+// exits 1. msg is the sentence for a person, cause the technical detail behind
+// it, which the desktop launcher shows as the expandable second line (FR-701).
+type fatalError struct {
+	msg   string
+	cause error
+}
+
+func (e *fatalError) Error() string {
+	if e.cause == nil {
+		return e.msg
+	}
+	return e.msg + ": " + e.cause.Error()
+}
+
+func (e *fatalError) Unwrap() error { return e.cause }
+
+// failf builds a fatalError. cause may be nil when msg says everything.
+func failf(msg string, cause error) error {
+	return &fatalError{msg: msg, cause: cause}
 }
 
 var errRestoreSnapshotUsage = errors.New("restore-snapshot requires a path to a snapshot zip: leafwiki [--data-dir <DIR>] restore-snapshot <path-to-zip>")
@@ -125,6 +192,13 @@ func main() {
 			}
 			os.Exit(coded.code)
 		}
+		var fatal *fatalError
+		if errors.As(err, &fatal) {
+			if fatal.cause != nil {
+				fail(fatal.msg, "error", fatal.cause)
+			}
+			fail(fatal.msg)
+		}
 		if !errors.Is(err, errLogged) && !errors.Is(err, errReported) {
 			fmt.Fprintln(os.Stderr, "Error:", err)
 		}
@@ -146,12 +220,160 @@ func runResetAdminPasswordCommand(cfg *serverConfig) error {
 	return nil
 }
 
+// Instance is a LeafWiki server running inside this process. It exists so a
+// window can start and stop the server on demand instead of the process
+// lifetime deciding it (FR-112): Addr reports where it listens, Wiki hands
+// in-process callers the wiki itself (FR-402), Stop ends it.
+type Instance struct {
+	listener net.Listener
+	wiki     *wiki.Wiki
+	cancel   context.CancelFunc
+	done     chan struct{}
+	serveErr error
+}
+
+// Addr reports the address the server actually bound.
+func (i *Instance) Addr() net.Addr { return i.listener.Addr() }
+
+// Wiki is the wiki this instance serves.
+func (i *Instance) Wiki() *wiki.Wiki { return i.wiki }
+
+// Wait blocks until the instance has stopped and reports how serving ended.
+func (i *Instance) Wait() error {
+	<-i.done
+	return i.serveErr
+}
+
+// Stop ends the instance and waits for it to release its resources. It fails
+// when ctx expires before the server has stopped.
+func (i *Instance) Stop(ctx context.Context) error {
+	i.cancel()
+	select {
+	case <-i.done:
+		return i.serveErr
+	case <-ctx.Done():
+		return fmt.Errorf("server did not stop in time: %w", ctx.Err())
+	}
+}
+
+// validateServerConfig runs the checks that only inspect the resolved options.
+// They return the failure instead of exiting so a window can show the same
+// message the CLI logs (FR-111); main is the single place that logs and exits.
+func validateServerConfig(cmd *cli.Command, cfg *serverConfig) error {
+	if _, err := authmw.ParseTrustedProxies(cfg.proxy.trustedProxyIPs); err != nil {
+		return failf("invalid --trusted-proxy-ips value", err)
+	}
+	if err := validateListenConfig(cfg.server.unixSocket, cmd.IsSet("host"), cmd.IsSet("port")); err != nil {
+		return failf("Invalid listen configuration", err)
+	}
+	if err := validateHTTPRemoteUserConfig(cfg.proxy.enableHTTPRemoteUser, cfg.proxy.trustedProxyIPs); err != nil {
+		return failf("Invalid HTTP remote user configuration", err)
+	}
+	if err := validateHTTPRemoteUserAutoCreateConfig(cfg.proxy.enableHTTPRemoteUserAutoCreate, cfg.proxy.enableHTTPRemoteUser, cfg.proxy.httpRemoteUserDefaultRole); err != nil {
+		return failf("Invalid HTTP remote user auto-create configuration", err)
+	}
+	if err := validateSMTPConfig(cfg.email.smtpHost, cfg.email.smtpFrom, cfg.server.publicURL, cfg.email.smtpSecurity); err != nil {
+		return failf("Invalid SMTP configuration", err)
+	}
+	// git-backup-remote is optional (local-only mode is supported)
+	if cfg.backup.gitBackup {
+		if err := validateGitBackupRemote(cfg.backup.gitBackupRemote, cfg.backup.gitBackupSSHKey, cfg.backup.gitBackupSSHKeyPath, cfg.backup.gitBackupHTTPUsername, cfg.backup.gitBackupHTTPPassword); err != nil {
+			return failf("Invalid git backup configuration", err)
+		}
+	}
+	return nil
+}
+
 // runServerCommand is the root action: with no subcommand given, leafwiki runs
-// the wiki server.
-func runServerCommand(_ context.Context, cmd *cli.Command, cfg *serverConfig) error {
-	basePath := normalizeBasePath(cfg.server.basePath)
-	maxAssetUploadSize := mustParseByteSize(cfg.frontend.maxAssetUploadSize, "max asset upload size")
-	restoreUploadMaxSize := mustParseByteSize(cfg.backup.restoreUploadMaxSize, "restore upload max size")
+// the wiki server and blocks until it stops.
+func runServerCommand(ctx context.Context, cmd *cli.Command, cfg *serverConfig) error {
+	if err := validateServerConfig(cmd, cfg); err != nil {
+		return err
+	}
+
+	instance, err := runServerWithConfig(ctx, cfg)
+	if err != nil {
+		return err
+	}
+
+	if err := instance.Wait(); err != nil {
+		slog.Default().Error("Failed to start server", "error", err)
+		return errLogged
+	}
+	return nil
+}
+
+// runServerWithConfig binds the configured address and serves on it. The
+// launcher binds its own listener and calls runServerWithListener instead
+// (FR-112), which keeps the CLI path exactly as it was.
+func runServerWithConfig(ctx context.Context, cfg *serverConfig) (*Instance, error) {
+	if cfg.server.unixSocket == "" {
+		listenAddr := cfg.server.host + ":" + cfg.server.port
+		slog.Default().Info("Starting LeafWiki", "address", listenAddr, "data_dir", cfg.server.dataDir)
+		listener, err := net.Listen("tcp", listenAddr)
+		if err != nil {
+			return nil, failf("Failed to start server", err)
+		}
+		return runServerWithListener(ctx, cfg, listener)
+	}
+
+	listener, err := listenOnUnixSocket(cfg.server.unixSocket)
+	if err != nil {
+		return nil, failf("Failed to start server", err)
+	}
+
+	slog.Default().Info(
+		"Starting LeafWiki",
+		"unix_socket", cfg.server.unixSocket,
+		"data_dir", cfg.server.dataDir,
+		"host_port_overridden", true,
+	)
+
+	return runServerWithListener(ctx, cfg, listener)
+}
+
+// runServerWithListener starts the server on listener and takes ownership of
+// it: on failure the listener is closed here, on success it is closed when the
+// instance stops. Everything the server needs is built here and released in
+// reverse order once serving ends. Setup itself does not observe ctx: a
+// cancelled ctx is checked once, before serving starts, and returns ctx.Err().
+func runServerWithListener(ctx context.Context, cfg *serverConfig, listener net.Listener) (*Instance, error) {
+	var cleanup func()
+	if cfg.server.unixSocket != "" {
+		cleanup = func() {
+			_ = listener.Close()
+			_ = os.Remove(cfg.server.unixSocket)
+		}
+	}
+
+	// cleanups are released in reverse creation order; closeWiki runs after
+	// all of them, whoever ends the start attempt.
+	var cleanups []func()
+	var closeWiki func()
+	abort := func(err error) (*Instance, error) {
+		for i := len(cleanups) - 1; i >= 0; i-- {
+			cleanups[i]()
+		}
+		if closeWiki != nil {
+			closeWiki()
+		}
+		if cleanup != nil {
+			cleanup()
+		} else {
+			_ = listener.Close()
+		}
+		return nil, err
+	}
+
+	basePath := NormalizeBasePath(cfg.server.basePath)
+	maxAssetUploadSize, err := parseByteSize(cfg.frontend.maxAssetUploadSize)
+	if err != nil {
+		return abort(failf("Invalid max asset upload size", err))
+	}
+	restoreUploadMaxSize, err := parseByteSize(cfg.backup.restoreUploadMaxSize)
+	if err != nil {
+		return abort(failf("Invalid restore upload max size", err))
+	}
 
 	logoutURL := cfg.proxy.logoutURL
 	if resolved, usedDeprecated := resolveLogoutURL(logoutURL, cfg.proxy.httpRemoteUserLogoutURL); usedDeprecated {
@@ -161,25 +383,13 @@ func runServerCommand(_ context.Context, cmd *cli.Command, cfg *serverConfig) er
 
 	smtpEnabled := cfg.email.smtpHost != ""
 
+	// validateServerConfig has already accepted this value; it is parsed a
+	// second time because the router needs the result, not the verdict.
 	trustedProxies, err := authmw.ParseTrustedProxies(cfg.proxy.trustedProxyIPs)
 	if err != nil {
-		fail("invalid --trusted-proxy-ips value", "error", err)
-	}
-	if err := validateListenConfig(cfg.server.unixSocket, cmd.IsSet("host"), cmd.IsSet("port")); err != nil {
-		fail("Invalid listen configuration", "error", err)
+		return abort(failf("invalid --trusted-proxy-ips value", err))
 	}
 
-	if err := validateHTTPRemoteUserConfig(cfg.proxy.enableHTTPRemoteUser, cfg.proxy.trustedProxyIPs); err != nil {
-		fail("Invalid HTTP remote user configuration", "error", err)
-	}
-
-	if err := validateHTTPRemoteUserAutoCreateConfig(cfg.proxy.enableHTTPRemoteUserAutoCreate, cfg.proxy.enableHTTPRemoteUser, cfg.proxy.httpRemoteUserDefaultRole); err != nil {
-		fail("Invalid HTTP remote user auto-create configuration", "error", err)
-	}
-
-	if err := validateSMTPConfig(cfg.email.smtpHost, cfg.email.smtpFrom, cfg.server.publicURL, cfg.email.smtpSecurity); err != nil {
-		fail("Invalid SMTP configuration", "error", err)
-	}
 	if smtpEnabled {
 		// A misconfigured public URL produces broken links in emails that
 		// have already gone out — irreversible — so log the resolved value
@@ -202,14 +412,6 @@ func runServerCommand(_ context.Context, cmd *cli.Command, cfg *serverConfig) er
 		)
 	}
 
-	// Validate git backup configuration
-	// Note: git-backup-remote is optional (local-only mode is supported)
-	if cfg.backup.gitBackup {
-		if err := validateGitBackupRemote(cfg.backup.gitBackupRemote, cfg.backup.gitBackupSSHKey, cfg.backup.gitBackupSSHKeyPath, cfg.backup.gitBackupHTTPUsername, cfg.backup.gitBackupHTTPPassword); err != nil {
-			fail("Invalid git backup configuration", "error", err)
-		}
-	}
-
 	if cfg.auth.disableAuth {
 		slog.Default().Warn("Authentication disabled. Wiki is publicly accessible without authentication.")
 	}
@@ -221,31 +423,39 @@ func runServerCommand(_ context.Context, cmd *cli.Command, cfg *serverConfig) er
 	// Check if data directory exists
 	if _, err := os.Stat(cfg.server.dataDir); os.IsNotExist(err) {
 		if err := os.MkdirAll(cfg.server.dataDir, 0755); err != nil {
-			fail("Failed to create data directory", "error", err)
+			return abort(failf("Failed to create data directory", err))
 		}
 		slog.Default().Info("Data directory created", "path", cfg.server.dataDir)
 	}
 
-	publicAccessService := buildPublicAccessService(cmd, cfg)
+	publicAccessService, err := buildPublicAccessService(cfg)
+	if err != nil {
+		return abort(err)
+	}
 
 	tocDisplayService, err := tocdisplay.New(cfg.server.dataDir)
 	if err != nil {
-		fail("Failed to load toc-display configuration", "error", err)
+		return abort(failf("Failed to load toc-display configuration", err))
 	}
 
 	if !cfg.auth.disableAuth {
 		if cfg.auth.jwtSecret == "" {
-			fail("JWT secret is required. Set it using --jwt-secret or LEAFWIKI_JWT_SECRET environment variable.")
+			return abort(failf("JWT secret is required. Set it using --jwt-secret or LEAFWIKI_JWT_SECRET environment variable.", nil))
 		}
 
 		if cfg.auth.adminPassword == "" {
-			fail("admin password is required. Set it using --admin-password or LEAFWIKI_ADMIN_PASSWORD environment variable.")
+			return abort(failf("admin password is required. Set it using --admin-password or LEAFWIKI_ADMIN_PASSWORD environment variable.", nil))
 		}
 	}
 
 	var metrics *httpmetrics.HTTPMetrics
 	if cfg.metrics.enableMetrics {
 		metrics = httpmetrics.NewHTTPMetrics(Version)
+		stopMetricsServer, _, err := startMetricsServer(metrics, cfg.metrics.metricsHost, cfg.metrics.metricsPort)
+		if err != nil {
+			return abort(failf("Failed to start metrics server", err))
+		}
+		cleanups = append(cleanups, stopMetricsServer)
 	}
 
 	// Initialize git backup before the wiki loads its tree: on first contact with
@@ -253,8 +463,9 @@ func runServerCommand(_ context.Context, cmd *cli.Command, cfg *serverConfig) er
 	// wiki boots with those pages and does not seed a welcome page on top of them.
 	backupManager, err := buildBackupManager(cfg)
 	if err != nil {
-		fail("git backup init failed: %v", err)
+		return abort(failf("git backup init failed", err))
 	}
+	cleanups = append(cleanups, backupManager.Stop)
 
 	w, err := wiki.NewWiki(&wiki.WikiOptions{
 		StorageDir:             cfg.server.dataDir,
@@ -293,9 +504,9 @@ func runServerCommand(_ context.Context, cmd *cli.Command, cfg *serverConfig) er
 	})
 	if err != nil {
 		if msg, ok := corruptDatabaseMessage(err); ok {
-			fail(msg, "error", err)
+			return abort(failf(msg, err))
 		}
-		fail("Failed to initialize Wiki", "error", err)
+		return abort(failf("Failed to initialize Wiki", err))
 	}
 
 	w.SetInstanceSettingsRoutes(wikiinstancesettings.NewRoutes(publicAccessService, tocDisplayService, w.AuthService(), slog.Default()))
@@ -308,13 +519,13 @@ func runServerCommand(_ context.Context, cmd *cli.Command, cfg *serverConfig) er
 		slog.Default().Info("loaded .leafwikiignore", "patterns", ignoreFile.PatternCount())
 	}
 
-	defer func() {
+	// The wiki is closed after every other cleanup: an in-flight restore or
+	// backup sync must not outlive the stores it writes through.
+	closeWiki = func() {
 		if err := w.Close(); err != nil {
 			slog.Default().Error("Failed to close Wiki", "error", err)
 		}
-	}()
-
-	defer backupManager.Stop()
+	}
 	// A settings Reconfigure (or the settings-managed manager's own background
 	// boot) can materialize remote content straight onto disk after the wiki's
 	// tree/SQLite index has already loaded — keep the index from going stale by
@@ -348,7 +559,7 @@ func runServerCommand(_ context.Context, cmd *cli.Command, cfg *serverConfig) er
 			RetentionCount: cfg.backup.snapshotRetention,
 		})
 		snapshotScheduler := snapshot.NewScheduler(snapshotManager)
-		defer snapshotScheduler.Stop()
+		cleanups = append(cleanups, snapshotScheduler.Stop)
 		w.SetSnapshotRoutes(wikisnapshot.NewRoutes(snapshotManager, snapshotScheduler, w.AuthService(), cfg.backup.snapshotRetention))
 
 		writeGate = restore.NewWriteGate()
@@ -369,10 +580,10 @@ func runServerCommand(_ context.Context, cmd *cli.Command, cfg *serverConfig) er
 			},
 			MaxUploadSizeBytes: restoreUploadMaxSize,
 		})
-		// Registered after (so it runs before, defers are LIFO) the w.Close()
-		// deferred above: an in-flight restore must finish before AuthService's
+		// Registered after w.Close, so it runs before it (cleanups are
+		// reversed): an in-flight restore must finish before AuthService's
 		// user/session stores get closed out from under it during shutdown.
-		defer restoreManager.Wait()
+		cleanups = append(cleanups, restoreManager.Wait)
 		w.SetRestoreRoutes(wikirestore.NewRoutes(restoreManager, w.AuthService()))
 	}
 
@@ -417,20 +628,42 @@ func runServerCommand(_ context.Context, cmd *cli.Command, cfg *serverConfig) er
 		WriteGate:         writeGate,
 	})
 
-	reloadSignals := make(chan os.Signal, 1)
-	notifyReloadSignals(reloadSignals)
-	defer signal.Stop(reloadSignals)
-
-	shutdownSignals := make(chan os.Signal, 1)
-	signal.Notify(shutdownSignals, syscall.SIGINT, syscall.SIGTERM)
-	defer signal.Stop(shutdownSignals)
-
-	if err := runServer(router, cfg.server.host, cfg.server.port, cfg.server.unixSocket, cfg.server.dataDir, metrics, cfg.metrics.metricsHost, cfg.metrics.metricsPort, w.TriggerResyncAsync, reloadSignals, shutdownSignals); err != nil {
-		slog.Default().Error("Failed to start server", "error", err)
-		return errLogged
+	server := &http.Server{
+		Handler:           router.Handler(),
+		ReadHeaderTimeout: 5 * time.Second,
 	}
 
-	return nil
+	reloadSignals := make(chan os.Signal, 1)
+	notifyReloadSignals(reloadSignals)
+	shutdownSignals := make(chan os.Signal, 1)
+	signal.Notify(shutdownSignals, syscall.SIGINT, syscall.SIGTERM)
+
+	// Booting the wiki has no cancellation points, so a ctx cancelled during
+	// setup is honoured here rather than mid-boot: the caller gets the error
+	// instead of a server it has already given up on.
+	if err := ctx.Err(); err != nil {
+		return abort(err)
+	}
+
+	runCtx, cancel := context.WithCancel(ctx)
+	instance := &Instance{listener: listener, wiki: w, cancel: cancel, done: make(chan struct{})}
+	go func() {
+		defer close(instance.done)
+		defer signal.Stop(reloadSignals)
+		defer signal.Stop(shutdownSignals)
+		defer func() {
+			for i := len(cleanups) - 1; i >= 0; i-- {
+				cleanups[i]()
+			}
+			closeWiki()
+			if cleanup != nil {
+				cleanup()
+			}
+		}()
+		instance.serveErr = serveWithLifecycle(runCtx, server, listener, cleanup, w.TriggerResyncAsync, reloadSignals, shutdownSignals)
+	}()
+
+	return instance, nil
 }
 
 // stateDBPaths returns the paths of every state database other than users.db
@@ -452,69 +685,15 @@ func stateDBPaths(dataDir string) []string {
 // today's behaviour and get a status-only Settings view). Otherwise it is
 // settings-managed, reading its initial value from
 // <data-dir>/public-access.json (absent ⇒ disabled).
-func buildPublicAccessService(cmd *cli.Command, cfg *serverConfig) *publicaccess.Service {
-	if cmd.IsSet("public-access") || cfg.auth.disableAuth {
-		return publicaccess.NewEnvManaged(cfg.auth.publicAccess || cfg.auth.disableAuth)
+func buildPublicAccessService(cfg *serverConfig) (*publicaccess.Service, error) {
+	if cfg.auth.publicAccessExplicit || cfg.auth.disableAuth {
+		return publicaccess.NewEnvManaged(cfg.auth.publicAccess || cfg.auth.disableAuth), nil
 	}
 	svc, err := publicaccess.NewSettingsManaged(cfg.server.dataDir)
 	if err != nil {
-		fail("Failed to load public-access configuration", "error", err)
+		return nil, failf("Failed to load public-access configuration", err)
 	}
-	return svc
-}
-
-func runServer(
-	router *gin.Engine,
-	host, port, unixSocket, dataDir string,
-	metrics *httpmetrics.HTTPMetrics,
-	metricsHost, metricsPort string,
-	reload func(),
-	reloadSignals, shutdownSignals <-chan os.Signal,
-) error {
-	server := &http.Server{
-		Handler:           router.Handler(),
-		ReadHeaderTimeout: 5 * time.Second,
-	}
-
-	var shutdownMetricsServer func()
-	if metrics != nil {
-		stopMetricsServer, _, err := startMetricsServer(metrics, metricsHost, metricsPort)
-		if err != nil {
-			return err
-		}
-		shutdownMetricsServer = stopMetricsServer
-		defer shutdownMetricsServer()
-	}
-
-	if unixSocket == "" {
-		listenAddr := host + ":" + port
-		slog.Default().Info("Starting LeafWiki", "address", listenAddr, "data_dir", dataDir)
-		listener, err := net.Listen("tcp", listenAddr)
-		if err != nil {
-			return err
-		}
-		return serveWithLifecycle(server, listener, nil, reload, reloadSignals, shutdownSignals)
-	}
-
-	listener, err := listenOnUnixSocket(unixSocket)
-	if err != nil {
-		return err
-	}
-
-	cleanup := func() {
-		_ = listener.Close()
-		_ = os.Remove(unixSocket)
-	}
-	defer cleanup()
-
-	slog.Default().Info(
-		"Starting LeafWiki",
-		"unix_socket", unixSocket,
-		"data_dir", dataDir,
-		"host_port_overridden", true,
-	)
-
-	return serveWithLifecycle(server, listener, cleanup, reload, reloadSignals, shutdownSignals)
+	return svc, nil
 }
 
 func startMetricsServer(metrics *httpmetrics.HTTPMetrics, host, port string) (func(), string, error) {
@@ -623,15 +802,6 @@ func parseByteSize(raw string) (int64, error) {
 		return 0, fmt.Errorf("byte size %q is too large", raw)
 	}
 	return int64(size), nil
-}
-
-// mustParseByteSize is for values a flag validator has already accepted.
-func mustParseByteSize(raw, label string) int64 {
-	size, err := parseByteSize(raw)
-	if err != nil {
-		fail("Invalid byte size value", "setting", label, "error", err)
-	}
-	return size
 }
 
 func validateHTTPRemoteUserConfig(enabled bool, trustedProxyIPsRaw string) error {
@@ -794,9 +964,11 @@ func validateListenConfig(unixSocket string, hostSet, portSet bool) error {
 	return nil
 }
 
-// serveWithLifecycle runs the HTTP server while handling live reload signals and
-// graceful shutdown signals. reload is non-blocking (fires a goroutine internally).
+// serveWithLifecycle runs the HTTP server while handling live reload signals,
+// graceful shutdown signals, and cancellation of ctx (which is how an instance
+// stops without a signal). reload is non-blocking (fires a goroutine internally).
 func serveWithLifecycle(
+	ctx context.Context,
 	server *http.Server,
 	listener net.Listener,
 	cleanup func(),
@@ -845,46 +1017,55 @@ func serveWithLifecycle(
 	})
 	defer waitForReloader()
 
+	// shutdown stops serving and releases the listener; it is shared by the
+	// signal path and the cancelled-context path.
+	shutdown := func(msg string, attrs ...any) error {
+		slog.Default().Info(msg, attrs...)
+		shuttingDown.Store(true)
+		stopReloader()
+		shutdownCtx, cancel := context.WithTimeout(context.Background(), gracefulShutdownTimeout)
+		err := server.Shutdown(shutdownCtx)
+		cancel()
+		if err != nil {
+			closeErr := server.Close()
+			if closeErr != nil && !errors.Is(closeErr, http.ErrServerClosed) {
+				err = errors.Join(err, closeErr)
+			}
+		}
+
+		if cleanup != nil {
+			cleanup()
+		}
+
+		waitForReloader()
+		serveErr := <-serveErrCh
+		if err != nil {
+			return err
+		}
+		return serveErr
+	}
+
 	for {
 		select {
 		case err := <-serveErrCh:
 			return err
+		case <-ctx.Done():
+			return shutdown("shutdown requested: shutting down server")
 		case sig, ok := <-shutdownSignals:
 			if !ok {
 				shutdownSignals = nil
 				continue
 			}
 
-			slog.Default().Info("shutdown signal received: shutting down server", "signal", sig.String())
-			shuttingDown.Store(true)
-			stopReloader()
-			shutdownCtx, cancel := context.WithTimeout(context.Background(), gracefulShutdownTimeout)
-			err := server.Shutdown(shutdownCtx)
-			cancel()
-			if err != nil {
-				closeErr := server.Close()
-				if closeErr != nil && !errors.Is(closeErr, http.ErrServerClosed) {
-					err = errors.Join(err, closeErr)
-				}
-			}
-
-			if cleanup != nil {
-				cleanup()
-			}
-
-			waitForReloader()
-			serveErr := <-serveErrCh
-			if err != nil {
-				return err
-			}
-			return serveErr
+			return shutdown("shutdown signal received: shutting down server", "signal", sig.String())
 		}
 	}
 }
 
-// normalizeBasePath normalizes the base path to the form "/mypath" (no trailing slash).
-// Accepts "mypath", "/mypath", "/mypath/", etc. Returns "" for root.
-func normalizeBasePath(s string) string {
+// NormalizeBasePath normalizes the base path to the form "/mypath" (no trailing slash).
+// Accepts "mypath", "/mypath", "/mypath/", etc. Returns "" for root. The desktop
+// launcher uses the same function for its URLs (C-6).
+func NormalizeBasePath(s string) string {
 	s = strings.TrimSpace(s)
 	s = strings.Trim(s, "/")
 	if s == "" {

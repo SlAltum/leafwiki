@@ -108,22 +108,32 @@ func NewEncoder(model *Model, options EncoderOptions) (*Encoder, error) {
 		return nil, fmt.Errorf("embed: starting ONNX Runtime: %w", environmentErr)
 	}
 
-	var sessionOptions *ort.SessionOptions
+	created, err := ort.NewSessionOptions()
+	if err != nil {
+		return nil, fmt.Errorf("embed: preparing session options: %w", err)
+	}
+	sessionOptions := created
+	defer func() { _ = sessionOptions.Destroy() }()
+
 	if options.IntraOpThreads > 0 {
-		created, err := ort.NewSessionOptions()
-		if err != nil {
-			return nil, fmt.Errorf("embed: preparing session options: %w", err)
-		}
-		if err := created.SetIntraOpNumThreads(options.IntraOpThreads); err != nil {
-			_ = created.Destroy()
+		if err := sessionOptions.SetIntraOpNumThreads(options.IntraOpThreads); err != nil {
 			return nil, fmt.Errorf("embed: setting the intra-op thread count: %w", err)
 		}
-		if err := created.SetInterOpNumThreads(options.IntraOpThreads); err != nil {
-			_ = created.Destroy()
+		if err := sessionOptions.SetInterOpNumThreads(options.IntraOpThreads); err != nil {
 			return nil, fmt.Errorf("embed: setting the inter-op thread count: %w", err)
 		}
-		sessionOptions = created
-		defer func() { _ = sessionOptions.Destroy() }()
+	}
+
+	// ponytail: no CPU arena and no memory pattern. They make repeated inference
+	// faster, but the arena keeps its peak after a full rebuild, and a wiki
+	// indexes a few pages at a time once the initial build is done. Re-enable
+	// them if bulk indexing ever becomes the common path and the footprint is
+	// the smaller cost.
+	if err := sessionOptions.SetCpuMemArena(false); err != nil {
+		return nil, fmt.Errorf("embed: disabling the CPU arena: %w", err)
+	}
+	if err := sessionOptions.SetMemPattern(false); err != nil {
+		return nil, fmt.Errorf("embed: disabling the memory pattern: %w", err)
 	}
 
 	session, err := ort.NewDynamicAdvancedSession(

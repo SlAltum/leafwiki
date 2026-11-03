@@ -150,11 +150,15 @@ func TestWiki_TriggerResyncAsync_EmitsMetrics(t *testing.T) {
 	w := createWikiTestInstanceWithMetrics(t, metrics)
 	defer test_utils.WrapCloseWithErrorCheck(w.Close, t)
 
+	if status := w.ResyncStatus(); status.Running || status.Done {
+		t.Fatalf("ResyncStatus() before any trigger = %+v, want an idle job", status)
+	}
+
 	w.TriggerResyncAsync()
 
 	deadline := time.Now().Add(5 * time.Second)
 	for {
-		status := w.resyncJob.Status()
+		status := w.ResyncStatus()
 		if status.Done {
 			break
 		}

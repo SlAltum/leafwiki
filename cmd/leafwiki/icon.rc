@@ -1,0 +1,3 @@
+// Window and executable icon for Windows builds.
+// 1 is the icon group gio falls back to when IDI_APPLICATION is absent.
+1 ICON "leafwiki.ico"

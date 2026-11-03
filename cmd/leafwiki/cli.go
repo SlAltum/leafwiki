@@ -108,6 +108,9 @@ func newRootCommandWithConfig(cfg *serverConfig) *cli.Command {
 			newVectorsCommand(cfg),
 		},
 		Before: func(ctx context.Context, cmd *cli.Command) (context.Context, error) {
+			// Whether public mode is pinned or toggleable depends on the flag
+			// having been set, which only the parsed command knows.
+			cfg.auth.publicAccessExplicit = cmd.Root().IsSet("public-access")
 			// The log-format validator has already rejected anything parseLogFormat
 			// cannot handle, including the default; this only normalizes the case.
 			format, _ := parseLogFormat(cfg.server.logFormat)
@@ -121,6 +124,13 @@ func newRootCommandWithConfig(cfg *serverConfig) *cli.Command {
 		Action: func(ctx context.Context, cmd *cli.Command) error {
 			if cmd.Args().Present() {
 				return cli.Exit(fmt.Sprintf("Unknown command: %s\nRun \"leafwiki --help\" to see the available commands and options.", cmd.Args().First()), 1)
+			}
+			// A desktop build installs a hook here; server builds have none and
+			// go straight to the server (FR-103).
+			if launchLauncherHook != nil {
+				if handled, err := launchLauncherHook(ctx); handled {
+					return err
+				}
 			}
 			return runServerCommand(ctx, cmd, cfg)
 		},

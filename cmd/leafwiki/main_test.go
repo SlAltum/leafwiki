@@ -5,6 +5,9 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"go/ast"
+	"go/parser"
+	"go/token"
 	"io"
 	"log/slog"
 	"net"
@@ -17,6 +20,7 @@ import (
 	"runtime"
 	"slices"
 	"strings"
+	"sync"
 	"sync/atomic"
 	"testing"
 	"time"
@@ -31,18 +35,8 @@ import (
 func runRootCommand(t *testing.T, args []string, inspect func(cfg *serverConfig)) {
 	t.Helper()
 
-	cfg := &serverConfig{}
-	cmd := newRootCommandWithConfig(cfg)
-	cmd.Writer = io.Discard
-	cmd.ErrWriter = io.Discard
-	cmd.Action = func(_ context.Context, _ *cli.Command) error {
-		inspect(cfg)
-		return nil
-	}
-
-	if err := cmd.Run(context.Background(), append([]string{"leafwiki"}, args...)); err != nil {
-		t.Fatalf("cmd.Run(%q) error = %v", args, err)
-	}
+	cfg, _ := newServerConfigForTest(t, args...)
+	inspect(cfg)
 }
 
 func TestRootCommandHelp_DocumentsFlagsAndEnvVars(t *testing.T) {
@@ -997,7 +991,7 @@ func TestServeWithLifecycle_GracefulShutdownWaitsForInFlightRequest(t *testing.T
 
 	runErr := make(chan error, 1)
 	go func() {
-		runErr <- serveWithLifecycle(server, listener, nil, func() {}, reloadSignals, shutdownSignals)
+		runErr <- serveWithLifecycle(context.Background(), server, listener, nil, func() {}, reloadSignals, shutdownSignals)
 	}()
 
 	respCh := make(chan *http.Response, 1)
@@ -1082,7 +1076,7 @@ func TestServeWithLifecycle_ReloadSignalTriggersCallbackWithoutStoppingServer(t 
 
 	runErr := make(chan error, 1)
 	go func() {
-		runErr <- serveWithLifecycle(server, listener, nil, func() {
+		runErr <- serveWithLifecycle(context.Background(), server, listener, nil, func() {
 			reloadCalls.Add(1)
 			reloadDone <- struct{}{}
 		}, reloadSignals, shutdownSignals)
@@ -1151,7 +1145,7 @@ func TestServeWithLifecycle_ShutdownTimeoutStillRunsCleanup(t *testing.T) {
 	shutdownSignals := make(chan os.Signal, 1)
 	runErr := make(chan error, 1)
 	go func() {
-		runErr <- serveWithLifecycle(server, listener, func() {
+		runErr <- serveWithLifecycle(context.Background(), server, listener, func() {
 			select {
 			case cleanupCalled <- struct{}{}:
 			default:
@@ -1216,7 +1210,7 @@ func TestServeWithLifecycle_ShutdownDoesNotWaitForInFlightReload(t *testing.T) {
 	shutdownSignals := make(chan os.Signal, 1)
 	runErr := make(chan error, 1)
 	go func() {
-		runErr <- serveWithLifecycle(server, listener, nil, func() {
+		runErr <- serveWithLifecycle(context.Background(), server, listener, nil, func() {
 			close(reloadStarted)
 			go func() {
 				<-releaseReload
@@ -1461,5 +1455,408 @@ func TestViteConfig_ResolvesVersionViaSharedScript(t *testing.T) {
 
 	if !strings.Contains(string(content), "scripts/resolve-version.sh") {
 		t.Fatalf("expected vite.config.ts to resolve its version via scripts/resolve-version.sh, got:\n%s", content)
+	}
+}
+
+// newServerConfigForTest parses args through the real command tree and hands
+// back both the resolved config and the command, which validateServerConfig
+// needs for the flags that were explicitly set.
+func newServerConfigForTest(t *testing.T, args ...string) (*serverConfig, *cli.Command) {
+	t.Helper()
+
+	cfg := &serverConfig{}
+	cmd := newRootCommandWithConfig(cfg)
+	cmd.Writer = io.Discard
+	cmd.ErrWriter = io.Discard
+	cmd.Action = func(context.Context, *cli.Command) error { return nil }
+
+	if err := cmd.Run(context.Background(), append([]string{"leafwiki"}, args...)); err != nil {
+		t.Fatalf("cmd.Run(%q) error = %v", args, err)
+	}
+	return cfg, cmd
+}
+
+// A launcher has no terminal to read an exit code from: a rejected
+// configuration has to come back as an error value (FR-111), carrying the same
+// message the CLI logs.
+func TestValidateServerConfig_ReturnsFailureInsteadOfExiting(t *testing.T) {
+	tests := []struct {
+		name string
+		args []string
+		want string
+	}{
+		{
+			name: "smtp host without sender",
+			args: []string{"--smtp-host=mail.example.com", "--public-url=https://wiki.example.com"},
+			want: "--smtp-from",
+		},
+		{
+			name: "unix socket together with port",
+			args: []string{"--unix-socket=/tmp/leafwiki.sock", "--port=8080"},
+			want: "--unix-socket",
+		},
+		{
+			name: "remote user without trusted proxies",
+			args: []string{"--enable-http-remote-user"},
+			want: "--trusted-proxy-ips",
+		},
+		{
+			name: "auto-create without remote user",
+			args: []string{"--enable-http-remote-user-auto-create"},
+			want: "--enable-http-remote-user",
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			cfg, cmd := newServerConfigForTest(t, tc.args...)
+
+			err := validateServerConfig(cmd, cfg)
+			if err == nil {
+				t.Fatal("validateServerConfig() error = nil, want a failure")
+			}
+			var fatal *fatalError
+			if !errors.As(err, &fatal) {
+				t.Fatalf("validateServerConfig() error = %T, want a *fatalError", err)
+			}
+			if !strings.Contains(err.Error(), tc.want) {
+				t.Fatalf("validateServerConfig() error = %v, want it to mention %q", err, tc.want)
+			}
+		})
+	}
+}
+
+func TestValidateServerConfig_AcceptsAWorkingConfig(t *testing.T) {
+	cfg, cmd := newServerConfigForTest(t,
+		"--jwt-secret=test-secret",
+		"--admin-password=test-password",
+		"--data-dir="+t.TempDir(),
+	)
+	if err := validateServerConfig(cmd, cfg); err != nil {
+		t.Fatalf("validateServerConfig() error = %v, want nil", err)
+	}
+}
+
+// --public-access pins public mode only when it was actually given; otherwise
+// the value stays toggleable from Settings (the launcher never passes it).
+func TestRootCommand_PublicAccessExplicitOnlyWhenSet(t *testing.T) {
+	t.Run("given on the command line", func(t *testing.T) {
+		cfg, _ := newServerConfigForTest(t, "--public-access=true")
+		if !cfg.auth.publicAccessExplicit {
+			t.Fatal("publicAccessExplicit = false, want true")
+		}
+	})
+
+	t.Run("absent", func(t *testing.T) {
+		cfg, _ := newServerConfigForTest(t)
+		if cfg.auth.publicAccessExplicit {
+			t.Fatal("publicAccessExplicit = true, want false")
+		}
+	})
+
+	t.Run("from the environment", func(t *testing.T) {
+		t.Setenv("LEAFWIKI_PUBLIC_ACCESS", "true")
+		cfg, _ := newServerConfigForTest(t)
+		if !cfg.auth.publicAccessExplicit {
+			t.Fatal("publicAccessExplicit = false, want true")
+		}
+	})
+}
+
+// waitForHealth polls the readiness endpoint the launcher uses (SRS §6.5).
+func waitForHealth(t *testing.T, addr string) {
+	t.Helper()
+
+	client := &http.Client{Timeout: 2 * time.Second}
+	deadline := time.Now().Add(60 * time.Second)
+	for {
+		resp, err := client.Get("http://" + addr + "/api/health")
+		if err == nil {
+			status := resp.StatusCode
+			_ = resp.Body.Close()
+			if status == http.StatusOK {
+				return
+			}
+		}
+		if time.Now().After(deadline) {
+			t.Fatalf("server at %s did not become healthy: %v", addr, err)
+		}
+		time.Sleep(50 * time.Millisecond)
+	}
+}
+
+// The launcher owns the listener and stops the server through the instance
+// instead of a process signal (FR-112).
+func TestRunServerWithListener_ServesUntilStop(t *testing.T) {
+	cfg, _ := newServerConfigForTest(t,
+		"--jwt-secret=test-secret",
+		"--admin-password=test-password",
+		"--data-dir="+t.TempDir(),
+		"--snapshot=false",
+	)
+
+	listener, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		t.Fatalf("listen failed: %v", err)
+	}
+
+	instance, err := runServerWithListener(context.Background(), cfg, listener)
+	if err != nil {
+		t.Fatalf("runServerWithListener() error = %v", err)
+	}
+
+	if got, want := instance.Addr().String(), listener.Addr().String(); got != want {
+		t.Errorf("Addr() = %q, want the bound listener %q", got, want)
+	}
+	if instance.Wiki() == nil {
+		t.Fatal("Wiki() = nil, want the served wiki")
+	}
+
+	t.Cleanup(func() {
+		stopCtx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+		defer cancel()
+		if err := instance.Stop(stopCtx); err != nil {
+			t.Errorf("Stop() in cleanup error = %v", err)
+		}
+	})
+
+	waitForHealth(t, instance.Addr().String())
+
+	stopCtx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancel()
+	if err := instance.Stop(stopCtx); err != nil {
+		t.Fatalf("Stop() error = %v", err)
+	}
+
+	client := &http.Client{Timeout: time.Second}
+	if resp, err := client.Get("http://" + instance.Addr().String() + "/api/health"); err == nil {
+		_ = resp.Body.Close()
+		t.Fatal("server still answers after Stop()")
+	}
+}
+
+// A busy port must come back as a failure value the launcher can show, not as
+// an exit (FR-111).
+func TestRunServerWithConfig_PortInUseReturnsFailure(t *testing.T) {
+	busy, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		t.Fatalf("listen failed: %v", err)
+	}
+	defer func() {
+		_ = busy.Close()
+	}()
+
+	_, port, err := net.SplitHostPort(busy.Addr().String())
+	if err != nil {
+		t.Fatalf("split host port: %v", err)
+	}
+
+	cfg, _ := newServerConfigForTest(t,
+		"--jwt-secret=test-secret",
+		"--admin-password=test-password",
+		"--data-dir="+t.TempDir(),
+		"--snapshot=false",
+	)
+	cfg.server.host = "127.0.0.1"
+	cfg.server.port = port
+
+	instance, err := runServerWithConfig(context.Background(), cfg)
+	if err == nil {
+		_ = instance.Stop(context.Background())
+		t.Fatal("runServerWithConfig() error = nil, want a bind failure")
+	}
+	var fatal *fatalError
+	if !errors.As(err, &fatal) {
+		t.Fatalf("runServerWithConfig() error = %T, want a *fatalError", err)
+	}
+	if !strings.Contains(err.Error(), port) {
+		t.Errorf("error = %v, want it to name port %s", err, port)
+	}
+}
+
+// recordingHandler collects the records it receives, for the injected-handler
+// check (FR-601).
+type recordingHandler struct {
+	mu       sync.Mutex
+	disabled bool
+	records  []string
+}
+
+func (h *recordingHandler) Enabled(context.Context, slog.Level) bool { return !h.disabled }
+
+func (h *recordingHandler) Handle(_ context.Context, record slog.Record) error {
+	h.mu.Lock()
+	defer h.mu.Unlock()
+	h.records = append(h.records, record.Message)
+	return nil
+}
+
+func (h *recordingHandler) WithAttrs([]slog.Attr) slog.Handler { return h }
+func (h *recordingHandler) WithGroup(string) slog.Handler      { return h }
+
+func (h *recordingHandler) messages() []string {
+	h.mu.Lock()
+	defer h.mu.Unlock()
+	return append([]string(nil), h.records...)
+}
+
+func TestSetupLoggerWith_FeedsTheInjectedHandlerToo(t *testing.T) {
+	var stream bytes.Buffer
+	extra := &recordingHandler{}
+
+	SetupLoggerWith(&stream, "text", extra)
+	t.Cleanup(func() { slog.SetDefault(slog.New(slog.DiscardHandler)) })
+
+	slog.Default().Info("first")
+	slog.Default().With("k", "v").Info("second")
+
+	if !strings.Contains(stream.String(), "msg=first") || !strings.Contains(stream.String(), "msg=second") {
+		t.Fatalf("stdout stream = %q, want both records", stream.String())
+	}
+
+	got := extra.messages()
+	want := []string{"first", "second"}
+	if !slices.Equal(got, want) {
+		t.Fatalf("injected handler saw %v, want %v", got, want)
+	}
+}
+
+// Each handler keeps its own level filter, so a sink that wants less than the
+// stream stays quiet without silencing the stream (FR-601).
+func TestSetupLoggerWith_KeepsEachHandlerLevel(t *testing.T) {
+	var stream bytes.Buffer
+	quiet := &recordingHandler{disabled: true}
+
+	SetupLoggerWith(&stream, "text", quiet)
+	t.Cleanup(func() { slog.SetDefault(slog.New(slog.DiscardHandler)) })
+
+	slog.Default().Info("only the stream")
+
+	if !strings.Contains(stream.String(), "only the stream") {
+		t.Fatalf("stdout stream = %q, want the record", stream.String())
+	}
+	if got := quiet.messages(); len(got) != 0 {
+		t.Fatalf("disabled handler saw %v, want nothing", got)
+	}
+}
+
+// A failed start must release what it took: the listener has to be bindable
+// again, or the retry of FR-113 can never succeed.
+func TestRunServerWithListener_FailedStartReleasesListener(t *testing.T) {
+	// A file where the data directory should be: every later step that needs
+	// a directory inside it fails.
+	dataDir := filepath.Join(t.TempDir(), "not-a-directory")
+	if err := os.WriteFile(dataDir, []byte("x"), 0o644); err != nil {
+		t.Fatalf("write file: %v", err)
+	}
+
+	cfg, _ := newServerConfigForTest(t,
+		"--jwt-secret=test-secret",
+		"--admin-password=test-password",
+		"--data-dir="+dataDir,
+		"--snapshot=false",
+	)
+
+	listener, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		t.Fatalf("listen failed: %v", err)
+	}
+	addr := listener.Addr().String()
+
+	instance, err := runServerWithListener(context.Background(), cfg, listener)
+	if err == nil {
+		stopCtx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+		defer cancel()
+		_ = instance.Stop(stopCtx)
+		t.Fatal("runServerWithListener() error = nil, want a failure for an unusable data directory")
+	}
+	if instance != nil {
+		t.Fatal("runServerWithListener() returned an instance next to an error")
+	}
+
+	rebound, err := net.Listen("tcp", addr)
+	if err != nil {
+		t.Fatalf("listener was not released after a failed start: %v", err)
+	}
+	if err := rebound.Close(); err != nil {
+		t.Fatalf("close rebound listener: %v", err)
+	}
+}
+
+// A pre-cancelled context must not leave a running server behind: the caller
+// gave up, so the start returns the context error (FR-114).
+func TestRunServerWithListener_CancelledContextReleasesListener(t *testing.T) {
+	cfg, _ := newServerConfigForTest(t,
+		"--jwt-secret=test-secret",
+		"--admin-password=test-password",
+		"--data-dir="+t.TempDir(),
+		"--snapshot=false",
+	)
+
+	listener, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		t.Fatalf("listen failed: %v", err)
+	}
+	addr := listener.Addr().String()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+
+	instance, err := runServerWithListener(ctx, cfg, listener)
+	if instance != nil {
+		t.Fatal("runServerWithListener() returned an instance for a cancelled context")
+	}
+	if !errors.Is(err, context.Canceled) {
+		t.Fatalf("runServerWithListener() error = %v, want context.Canceled", err)
+	}
+
+	rebound, err := net.Listen("tcp", addr)
+	if err != nil {
+		t.Fatalf("listener was not released for a cancelled start: %v", err)
+	}
+	if err := rebound.Close(); err != nil {
+		t.Fatalf("close rebound listener: %v", err)
+	}
+}
+
+// FR-111's acceptance criterion in code form: a startup failure that exits
+// would take the launcher's window with it, so fail() may only be reachable
+// from main, and so may os.Exit.
+func TestFailAndExitAreOnlyReachableFromMain(t *testing.T) {
+	file, err := parser.ParseFile(token.NewFileSet(), "main.go", nil, parser.SkipObjectResolution)
+	if err != nil {
+		t.Fatalf("parse main.go: %v", err)
+	}
+
+	var offenders []string
+	// fail is the one function allowed to exit; main is where it is called.
+	allowed := map[string]bool{"main": true, "fail": true}
+	for _, decl := range file.Decls {
+		fn, ok := decl.(*ast.FuncDecl)
+		if !ok || fn.Body == nil || allowed[fn.Name.Name] {
+			continue
+		}
+		ast.Inspect(fn.Body, func(n ast.Node) bool {
+			call, ok := n.(*ast.CallExpr)
+			if !ok {
+				return true
+			}
+			switch called := call.Fun.(type) {
+			case *ast.Ident:
+				if called.Name == "fail" {
+					offenders = append(offenders, fn.Name.Name+" calls fail")
+				}
+			case *ast.SelectorExpr:
+				pkg, ok := called.X.(*ast.Ident)
+				if ok && pkg.Name == "os" && called.Sel.Name == "Exit" {
+					offenders = append(offenders, fn.Name.Name+" calls os.Exit")
+				}
+			}
+			return true
+		})
+	}
+
+	if len(offenders) > 0 {
+		t.Fatalf("only main may end the process, found: %s", strings.Join(offenders, ", "))
 	}
 }

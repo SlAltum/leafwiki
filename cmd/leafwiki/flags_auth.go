@@ -8,16 +8,21 @@ import (
 
 // authOptions holds the options for authentication, tokens and the initial admin.
 type authOptions struct {
-	jwtSecret           string
-	totpEncryptionKey   string
-	disableAuth         bool
-	publicAccess        bool
-	accessTokenTimeout  time.Duration
-	refreshTokenTimeout time.Duration
-	adminUsername       string
-	adminEmail          string
-	adminPassword       string
-	editorLimit         int
+	jwtSecret         string
+	totpEncryptionKey string
+	disableAuth       bool
+	publicAccess      bool
+	// publicAccessExplicit records whether --public-access was given on the
+	// command line or in the environment: only then is public mode pinned,
+	// otherwise it stays toggleable from Settings. Set in the root command's
+	// Before hook, the one place that still sees the parsed command.
+	publicAccessExplicit bool
+	accessTokenTimeout   time.Duration
+	refreshTokenTimeout  time.Duration
+	adminUsername        string
+	adminEmail           string
+	adminPassword        string
+	editorLimit          int
 }
 
 // Flags declares them. Adding an option here is the whole change: the flag,

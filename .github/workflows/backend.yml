@@ -81,6 +81,29 @@ jobs:
           CROSS_PLATFORM: ${{ matrix.platform }}
         run: make cross CROSS_PLATFORMS="$CROSS_PLATFORM"
 
+  # The desktop launcher lives behind a build tag, so neither the tests nor
+  # `make cross` ever compile it. This is the only job that does, and it
+  # cross-compiles from Linux on purpose: the window must keep building without
+  # cgo and without a Windows runner.
+  build-launcher:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      - name: Set up Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
+
+      - name: Install dependencies
+        run: go mod download
+
+      - name: Build the launcher tag
+        run: make verify-launcher
+
   # The experimental API specification is generated and committed. Regenerate
   # on the host platform and fail if the committed files are stale. The
   # generator runs only here, never inside the go test jobs.

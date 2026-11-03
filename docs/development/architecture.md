@@ -17,9 +17,18 @@ cmd/leafwiki  →  internal/wiki (composition root)  →  internal/wiki/<domain>
   (`cmd/leafwiki/signals_unix.go` vs `signals_windows.go` — `SIGUSR1`/`SIGHUP` trigger
   `Wiki.TriggerResyncAsync()` on Unix; Windows has no equivalent signal, only the HTTP resync
   endpoint). It owns process lifecycle; it does not know how any domain works internally.
+
+  Four seams exist for the embedded desktop launcher and nothing else:
+  `validateServerConfig(cmd, cfg) error` (every startup check as a return value instead of
+  `os.Exit`), `Instance` with `Addr`/`Wait`/`Stop`/`Wiki` (a server this process can start and
+  stop on demand), `runServerWithListener(ctx, cfg, listener)` (the caller brings the listener) and
+  `SetupLoggerWith(w, format, extra)` (one extra `slog.Handler` sees every record). `fail()` is
+  called from `main` only; everything below returns a `*fatalError{msg, cause}`. `NormalizeBasePath`
+  and `Wiki.ResyncStatus()` are exported for the same reason.
 - **`internal/wiki` (composition root)** — `NewWiki()` in `wiki.go` is the single place that
   constructs every store/service and wires them together. This is the file to read to understand
-  real init order (see below), not any diagram.
+  real init order (see below), not any diagram. `Wiki.ResyncStatus()` exposes the background
+  reload's state to in-process callers (the launcher shows "still loading" / "updated at hh:mm").
 - **Domain slices, `internal/wiki/<name>`** — one package per bounded capability:
   `pages`, `pagesave`, `auth`, `assets`, `avatar`, `revisions`, `search`, `links`, `tags`,
   `properties`, `branding`, `apikeys`, `importer`, `health`, `resync`, `backup`, `snapshot`,
@@ -32,6 +41,17 @@ cmd/leafwiki  →  internal/wiki (composition root)  →  internal/wiki/<domain>
   cross-domain composition happens in the composition root (e.g. `pagesRoutes` is handed `w.tree`,
   `w.revision`, `w.asset`, `w.favorites`, and a `pagesave.PageSaveOrchestrator` that wires five
   independent side effects together).
+- **`internal/launcher` (desktop launcher policy)**: every decision of the optional Windows
+  window lives here, with no UI import at all (NFR-8), so all of it is unit-testable: `config.go`
+  (`launcher.json`), `creds.go` (`jwt.secret`/`admin.password` and the three credential states),
+  `publicaccess.go`, `lock.go` (data-directory lock, `launcher.state.json`, the locked-instance
+  decision), `port.go`, `ringlog.go` (one `slog` handler that keeps 2000 lines and writes a
+  rotating file), `refresh.go` (content snapshot + bounded refresh polling), `params.go`/`argv.go`
+  (the parameter table generated from the CLI's own flag declarations, and the argv built from it),
+  `controller.go` (the `stopped/starting/running/stopping/closing/failed` machine) and
+  `strings.go` (all user-visible text). The window itself is `cmd/leafwiki/launcher_*.go` behind
+  the `launcher` build tag; a build without the tag contains no `gioui.org` code, and the server
+  binary is unchanged (C-3).
 - **`internal/core/*`** — the lower-level domain primitives with no knowledge of HTTP or use
   cases: `tree` (page tree + filesystem persistence), `auth` (users/sessions/API
   keys/TOTP/email tokens as SQLite-backed primitives), `markdown` (frontmatter parsing),

@@ -93,7 +93,8 @@ make desktop-windows-vectors VECTORS_ORT_DLL=D:\path\to\onnxruntime.dll
 - 换模型只需换 `models/<id>/`（`manifest.json` 描述文件与校验和），不用重新编译
 
 **这两样东西不在仓库里**（`.gitignore` 忽略 `releases/*`、`assets/tokenizer/`、
-`assets/tokenizer-*/`），所以从干净检出打包前要先把它们放回本地：
+`assets/tokenizer-*/`），所以从干净检出打包前要先把它们放回本地。获取方式、目录布局与
+`manifest.json` 的校验规则见 [语义检索的模型与推理库](../development/vectors-assets.md)。
 
 | 文件 | 从哪来 | 版本约束 |
 |---|---|---|

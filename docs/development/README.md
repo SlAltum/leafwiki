@@ -8,6 +8,9 @@ are in [CONTRIBUTING.md](../../CONTRIBUTING.md); agent instructions in [AGENTS.m
 - [Source map](./source-map.md): what every backend and frontend directory does.
 - [Architecture](./architecture.md): layering, init order, storage model (derived vs. real
   state), auth model, Markdown rendering pipeline.
+- [Semantic search assets](./vectors-assets.md): where the embedding models and the ONNX
+  Runtime library come from, how `manifest.json` is validated, and how to run the tests
+  locally.
 - [Processes](./processes.md): core workflows end to end: page save, revisioning, wikilink
   resolution, resync, editor auto-save, tree rename/move, auth.
 - [API documentation](../api/README.md): the experimental generated Swagger 2.0 spec, how to

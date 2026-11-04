@@ -23,7 +23,7 @@ func DefaultRunner(name string, args ...string) error {
 
 // OpenURL opens url in the default browser (FR-801).
 func OpenURL(runner Runner, url string) error {
-	return runTarget(runner, url, platformOpenURL())
+	return runTarget(runner, url, platformOpenURLs()...)
 }
 
 // OpenDir opens dir in the system file manager (FR-803).
@@ -31,19 +31,28 @@ func OpenDir(runner Runner, dir string) error {
 	return runTarget(runner, dir, platformOpenDir())
 }
 
-// runTarget calls the platform's opener, falling back to the other platform's
-// spelling only when there is none.
-func runTarget(runner Runner, target string, command openCommand) error {
+// runTarget tries each opener in order and reports the last failure. The list
+// exists for openers that are only a fallback when the first one is missing.
+func runTarget(runner Runner, target string, commands ...openCommand) error {
 	if runner == nil {
 		runner = DefaultRunner
 	}
-	if command.name == "" {
-		return fmt.Errorf("no system opener available on %s", runtime.GOOS)
+
+	var lastErr error
+	for _, command := range commands {
+		if command.name == "" {
+			continue
+		}
+		if err := runner(command.name, append(append([]string{}, command.args...), target)...); err != nil {
+			lastErr = err
+			continue
+		}
+		return nil
 	}
-	if err := runner(command.name, append(command.args, target)...); err != nil {
-		return fmt.Errorf("open %s: %w", target, err)
+	if lastErr != nil {
+		return fmt.Errorf("open %s: %w", target, lastErr)
 	}
-	return nil
+	return fmt.Errorf("no system opener available on %s", runtime.GOOS)
 }
 
 type openCommand struct {
@@ -51,16 +60,22 @@ type openCommand struct {
 	args []string
 }
 
-func platformOpenURL() openCommand {
+func platformOpenURLs() []openCommand {
 	switch runtime.GOOS {
 	case "windows":
-		// The documented shell handler for a URL; "start" is a cmd built-in and
-		// needs a shell to exist.
-		return openCommand{name: "rundll32", args: []string{"url.dll,FileProtocolHandler"}}
+		// explorer.exe hands the URL to the shell as the interactive user, so a
+		// launcher that was itself started elevated does not drag the browser up
+		// with it (an elevated Edge refuses to share its instance and asks about
+		// restarting with normal privileges). rundll32 is the fallback: it
+		// inherits the caller's integrity level but is always present.
+		return []openCommand{
+			{name: "explorer"},
+			{name: "rundll32", args: []string{"url.dll,FileProtocolHandler"}},
+		}
 	case "darwin":
-		return openCommand{name: "open"}
+		return []openCommand{{name: "open"}}
 	default:
-		return openCommand{name: "xdg-open"}
+		return []openCommand{{name: "xdg-open"}}
 	}
 }
 

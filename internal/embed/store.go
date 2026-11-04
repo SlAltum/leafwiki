@@ -486,6 +486,30 @@ func (s *Store) PageChunks(buildID, pageID string) ([]PageChunk, error) {
 	return chunks, err
 }
 
+// PageIDs returns every page one build holds chunks for, so a caller can tell
+// which pages are in the index and which are gone from disk.
+func (s *Store) PageIDs(buildID string) ([]string, error) {
+	var pageIDs []string
+	err := s.withDBRead(func(db *sql.DB) error {
+		rows, err := db.Query(`SELECT DISTINCT page_id FROM chunks WHERE build_id = ? ORDER BY page_id`, buildID)
+		if err != nil {
+			return err
+		}
+		defer func() {
+			_ = rows.Close()
+		}()
+		for rows.Next() {
+			var pageID string
+			if err := rows.Scan(&pageID); err != nil {
+				return err
+			}
+			pageIDs = append(pageIDs, pageID)
+		}
+		return rows.Err()
+	})
+	return pageIDs, err
+}
+
 // ChunkCount returns how many chunks a build holds.
 func (s *Store) ChunkCount(buildID string) (int, error) {
 	var count int

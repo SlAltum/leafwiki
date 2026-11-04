@@ -12,15 +12,24 @@ import (
 	"sync/atomic"
 	"testing"
 	"time"
+
+	"github.com/perber/wiki/internal/core/shared/advisorylock"
+	"github.com/perber/wiki/internal/core/shared/wikilock"
 )
 
 type fakeServer struct {
 	http    *http.Server
 	trigger atomic.Int32
+	// release hands the data directory back, like the real server does when it
+	// stops.
+	release func()
 }
 
 func (f *fakeServer) Stop(ctx context.Context) error {
 	f.trigger.Add(0)
+	if f.release != nil {
+		f.release()
+	}
 	return f.http.Shutdown(ctx)
 }
 
@@ -34,7 +43,7 @@ func (f *fakeServer) ResyncStatus() ResyncStatus { return ResyncStatus{} }
 // healthyStarter serves /api/health on the launcher's own listener, which is
 // what the readiness probe talks to.
 func healthyStarter(calls *atomic.Int32) StartServer {
-	return func(ctx context.Context, argv []string, listener net.Listener) (Server, error) {
+	return func(ctx context.Context, argv []string, listener net.Listener, lock *advisorylock.File) (Server, error) {
 		calls.Add(1)
 		mux := http.NewServeMux()
 		mux.HandleFunc("/api/health", func(w http.ResponseWriter, _ *http.Request) {
@@ -44,12 +53,12 @@ func healthyStarter(calls *atomic.Int32) StartServer {
 		go func() {
 			_ = server.Serve(listener)
 		}()
-		return &fakeServer{http: server}, nil
+		return &fakeServer{http: server, release: func() { wikilock.Release(lock) }}, nil
 	}
 }
 
 func failingStarter(calls *atomic.Int32, err error) StartServer {
-	return func(context.Context, []string, net.Listener) (Server, error) {
+	return func(context.Context, []string, net.Listener, *advisorylock.File) (Server, error) {
 		calls.Add(1)
 		return nil, err
 	}
@@ -80,7 +89,11 @@ func newTestController(t *testing.T, deps Deps) *Controller {
 	deps.ProbeLimit = 2 * time.Second
 	deps.JoinTimeout = 2 * time.Second
 
-	return NewController(deps)
+	controller := NewController(deps)
+	// A test that leaves a server running would otherwise hold the directory lock
+	// past the test's temp-directory cleanup.
+	t.Cleanup(func() { controller.Shutdown() })
+	return controller
 }
 
 func waitForControllerState(t *testing.T, c *Controller, want RunState) Status {
@@ -130,11 +143,11 @@ func TestController_FailureIsReportedAndRetryConverges(t *testing.T) {
 	var failFirst atomic.Bool
 	failFirst.Store(true)
 
-	starter := func(ctx context.Context, argv []string, listener net.Listener) (Server, error) {
+	starter := func(ctx context.Context, argv []string, listener net.Listener, lock *advisorylock.File) (Server, error) {
 		if failFirst.CompareAndSwap(true, false) {
 			return nil, errors.New("the database is corrupt")
 		}
-		return healthyStarter(&calls)(ctx, argv, listener)
+		return healthyStarter(&calls)(ctx, argv, listener, lock)
 	}
 
 	c := newTestController(t, Deps{Start: starter})
@@ -275,4 +288,50 @@ func TestController_QuietlyIgnoresUnusedDeps(t *testing.T) {
 		t.Fatalf("new controller state = %v, want stopped", status.State)
 	}
 	_ = slog.Default()
+}
+
+// The launcher takes the directory lock before it writes anything into the data
+// directory, so a second instance fails without touching a live one (FR-101).
+func TestController_RefusedWhileAnotherProcessOwnsTheDirectory(t *testing.T) {
+	dataDir := t.TempDir()
+	lock, err := wikilock.Acquire(dataDir)
+	if err != nil {
+		t.Fatalf("Acquire: %v", err)
+	}
+	defer wikilock.Release(lock)
+
+	var calls atomic.Int32
+	c := newTestController(t, Deps{DataDir: dataDir, Start: healthyStarter(&calls)})
+	c.Start()
+
+	status := waitForControllerState(t, c, StateFailed)
+	if !strings.Contains(status.Detail, dataDir) {
+		t.Fatalf("detail = %q, want it to name the data directory", status.Detail)
+	}
+	if calls.Load() != 0 {
+		t.Fatal("the server was started while the directory was owned elsewhere")
+	}
+	// The refused start must not have written its own markers into a directory
+	// someone else owns.
+	if _, statErr := os.Stat(filepath.Join(dataDir, "launcher.state.json")); statErr == nil {
+		t.Fatal("the refused start wrote launcher.state.json")
+	}
+	if _, statErr := os.Stat(filepath.Join(dataDir, "public-access.json")); statErr == nil {
+		t.Fatal("the refused start wrote public-access.json")
+	}
+}
+
+// A failed start gives the directory back, so the retry can run (FR-113).
+func TestController_FailedStartReleasesTheDirectory(t *testing.T) {
+	dataDir := t.TempDir()
+	var calls atomic.Int32
+	c := newTestController(t, Deps{DataDir: dataDir, Start: failingStarter(&calls, errors.New("boom"))})
+	c.Start()
+	waitForControllerState(t, c, StateFailed)
+
+	lock, err := wikilock.Acquire(dataDir)
+	if err != nil {
+		t.Fatalf("the directory is still locked after a failed start: %v", err)
+	}
+	wikilock.Release(lock)
 }

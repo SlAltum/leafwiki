@@ -49,6 +49,7 @@ docker run -p 8080:8080 -v ~/leafwiki-data:/app/data \
   - [Security](#security)
   - [Operations notes](#operations-notes)
 - [Keyboard Shortcuts](#keyboard-shortcuts)
+- [Agent Access (CLI)](#agent-access-cli)
 - [External Edits & Resync](#external-edits--resync)
 - [Sorting Pages](#sorting-pages)
 - [Support this project](#support-this-project)
@@ -412,6 +413,8 @@ For plain HTTP: add `--allow-insecure=true` so login and CSRF cookies work.
 | `--smtp-security`                | Transport security: `none`, `starttls`, or `tls`                        | `starttls`    | v0.13.0 |
 | `--smtp-insecure-skip-verify`    | Skip TLS certificate verification for SMTP (testing only)               | `false`       | v0.13.0 |
 | `--smtp-timeout`                 | Timeout for a single SMTP send (e.g. `10s`)                             | `10s`         | v0.13.0 |
+| `--control-socket`               | Unix socket agents write through; an empty value disables the channel   | `<data-dir>/control.sock` | v0.14.0 |
+| `--control-auth`                 | `optional` (anonymous may read and write) or `required` (only `status`/`auth.login` without credentials) | `optional` | v0.14.0 |
 
 > Docker image default: `LEAFWIKI_HOST` is set to `0.0.0.0` automatically by the container entrypoint if neither `--host` nor `LEAFWIKI_HOST` is provided.
 
@@ -485,6 +488,10 @@ For plain HTTP: add `--allow-insecure=true` so login and CSRF cookies work.
 | `LEAFWIKI_SMTP_FROM_NAME`              | From display name                                    | `LeafWiki`    | v0.13.0 |
 | `LEAFWIKI_SMTP_SECURITY`               | Transport security: `none`, `starttls`, or `tls`    | `starttls`    | v0.13.0 |
 | `LEAFWIKI_SMTP_INSECURE_SKIP_VERIFY`   | Skip TLS certificate verification for SMTP           | `false`       | v0.13.0 |
+| `LEAFWIKI_CONTROL_SOCKET`               | Unix socket agents write through; an empty value disables the channel | `<data-dir>/control.sock` | v0.14.0 |
+| `LEAFWIKI_CONTROL_AUTH`                 | `optional` or `required`                             | `optional`    | v0.14.0 |
+| `LEAFWIKI_AGENT_USER`                   | Agent CLI: account to authenticate as                | `""`          | v0.14.0 |
+| `LEAFWIKI_AGENT_PASSWORD`               | Agent CLI: password for `LEAFWIKI_AGENT_USER`        | `""`          | v0.14.0 |
 | `LEAFWIKI_SMTP_TIMEOUT`                | Timeout for a single SMTP send                       | `10s`         | v0.13.0 |
 
 ### Custom Stylesheet
@@ -732,6 +739,42 @@ LeafWiki resolves relative page links with **page-as-folder** semantics: the cur
 
 A trailing `.md` suffix in a link target is ignored for page lookup (for example `setup.md` → `setup`), which matches common filesystem / Obsidian-style Markdown.
 
+## Agent Access (CLI)
+
+LeafWiki speaks to local agents through a **control socket** in its data directory, and the same
+binary is the client. This is for a coding assistant or a script running on the same machine; it is
+not another remote API (see [Agent control channel](./docs/development/architecture.md#agent-control-channel)).
+
+```bash
+leafwiki --data-dir ./data status                      # protocol, pages, vector state
+leafwiki --data-dir ./data page get platform/deploy    # path, id, title, version, tags, vectors, content
+leafwiki --data-dir ./data page write platform/deploy --title "Deploy" --content-file - < deploy.md
+leafwiki --data-dir ./data page apply --batch changes.jsonl --json
+leafwiki --data-dir ./data page delete platform/deploy --dry-run
+```
+
+* **Reads, creates and updates are open** to a caller that does not authenticate, the same trust
+  level as editing the Markdown files on disk. **Deleting needs an editor or an admin**
+  (`--user`/`--password`, `--password-file` or `LEAFWIKI_AGENT_USER`/`LEAFWIKI_AGENT_PASSWORD`).
+* `--control-auth=required` closes everything except `status` and `auth.login`.
+* `--control-socket=""` turns the channel off. A socket that cannot be bound (a long path on
+  Windows) is a warning; the server keeps running without it.
+* **One writer per data directory**: the running server holds `<data>/wiki.lock`, so a second
+  instance now fails to start instead of half-sharing the directory. When no server runs, the same
+  commands write **offline** (holding the lock) and update the semantic index only when its model is
+  present; otherwise they tell you to run `leafwiki vectors sync`.
+* `--json` prints exactly one JSON object on success and on a partial batch; a failing command
+  prints nothing on stdout (the error and the exit code carry the outcome).
+* Exit codes: `0` success, `1` unclassified, `2` usage, `3` not found, `4` version conflict,
+  `5` not allowed, `6` unreachable/timeout/restore, `7` capability, `8` partial batch, `75` locked.
+* **`vectors build` and `vectors sync` now refuse to run while the server is up** (exit 75): both
+  take the same directory lock. Run them with the server stopped.
+
+In a container, run the CLI inside it (`docker compose exec leafwiki /app/leafwiki ...`), because the
+socket and the lock live in the container's data directory. The image creates `/app/data` as
+`0755` owned by root (the channel's trust boundary is "same uid as the data directory"); a named
+volume mounted there must be writable by the uid the container runs as.
+
 ## External Edits & Resync
 
 LeafWiki is intended to be the primary writer for a workspace. However, Markdown files may still be changed outside LeafWiki — for example through a text editor, Git, a script, or a bulk import.
@@ -746,51 +789,3 @@ Both paths run the same resync job and produce the same result. A resync should 
 Changes to `.leafwikiignore` are separate and are only read at startup.
 
 **New files without a `leafwiki_id`:** LeafWiki stores the identity of a page in the `leafwiki_id` field in its frontmatter rather than deriving it from the filename or path. This allows LeafWiki to retain the identity of a document when it is renamed or moved.
-
-If a Markdown file created outside LeafWiki does not yet contain a `leafwiki_id`, the next resync generates one and writes it back to the file. No manual action is required, but the file will therefore change on disk during the resync.
-
-If `root/` is managed by a separate Git workflow outside LeafWiki's built-in [Git Backup](#git-backup-v0113-experimental), this generated ID will appear as an additional diff.
-
----
-
-## Sorting Pages
-
-Page order in LeafWiki is **explicit and manual** — it does not follow filename or alphabetical order automatically. By default, pages appear in the order they were created.
-
-LeafWiki is not a file browser. The tree reflects the structure you define, and the order you set is the order your readers see.
-
-To reorder the pages inside a section or under a parent page:
-
-1. Hover over the section or page in the sidebar tree to reveal the action buttons
-2. Click the **⋮** (more actions) button
-3. Select **Sort Section Children** or **Sort Page Children**
-
-![Sort context menu](./assets/sort-context-menu.png)
-
-The sort dialog lets you drag items into position, use the ↑ ↓ arrow buttons, or jump to alphabetical order with **A → Z** / **Z → A**. Click **Save** to apply.
-
-![Sort dialog](./assets/sort-dialog.png)
-
-> Sorting is per level — the order of a section's direct children is independent of deeper nested items.
-
----
-
-## Support this project
-
-If it's useful to you:
-
-- ⭐ **[Star the repo](https://github.com/perber/leafwiki)** — helps others find it
-- 💛 **[Sponsor on GitHub](https://github.com/sponsors/perber)** — supports ongoing maintenance, bug fixes, and new features
-- ☕ **[Buy a coffee on Ko-fi](https://ko-fi.com/perber)** — a one-time thank-you
-- 🚀 **[Don't want to self-host? LeafWiki Hosted](https://leafwiki.com/hosted/)** — managed LeafWiki, your content stays plain Markdown
-
-Need help deploying LeafWiki for your team? [Business support & setup →](https://leafwiki.com/support/)
-
----
-
-## Contributing
-
-Contributions, discussions, and feedback are welcome.  
-Open an issue or start a discussion on GitHub. Follow the repository to get notified about new releases.
-
-**Translations:** the UI currently ships in English, German, Spanish, French, and Simplified Chinese. Adding another language is a self-contained contribution — [docs/i18n.md](docs/i18n.md) walks through it.

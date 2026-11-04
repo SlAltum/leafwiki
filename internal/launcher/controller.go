@@ -12,6 +12,9 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/perber/wiki/internal/core/shared/advisorylock"
+	"github.com/perber/wiki/internal/core/shared/wikilock"
 )
 
 // State is one of the six states the window shows (FR-805).
@@ -49,7 +52,11 @@ type Server interface {
 // StartServer starts the server on the listener the launcher bound. argv is the
 // argument vector built from the parameter table, so the caller parses it with
 // the real CLI instead of duplicating flag handling.
-type StartServer func(ctx context.Context, argv []string, listener net.Listener) (Server, error)
+// StartServer starts the server on a listener the launcher owns. It takes the
+// data-directory lock, which the server releases when it stops: the launcher takes
+// it first, so its own writes into the data directory happen while it owns the
+// directory (FR-101, FR-194).
+type StartServer func(ctx context.Context, argv []string, listener net.Listener, lock *advisorylock.File) (Server, error)
 
 // Deps are the controller's collaborators. Tests replace every one of them.
 type Deps struct {
@@ -61,11 +68,13 @@ type Deps struct {
 	CredState   CredState
 	AutoRefresh bool
 	// ParamsDirty reports whether the table holds unsaved edits.
-	Start func(ctx context.Context, argv []string, listener net.Listener) (Server, error)
+	Start func(ctx context.Context, argv []string, listener net.Listener, lock *advisorylock.File) (Server, error)
 	// Validate check-parses argv without starting anything (FR-507).
 	Validate func(argv []string) error
-	OpenURL  func(target string) error
-	OpenDir  func(target string) error
+	// WriteAgentBrief writes the AGENT.md next to the executable; nil skips it.
+	WriteAgentBrief func(exeDir, dataDir, url string) error
+	OpenURL         func(target string) error
+	OpenDir         func(target string) error
 	// ResetAdminPassword regenerates the admin password and returns the new
 	// one; it runs with the server stopped (FR-205).
 	ResetAdminPassword func(dataDir string) (string, error)
@@ -186,6 +195,9 @@ func NewController(deps Deps) *Controller {
 	}
 	c.basePath = NormalizeBasePath(paramValue(c.params, "base-path"))
 	c.branding = LoadBranding(deps.DataDir, Text.AppTitle)
+	if c.deps.WriteAgentBrief == nil {
+		c.deps.WriteAgentBrief = launcherWriteAgentBrief
+	}
 	return c
 }
 
@@ -460,8 +472,26 @@ func (c *Controller) runStart() {
 		return
 	}
 
-	if err := EnsurePublicRead(c.deps.DataDir); err != nil {
+	// The directory comes first: everything below writes into it, and a second
+	// instance must fail before the launcher touches a live one (FR-101).
+	if err := wikilock.EnsureDataDir(c.deps.DataDir); err != nil {
 		c.fail(err)
+		return
+	}
+	lock, err := wikilock.Acquire(c.deps.DataDir)
+	if err != nil {
+		c.fail(err)
+		return
+	}
+	// The lock is released before the failure is reported, so a retry finds it
+	// free; on success the server owns it until it stops.
+	failLocked := func(startErr error) {
+		wikilock.Release(lock)
+		c.fail(startErr)
+	}
+
+	if err := EnsurePublicRead(c.deps.DataDir); err != nil {
+		failLocked(err)
 		return
 	}
 
@@ -479,6 +509,7 @@ func (c *Controller) runStart() {
 		listener, port, err = Repick(c.deps.host())
 	}
 	if err != nil {
+		wikilock.Release(lock)
 		c.failPort(err)
 		return
 	}
@@ -498,9 +529,9 @@ func (c *Controller) runStart() {
 	ctx, cancel := context.WithCancel(context.Background())
 	_ = cancel // the server's own Stop cancels its context
 
-	server, err := c.deps.Start(ctx, argv, listener)
+	server, err := c.deps.Start(ctx, argv, listener, lock)
 	if err != nil {
-		c.fail(err)
+		failLocked(err)
 		return
 	}
 
@@ -772,6 +803,8 @@ func (c *Controller) setRunning() {
 	}
 	c.mu.Unlock()
 
+	c.writeAgentBrief()
+
 	if snapshot, err := TakeSnapshot(c.contentRoot()); err == nil {
 		c.mu.Lock()
 		c.lastSnapshot = snapshot
@@ -864,4 +897,22 @@ func NormalizeBasePath(s string) string {
 		return ""
 	}
 	return "/" + s
+}
+
+// writeAgentBrief publishes the AGENT.md an agent reads, with the address it just
+// started on. A failure is not fatal: the wiki works without the file.
+func (c *Controller) writeAgentBrief() {
+	if c.deps.WriteAgentBrief == nil {
+		return
+	}
+	c.mu.Lock()
+	url := c.urlLocked()
+	dataDir := c.deps.DataDir
+	c.mu.Unlock()
+
+	exe, err := os.Executable()
+	if err != nil {
+		return
+	}
+	_ = c.deps.WriteAgentBrief(filepath.Dir(exe), dataDir, url)
 }

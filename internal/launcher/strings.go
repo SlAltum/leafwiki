@@ -21,6 +21,8 @@ type Strings struct {
 	Stop           string
 	OpenDataDir    string
 	Address        string
+	Agent          string
+	AgentHint      string
 	Account        string
 	AccountName    string
 	CopyHint       string
@@ -111,6 +113,8 @@ var Text = Strings{
 	Stop:           "停止服务",
 	OpenDataDir:    "打开数据目录",
 	Address:        "地址",
+	Agent:          "AI 助手",
+	AgentHint:      "整段复制给 AI 助手；完整规则在程序旁边的 AGENT.md。",
 	Account:        "账号 / 初始密码",
 	AccountName:    "admin",
 	CopyHint:       "首次启动时生成。",

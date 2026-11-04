@@ -30,7 +30,9 @@ RUN chmod +x /docker-entrypoint.sh
 
 EXPOSE 8080
 
-RUN mkdir -p /app/data && chmod 777 /app/data
+# 0755, not 0777: the control channel's trust boundary is "same uid as the data
+# directory owner", and a world-writable directory would weaken it (ADR-0018).
+RUN mkdir -p /app/data && chmod 0755 /app/data
 
 LABEL org.opencontainers.image.title="LeafWiki" \
       org.opencontainers.image.description="LeafWiki – A fast wiki for people who think in folders, not feeds" \

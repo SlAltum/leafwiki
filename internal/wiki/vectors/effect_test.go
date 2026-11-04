@@ -71,8 +71,8 @@ func TestSideEffect_ForgetsDeletedPages(t *testing.T) {
 		AffectedPages: []*tree.Page{pageStub("p1")},
 	})
 
-	if count, err := store.ChunkCount(current.ID); err != nil || count != 0 {
-		t.Fatalf("ChunkCount after delete = %d, %v; want the page's chunks gone", count, err)
+	if chunks, err := store.PageChunks(current.ID, "p1"); err != nil || len(chunks) != 0 {
+		t.Fatalf("the deleted page still holds %d chunks, %v", len(chunks), err)
 	}
 	if count, err := store.QueueCount(); err != nil || count != 0 {
 		t.Fatalf("queue holds %d pages after delete", count)

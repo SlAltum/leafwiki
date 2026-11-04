@@ -77,3 +77,8 @@ own session with its file as instructions.
 Runbooks in `.claude/skills/<name>/SKILL.md`: `develop` (the workflow above), `tidy-tests`
 (restructure a package's tests with proof nothing was lost), `run` (start backend + frontend),
 `docs-review` (docs vs. code), `worktree-cleanup`.
+
+[docs/development/skills/leafwiki/SKILL.md](./docs/development/skills/leafwiki/SKILL.md) is the
+runbook for driving a wiki instance from an agent (`leafwiki page get|write|apply|delete`,
+`check`, `vectors sync`). It lives with the developer docs, not under `.claude/`, so any agent
+that reads this file can open it.

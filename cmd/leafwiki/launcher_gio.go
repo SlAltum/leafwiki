@@ -9,6 +9,7 @@ import (
 	"io"
 	"log/slog"
 	"os"
+	"path/filepath"
 	"runtime"
 	"runtime/pprof"
 	"strings"
@@ -43,17 +44,18 @@ type launcherUI struct {
 	theme   *material.Theme
 	mono    font.Font
 
-	page     int
-	tabBasic widget.Clickable
-	tabAdv   widget.Clickable
-	openWiki widget.Clickable
-	restart  widget.Clickable
-	stop     widget.Clickable
-	openDir  widget.Clickable
-	refresh  widget.Clickable
-	copyURL  widget.Clickable
-	copyPass widget.Clickable
-	scroll   layout.List
+	page      int
+	tabBasic  widget.Clickable
+	tabAdv    widget.Clickable
+	openWiki  widget.Clickable
+	restart   widget.Clickable
+	stop      widget.Clickable
+	openDir   widget.Clickable
+	refresh   widget.Clickable
+	copyURL   widget.Clickable
+	copyPass  widget.Clickable
+	copyAgent widget.Clickable
+	scroll    layout.List
 
 	btnMin   widget.Clickable
 	btnMax   widget.Clickable
@@ -338,6 +340,9 @@ func (u *launcherUI) handleClicks(gtx layout.Context) {
 	}
 	if u.copyPass.Clicked(gtx) {
 		u.copy(gtx, u.ctrl.Status().Password)
+	}
+	if u.copyAgent.Clicked(gtx) {
+		u.copy(gtx, u.agentPrompt())
 	}
 }
 
@@ -823,6 +828,21 @@ func (u *launcherUI) ticket(gtx layout.Context, status launcher.Status) layout.D
 		}
 	}
 
+	// The agent handle sits under the three cells: one sentence a user can copy into
+	// a chat with an AI assistant, nothing to explain. inner holds the layout built
+	// above; reassigning body would make the closure call itself.
+	agentLine := u.agentPrompt()
+	inner := body
+	body = func(gtx layout.Context) layout.Dimensions {
+		return layout.Flex{Axis: layout.Vertical}.Layout(gtx,
+			layout.Rigid(inner),
+			layout.Rigid(u.rule),
+			layout.Rigid(func(gtx layout.Context) layout.Dimensions {
+				return u.ticketCell(gtx, launcher.Text.Agent, agentLine, launcher.Text.AgentHint, &u.copyAgent, true)
+			}),
+		)
+	}
+
 	return u.panel(gtx, 0, body)
 }
 
@@ -1294,4 +1314,18 @@ func shortDataDir(path string) string {
 		return path
 	}
 	return "…" + path[len(path)-27:]
+}
+
+// agentPrompt is what the panel hands to an agent: a sentence that names the
+// executable, the command that shows what the instance can do, and the file with
+// the rest. The CLI finds its data directory next to the executable, so no path
+// beyond the executable has to be copied with it.
+func (u *launcherUI) agentPrompt() string {
+	exe, err := os.Executable()
+	if err != nil {
+		return "请读这个目录里的 AGENT.md，然后用 leafwiki 命令帮我读写页面。"
+	}
+	brief := filepath.Join(filepath.Dir(exe), launcher.AgentBriefName)
+	return "这是一个本地 LeafWiki 文档站。请先读 \"" + brief +
+		"\"（里面有命令、退出码和规则），然后用 \"" + exe + "\" 帮我读写页面。"
 }

@@ -118,8 +118,10 @@ func TestEnqueue_MergesRepeatedSavesIntoOneEncode(t *testing.T) {
 	if written == 0 {
 		t.Fatal("Drain wrote no chunks")
 	}
-	if calls := encoder.callCount(); calls != 1 {
-		t.Fatalf("encoder ran %d times, want once for three saves", calls)
+	// The first drain opens the first build, which covers every page: three
+	// saves of one page must still cost one encode for it.
+	if calls := encoder.callCount(); calls != 2 {
+		t.Fatalf("encoder ran %d times, want once per page of the first build", calls)
 	}
 	if count, err := store.QueueCount(); err != nil || count != 0 {
 		t.Fatalf("queue holds %d entries after the drain, %v", count, err)
@@ -136,6 +138,10 @@ func TestEnqueue_MergesRepeatedSavesIntoOneEncode(t *testing.T) {
 
 func TestPaused_BlocksEnqueueAndResumes(t *testing.T) {
 	svc, store, encoder, _ := newTestService(t)
+	if _, err := svc.Rebuild(nil); err != nil {
+		t.Fatalf("Rebuild: %v", err)
+	}
+	callsBefore := encoder.callCount()
 
 	if err := svc.SetPaused(true); err != nil {
 		t.Fatalf("SetPaused: %v", err)
@@ -152,8 +158,8 @@ func TestPaused_BlocksEnqueueAndResumes(t *testing.T) {
 	if _, err := svc.Drain(0); err != nil {
 		t.Fatalf("Drain: %v", err)
 	}
-	if encoder.callCount() != 0 {
-		t.Fatal("a paused service encoded something")
+	if calls := encoder.callCount() - callsBefore; calls != 0 {
+		t.Fatalf("a paused service encoded %d times", calls)
 	}
 
 	if err := svc.SetPaused(false); err != nil {
@@ -165,8 +171,8 @@ func TestPaused_BlocksEnqueueAndResumes(t *testing.T) {
 	if _, err := svc.Drain(0); err != nil {
 		t.Fatalf("Drain: %v", err)
 	}
-	if encoder.callCount() != 1 {
-		t.Fatalf("encoder ran %d times after resuming, want 1", encoder.callCount())
+	if calls := encoder.callCount() - callsBefore; calls != 1 {
+		t.Fatalf("encoder ran %d times after resuming, want once for the queued page", calls)
 	}
 }
 
@@ -216,6 +222,214 @@ func TestIndexPage_KeepsTheRestOfTheIndex(t *testing.T) {
 	}
 	if count, err := store.ChunkCount(after.ID); err != nil || count != 2 {
 		t.Fatalf("ChunkCount = %d, %v; want p1's single chunk plus p2's", count, err)
+	}
+}
+
+func TestDrain_KeepsPagesThatWereNotQueued(t *testing.T) {
+	svc, store, encoder, pages := newTestService(t)
+
+	// Three pages in the index: a drain after one edit must leave the other two
+	// answering from the same build (FR-164).
+	pages.pages["p3"] = &tree.Page{Content: `## 第三页
+
+dritte Seite`}
+	pages.order = append(pages.order, "p3")
+	if _, err := svc.Rebuild(nil); err != nil {
+		t.Fatalf("Rebuild: %v", err)
+	}
+	before, err := store.CurrentBuild()
+	if err != nil || before == nil {
+		t.Fatalf("CurrentBuild = %#v, %v", before, err)
+	}
+	chunksBefore, err := store.ChunkCount(before.ID)
+	if err != nil {
+		t.Fatalf("ChunkCount: %v", err)
+	}
+	callsBefore := encoder.callCount()
+
+	// Only one page changed, so only one page is queued. The edit keeps the
+	// section count, so the index must keep its size.
+	pages.pages["p1"] = &tree.Page{Content: "## 部署流程\n\nrun deploy again\n\n## Rollback\n\ngo back again"}
+	if err := svc.Enqueue("p1"); err != nil {
+		t.Fatalf("Enqueue: %v", err)
+	}
+	if _, err := svc.Drain(0); err != nil {
+		t.Fatalf("Drain: %v", err)
+	}
+	if calls := encoder.callCount() - callsBefore; calls != 1 {
+		t.Fatalf("the drain encoded %d times, want once for the one queued page", calls)
+	}
+
+	after, err := store.CurrentBuild()
+	if err != nil || after == nil {
+		t.Fatalf("CurrentBuild = %#v, %v", after, err)
+	}
+	if after.ID != before.ID {
+		t.Fatalf("the drain switched the build generation %q -> %q", before.ID, after.ID)
+	}
+	chunksAfter, err := store.ChunkCount(after.ID)
+	if err != nil {
+		t.Fatalf("ChunkCount: %v", err)
+	}
+	if chunksAfter != chunksBefore {
+		t.Fatalf("chunk count %d -> %d after draining one page", chunksBefore, chunksAfter)
+	}
+	if after.ModelID != before.ModelID || after.TokenizerVersion != before.TokenizerVersion {
+		t.Fatalf("the drain restamped the build identity %#v -> %#v", before, after)
+	}
+	for _, id := range []string{"p1", "p2", "p3"} {
+		status, err := svc.PageStatus(id)
+		if err != nil {
+			t.Fatalf("PageStatus(%s): %v", id, err)
+		}
+		if status.State != PageIndexed {
+			t.Fatalf("%s = %q after draining another page, want indexed", id, status.State)
+		}
+	}
+	if count, err := store.QueueCount(); err != nil || count != 0 {
+		t.Fatalf("queue holds %d pages after the drain, %v", count, err)
+	}
+}
+
+func TestDrain_OneFailingPageLeavesTheBatchRunning(t *testing.T) {
+	svc, store, _, pages := newTestService(t)
+
+	if _, err := svc.Rebuild(nil); err != nil {
+		t.Fatalf("Rebuild: %v", err)
+	}
+	before, err := store.CurrentBuild()
+	if err != nil || before == nil {
+		t.Fatalf("CurrentBuild = %#v, %v", before, err)
+	}
+
+	pages.pages["p1"] = &tree.Page{Content: "## 部署流程\n\nrun deploy again\n\n## Rollback\n\ngo back again"}
+	pages.pages["p2"].Content = "edited too"
+	for _, id := range []string{"p1", "p2"} {
+		if err := svc.Enqueue(id); err != nil {
+			t.Fatalf("Enqueue(%s): %v", id, err)
+		}
+	}
+	// The second queued page disappears before the drain can read it.
+	delete(pages.pages, "p2")
+
+	if _, err := svc.Drain(0); err != nil {
+		t.Fatalf("Drain: %v", err)
+	}
+
+	if status, err := svc.PageStatus("p1"); err != nil || status.State != PageIndexed {
+		t.Fatalf("the healthy page = %#v, %v; want indexed", status, err)
+	}
+	if status, err := svc.PageStatus("p2"); err != nil || status.State != PageFailed {
+		t.Fatalf("the unreadable page = %#v, %v; want failed", status, err)
+	}
+	if count, err := store.QueueCount(); err != nil || count != 0 {
+		t.Fatalf("queue still holds %d pages, %v", count, err)
+	}
+	if status, err := svc.Status(true); err != nil || status.State == StateFailed {
+		t.Fatalf("one bad page marked the whole index %#v, %v", status, err)
+	}
+}
+
+func TestDrain_NothingEmbeddedReportsFailure(t *testing.T) {
+	svc, store, _, pages := newTestService(t)
+
+	if _, err := svc.Rebuild([]string{"p1"}); err != nil {
+		t.Fatalf("Rebuild: %v", err)
+	}
+	before, err := store.CurrentBuild()
+	if err != nil || before == nil {
+		t.Fatalf("CurrentBuild = %#v, %v", before, err)
+	}
+
+	pages.pages["p2"].Content = "edited"
+	if err := svc.Enqueue("p2"); err != nil {
+		t.Fatalf("Enqueue: %v", err)
+	}
+	delete(pages.pages, "p2")
+
+	if _, err := svc.Drain(0); err == nil {
+		t.Fatal("a drain that embedded nothing reported success")
+	}
+	if count, err := store.ChunkCount(before.ID); err != nil || count != 2 {
+		t.Fatalf("the answering build holds %d chunks, %v; want p1's 2", count, err)
+	}
+	if status, err := svc.Status(true); err != nil || status.State != StateFailed {
+		t.Fatalf("status = %#v, %v; want failed so a rebuild is asked for", status, err)
+	}
+}
+
+func TestPageStatus_EmbeddingAgainClearsAnEarlierFailure(t *testing.T) {
+	svc, _, _, _ := newTestService(t)
+
+	if _, err := svc.Rebuild([]string{"p1"}); err != nil {
+		t.Fatalf("Rebuild: %v", err)
+	}
+	if err := svc.Enqueue("p1"); err != nil {
+		t.Fatalf("Enqueue: %v", err)
+	}
+	if err := svc.store.MarkQueuedFailure("p1", "boom"); err != nil {
+		t.Fatalf("MarkQueuedFailure: %v", err)
+	}
+	if status, err := svc.PageStatus("p1"); err != nil || status.State != PageFailed {
+		t.Fatalf("status = %#v, %v; want the recorded failure", status, err)
+	}
+
+	// A single-page rebuild and a full rebuild both put the page back, so the
+	// failure row must not outlive them: it would report a page as broken that
+	// the index answers fine.
+	if err := svc.IndexPage("p1"); err != nil {
+		t.Fatalf("IndexPage: %v", err)
+	}
+	if status, err := svc.PageStatus("p1"); err != nil || status.State != PageIndexed {
+		t.Fatalf("after IndexPage status = %#v, %v; want indexed", status, err)
+	}
+
+	if err := svc.Enqueue("p1"); err != nil {
+		t.Fatalf("Enqueue: %v", err)
+	}
+	if err := svc.store.MarkQueuedFailure("p1", "boom"); err != nil {
+		t.Fatalf("MarkQueuedFailure: %v", err)
+	}
+	if _, err := svc.Rebuild([]string{"p1"}); err != nil {
+		t.Fatalf("Rebuild: %v", err)
+	}
+	if status, err := svc.PageStatus("p1"); err != nil || status.State != PageIndexed {
+		t.Fatalf("after a full rebuild status = %#v, %v; want indexed", status, err)
+	}
+}
+
+func TestDrain_RebuildsWhenTheBuildIsAnotherModels(t *testing.T) {
+	_, store, _, pages := newTestService(t)
+	owner := NewService(store, &fakeEncoder{}, pages, "minilm", "wordpiece-1", ModeAuto, nil)
+	if _, err := owner.Rebuild(nil); err != nil {
+		t.Fatalf("Rebuild: %v", err)
+	}
+
+	// A service configured for another model must not write its vectors into
+	// the existing build: rebuilding is the only honest move (FR-408).
+	other := NewService(store, &fakeEncoder{}, pages, "other-model", "other-tokenizer", ModeAuto, nil)
+	if err := other.Enqueue("p1"); err != nil {
+		t.Fatalf("Enqueue: %v", err)
+	}
+	if _, err := other.Drain(0); err != nil {
+		t.Fatalf("Drain: %v", err)
+	}
+
+	current, err := store.CurrentBuild()
+	if err != nil || current == nil {
+		t.Fatalf("CurrentBuild = %#v, %v", current, err)
+	}
+	if current.ModelID != "other-model" || current.TokenizerVersion != "other-tokenizer" {
+		t.Fatalf("build identity = %#v, want the draining service's", current)
+	}
+	for _, id := range []string{"p1", "p2"} {
+		status, err := other.PageStatus(id)
+		if err != nil || status.State != PageIndexed {
+			t.Fatalf("%s = %#v, %v; want indexed by the full rebuild", id, status, err)
+		}
+	}
+	if count, err := store.QueueCount(); err != nil || count != 0 {
+		t.Fatalf("queue holds %d pages, %v", count, err)
 	}
 }
 

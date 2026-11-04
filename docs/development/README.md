@@ -17,6 +17,9 @@ are in [CONTRIBUTING.md](../../CONTRIBUTING.md); agent instructions in [AGENTS.m
   regenerate it and how to document a package.
 - [Architecture decision records](./adr/README.md): why things are the way they are, when to
   write a new ADR, and the template.
+- [Agent runbook for a wiki instance](./skills/leafwiki/SKILL.md): driving a running or stopped
+  LeafWiki from an agent (`page get|write|apply|delete`, `check`, `vectors sync`), with the
+  CLI, content and troubleshooting references next to it.
 
 These pages name code by package, file and function, not line numbers, so they don't go stale
 with every edit. If you find a statement that no longer matches the code, fix it in the same PR.

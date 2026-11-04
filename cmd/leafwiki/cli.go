@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"log/slog"
 	"net"
 	"os"
 	"slices"
@@ -30,6 +29,7 @@ const (
 	catSnapshots = "Snapshots & restore"
 	catEmail     = "Email (SMTP)"
 	catVectors   = "Semantic search"
+	catControl   = "Agent access"
 )
 
 const rootUsageText = `leafwiki --jwt-secret <SECRET> --admin-password <PASSWORD> [--host <HOST>] [--port <PORT>] [--unix-socket <PATH>] [--data-dir <DIR>]
@@ -63,6 +63,7 @@ type serverConfig struct {
 	backup   backupOptions
 	email    emailOptions
 	vectors  vectorsOptions
+	control  controlOptions
 }
 
 // flags collects the groups. A group missing from this list would silently
@@ -77,6 +78,7 @@ func (c *serverConfig) flags() []cli.Flag {
 		c.backup.Flags(),
 		c.email.Flags(),
 		c.vectors.Flags(),
+		c.control.Flags(),
 	)
 }
 
@@ -106,18 +108,25 @@ func newRootCommandWithConfig(cfg *serverConfig) *cli.Command {
 			newResetAdminPasswordCommand(cfg),
 			newRestoreSnapshotCommand(cfg),
 			newVectorsCommand(cfg),
+			newCheckCommand(cfg),
+			newPageCommand(cfg),
+			newStatusCommand(cfg),
 		},
 		Before: func(ctx context.Context, cmd *cli.Command) (context.Context, error) {
 			// Whether public mode is pinned or toggleable depends on the flag
 			// having been set, which only the parsed command knows.
 			cfg.auth.publicAccessExplicit = cmd.Root().IsSet("public-access")
+			// An explicitly empty --control-socket disables the channel; the
+			// default starts it (FR-102).
+			cfg.control.socketExplicit = cmd.Root().IsSet(controlSocketFlagName)
 			// The log-format validator has already rejected anything parseLogFormat
 			// cannot handle, including the default; this only normalizes the case.
 			format, _ := parseLogFormat(cfg.server.logFormat)
 			setupLogger(os.Stdout, format)
 			for _, key := range ignoredServiceLinkVars(cmd.Flags, cmd.IsSet) {
-				slog.Warn("ignoring environment variable that looks like a Kubernetes service link; set enableServiceLinks: false on the pod or rename the Service",
-					"variable", key)
+				// A machine-readable command owns stdout, and this fires before
+				// its Before hook can redirect the logger (FR-197).
+				_, _ = fmt.Fprintln(os.Stderr, "warning: ignoring environment variable "+key+" that looks like a Kubernetes service link; set enableServiceLinks: false on the pod or rename the Service")
 			}
 			return ctx, nil
 		},

@@ -69,3 +69,6 @@ internal/http/dist/*
 # Local model + ONNX Runtime downloads (never committed)
 assets/tokenizer/
 assets/tokenizer-*/
+
+# antislop audit output (review artifacts, never committed)
+anti-slop/

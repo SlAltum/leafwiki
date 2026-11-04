@@ -1,6 +1,30 @@
 package main
 
-import "github.com/urfave/cli/v3"
+import (
+	"os"
+	"path/filepath"
+
+	"github.com/urfave/cli/v3"
+)
+
+// defaultDataDir is <exe dir>/data when that directory exists: a shipped wiki is
+// leafwiki.exe next to data/, so any caller can run it without a path. Otherwise
+// ./data.
+func defaultDataDir() string {
+	exe, err := os.Executable()
+	if err != nil {
+		return "./data"
+	}
+	return dataDirNextTo(exe)
+}
+
+func dataDirNextTo(exePath string) string {
+	candidate := filepath.Join(filepath.Dir(exePath), "data")
+	if info, err := os.Stat(candidate); err == nil && info.IsDir() {
+		return candidate
+	}
+	return "./data"
+}
 
 // serverOptions holds the options for listener, data directory and logging.
 type serverOptions struct {
@@ -53,7 +77,7 @@ func (o *serverOptions) Flags() []cli.Flag {
 			Destination: &o.dataDir,
 			Category:    catServer,
 			Usage:       "path to data directory",
-			Value:       "./data",
+			Value:       defaultDataDir(),
 			Sources:     envVars("LEAFWIKI_DATA_DIR"),
 			Config:      trimmed,
 		},

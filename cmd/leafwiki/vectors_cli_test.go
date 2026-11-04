@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"path/filepath"
 	"testing"
 
 	"github.com/perber/wiki/internal/wiki/vectors"
@@ -58,7 +59,64 @@ func TestRunVectorsBuild_ReportsLockedWithItsExitCode(t *testing.T) {
 	if !errors.As(err, &coded) {
 		t.Fatalf("runVectorsBuild = %v, want an exit code error", err)
 	}
-	if coded.code != vectorsExitLocked {
-		t.Fatalf("exit code = %d, want %d", coded.code, vectorsExitLocked)
+	if coded.code != exitCodeLocked {
+		t.Fatalf("exit code = %d, want %d", coded.code, exitCodeLocked)
+	}
+}
+
+// The commands that rewrite the data directory respect the same marker as the
+// server (FR-101), so a live server is never written through.
+func TestDataDirCommands_ReportLockedWhenTheDataDirIsInUse(t *testing.T) {
+	dataDir := t.TempDir()
+	lock, err := acquireTestWikiLock(dataDir)
+	if err != nil {
+		t.Fatalf("acquireTestWikiLock: %v", err)
+	}
+	defer func() {
+		if releaseErr := lock.Release(); releaseErr != nil {
+			t.Errorf("release: %v", releaseErr)
+		}
+	}()
+
+	cfg := &serverConfig{server: serverOptions{dataDir: dataDir}}
+
+	for name, run := range map[string]func() error{
+		"reset-admin-password": func() error { return runResetAdminPasswordCommand(cfg) },
+		"restore-snapshot":     func() error { return runRestoreSnapshotCommand(dataDir, filepath.Join(dataDir, "snapshot.zip")) },
+	} {
+		err := run()
+		var coded *exitCodeError
+		if !errors.As(err, &coded) {
+			t.Fatalf("%s = %v, want an exit code error", name, err)
+		}
+		if coded.code != exitCodeLocked {
+			t.Fatalf("%s exit code = %d, want %d", name, coded.code, exitCodeLocked)
+		}
+	}
+}
+
+func TestRunVectorsBuild_ReportsLockedWhenTheDataDirIsInUse(t *testing.T) {
+	dataDir := t.TempDir()
+	cfg := &serverConfig{server: serverOptions{dataDir: dataDir}}
+
+	// The whole data directory is the outer lock (FR-166): a running server
+	// holds it, so an offline build must not touch the directory either.
+	lock, err := acquireTestWikiLock(dataDir)
+	if err != nil {
+		t.Fatalf("acquireTestWikiLock: %v", err)
+	}
+	defer func() {
+		if releaseErr := lock.Release(); releaseErr != nil {
+			t.Errorf("release: %v", releaseErr)
+		}
+	}()
+
+	err = runVectorsBuild(t.Context(), cfg, true, "")
+	var coded *exitCodeError
+	if !errors.As(err, &coded) {
+		t.Fatalf("runVectorsBuild = %v, want an exit code error", err)
+	}
+	if coded.code != exitCodeLocked {
+		t.Fatalf("exit code = %d, want %d", coded.code, exitCodeLocked)
 	}
 }

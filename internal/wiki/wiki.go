@@ -66,6 +66,13 @@ type Wiki struct {
 	searchIndex       *search.SQLiteIndex
 	status            *search.IndexingStatus
 	storageDir        string
+	authDisabled      bool
+	// writeGate is shared with the HTTP middleware, so a restore stops both
+	// writers (FR-150).
+	writeGate *restore.WriteGate
+	// controlWriteMu serializes the agent channel's batches: their side effects
+	// run outside the tree lock, so two batches would interleave (NFR-7).
+	controlWriteMu sync.Mutex
 
 	// Semantic search. All three stay nil while the feature is off.
 	vectorService *vectors.Service
@@ -132,6 +139,9 @@ type WikiOptions struct {
 	SMTP                    email.Config  // SMTP config for password-reset/invite email; SMTP.Enabled()==false disables the feature entirely
 	Metrics                 *httpmetrics.HTTPMetrics
 	Vectors                 VectorsOptions // semantic search; the zero value keeps it off
+	// WriteGate is the restore's write gate. The agent channel enters it around
+	// the file write and leaves before the side effects (FR-150).
+	WriteGate *restore.WriteGate
 }
 
 // VectorsOptions configures semantic search.
@@ -149,6 +159,8 @@ func NewWiki(options *WikiOptions) (*Wiki, error) {
 	shutdownCtx, shutdownCancel := context.WithCancel(context.Background())
 	w := &Wiki{
 		storageDir:     options.StorageDir,
+		authDisabled:   options.AuthDisabled,
+		writeGate:      options.WriteGate,
 		log:            slog.Default().With("component", "Wiki"),
 		resyncJob:      wikiresync.NewResyncJob(),
 		shutdownCtx:    shutdownCtx,

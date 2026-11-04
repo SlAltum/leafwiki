@@ -148,7 +148,9 @@ func RequireEditorOrAdmin() gin.HandlerFunc {
 			return
 		}
 
-		if user.HasRole(auth.RoleAdmin) || user.HasRole(auth.RoleEditor) {
+		// One capability matrix decides both the HTTP and the agent-channel
+		// answer, so the two cannot drift apart (FR-115).
+		if auth.Can(user.Role, auth.OpPageDelete) {
 			c.Next()
 			return
 		}

@@ -1,6 +1,7 @@
 // Package vectors keeps the semantic index in step with the pages: it queues
-// pages that changed, embeds them, and switches the vectors database to the new
-// build when a batch finishes.
+// pages that changed and embeds them into the build reads already answer from.
+// Only a full rebuild opens a new generation, because switching generation is
+// what drops every chunk the rebuild did not write itself.
 package vectors
 
 import (
@@ -91,6 +92,15 @@ func (s *Service) EncoderAvailable() bool {
 	return s.encoder != nil
 }
 
+// Mode is the configured indexing mode, which the status reports (FR-122).
+func (s *Service) Mode() Mode { return s.mode }
+
+// FailedCount counts the pages whose embedding gave up, which the status
+// reports beside the queue length (FR-122).
+func (s *Service) FailedCount() (int, error) {
+	return s.store.FailedCount()
+}
+
 // AutoIndex reports whether a save should queue the page.
 func (s *Service) AutoIndex() bool {
 	return s.mode.AutoIndex()
@@ -160,9 +170,11 @@ func (s *Service) Forget(pageID string) error {
 	return s.store.RemoveFromQueue(pageID)
 }
 
-// Drain embeds the queued pages in one build and makes it current. A page that
-// fails is recorded and skipped; the rest still commit (FR-407). limit <= 0
-// drains everything.
+// Drain embeds the queued pages into the build reads already answer from. It
+// never starts a generation: committing one drops the chunks of every page that
+// was not queued, which is every page that did not change (FR-164). A page that
+// fails is recorded and skipped; the rest still land (FR-407). limit <= 0 drains
+// everything.
 func (s *Service) Drain(limit int) (int, error) {
 	entries, err := s.store.QueuedPages(limit)
 	if err != nil {
@@ -176,7 +188,96 @@ func (s *Service) Drain(limit int) (int, error) {
 	for i, entry := range entries {
 		pageIDs[i] = entry.PageID
 	}
-	return s.build(pageIDs, entries)
+
+	if err := s.claimBuild(); err != nil {
+		return 0, err
+	}
+	defer s.releaseBuild()
+	return s.embedQueued(entries)
+}
+
+// embedQueued replaces the queued pages inside the current build; the caller
+// holds the build slot. With no build at all there is nothing to keep, so the
+// batch may open the first generation.
+func (s *Service) embedQueued(queued []embed.QueueEntry) (int, error) {
+	current, err := s.store.CurrentBuild()
+	if err != nil {
+		return 0, err
+	}
+
+	pageIDs := make([]string, len(queued))
+	for i, entry := range queued {
+		pageIDs[i] = entry.PageID
+	}
+
+	if current == nil {
+		// A generation holding only the queued pages would claim to be the whole
+		// index, so the first one covers every page (FR-164).
+		all, err := s.allPageIDs()
+		if err != nil {
+			return 0, err
+		}
+		return s.buildClaimed(all, queued)
+	}
+
+	// Vectors from another model cannot share a build with ours, and an
+	// in-place write records no provenance that they did. The state already
+	// says stale, so do what that state asks for: rebuild (FR-408).
+	if current.ModelID != s.modelID || current.TokenizerVersion != s.tokenizerVersion {
+		all, err := s.allPageIDs()
+		if err != nil {
+			return 0, err
+		}
+		return s.buildClaimed(all, queued)
+	}
+
+	written := 0
+	failed := 0
+	for _, entry := range queued {
+		pageID := entry.PageID
+		chunks, err := s.chunksFor(pageID)
+		if err != nil {
+			failed++
+			s.log.Warn("could not index a page for semantic search", "pageID", pageID, "error", err)
+			if qErr := s.store.MarkQueuedFailure(pageID, err.Error()); qErr != nil {
+				s.log.Warn("could not record the queue failure", "pageID", pageID, "error", qErr)
+			}
+			continue
+		}
+		if err := s.store.ReplacePageChunks(current.ID, pageID, chunks); err != nil {
+			return written, err
+		}
+		written += len(chunks)
+
+		// The page can be deleted or saved again while it is being embedded.
+		// Re-reading it tells the two apart, so neither a deleted page's chunks
+		// nor a newer save is left looking embedded.
+		if _, err := s.pages.GetPage(pageID); err != nil {
+			if fErr := s.store.DeletePageChunks(pageID); fErr != nil {
+				s.log.Warn("could not undo the chunks of a deleted page", "pageID", pageID, "error", fErr)
+			}
+			if fErr := s.store.RemoveFromQueue(pageID); fErr != nil {
+				s.log.Warn("could not clear a deleted page from the queue", "pageID", pageID, "error", fErr)
+			}
+			continue
+		}
+		// The page is in the index now, so its queue row goes: a crash after
+		// this point costs nothing. A row a save re-pointed stays, and the next
+		// drain embeds that content.
+		if err := s.store.RemoveQueuedPage(pageID, entry.QueuedAt); err != nil {
+			s.log.Warn("could not clear an indexed page from the queue", "pageID", pageID, "error", err)
+		}
+	}
+
+	// Every page of this batch failed, so the index is as incomplete as the
+	// per-page statuses say. Reporting success would let the overall state
+	// claim a healthy index (FR-701).
+	if written == 0 && failed > 0 {
+		failure := fmt.Errorf("no queued page could be embedded")
+		s.recordBuildFailure(failure)
+		return 0, failure
+	}
+	return written, nil
 }
 
 // Rebuild embeds the given pages, or every page when pageIDs is nil. This is
@@ -227,7 +328,12 @@ func (s *Service) IndexPage(pageID string) error {
 	if err != nil {
 		return err
 	}
-	return s.store.ReplacePageChunks(current.ID, pageID, chunks)
+	if err := s.store.ReplacePageChunks(current.ID, pageID, chunks); err != nil {
+		return err
+	}
+	// The page is in the index again, so a row that recorded an earlier
+	// failure is no longer true (FR-410).
+	return s.store.ClearQueueFailure(pageID)
 }
 
 // build embeds pages into a fresh generation and commits it.
@@ -332,6 +438,10 @@ func (s *Service) buildClaimed(pageIDs []string, queued []embed.QueueEntry) (int
 			return written, err
 		}
 		written += len(chunks)
+		// A rebuild that embedded the page makes an earlier failure row false.
+		if err := s.store.ClearQueueFailure(pageID); err != nil {
+			s.log.Warn("could not clear a stale queue failure", "pageID", pageID, "error", err)
+		}
 	}
 
 	// A build that wrote nothing would still switch the pointer and drop the

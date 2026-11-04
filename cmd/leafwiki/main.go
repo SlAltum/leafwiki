@@ -26,6 +26,7 @@ import (
 	"github.com/perber/wiki/internal/core/email"
 	"github.com/perber/wiki/internal/core/ignore"
 	"github.com/perber/wiki/internal/core/settings"
+	"github.com/perber/wiki/internal/core/shared/advisorylock"
 	sharedcrypto "github.com/perber/wiki/internal/core/shared/crypto"
 	"github.com/perber/wiki/internal/core/tools"
 	httpinternal "github.com/perber/wiki/internal/http"
@@ -37,6 +38,7 @@ import (
 	"github.com/perber/wiki/internal/tocdisplay"
 	"github.com/perber/wiki/internal/wiki"
 	wikibackup "github.com/perber/wiki/internal/wiki/backup"
+	"github.com/perber/wiki/internal/wiki/control"
 	wikiinstancesettings "github.com/perber/wiki/internal/wiki/instancesettings"
 	wikirestore "github.com/perber/wiki/internal/wiki/restore"
 	wikisnapshot "github.com/perber/wiki/internal/wiki/snapshot"
@@ -160,7 +162,11 @@ func runRestoreSnapshotCommand(dataDir, snapshotPath string) error {
 	if snapshotPath == "" {
 		return errRestoreSnapshotUsage
 	}
-	if err := restore.RestoreOffline(dataDir, snapshotPath); err != nil {
+	// An offline restore swaps the directories and databases of the whole data
+	// directory, so it must not run next to a server (FR-101).
+	if err := withWikiLock(dataDir, func() error {
+		return restore.RestoreOffline(dataDir, snapshotPath)
+	}); err != nil {
 		return fmt.Errorf("restore failed: %w", err)
 	}
 	fmt.Println("Snapshot restored successfully. Start the server normally to pick up the restored data.")
@@ -207,8 +213,18 @@ func main() {
 }
 
 func runResetAdminPasswordCommand(cfg *serverConfig) error {
-	user, err := tools.ResetAdminPassword(cfg.server.dataDir, cfg.auth.adminUsername, cfg.auth.adminEmail)
+	// The reset rewrites the user database, which a running server also writes.
+	var user *auth.User
+	err := withWikiLock(cfg.server.dataDir, func() error {
+		var lockErr error
+		user, lockErr = tools.ResetAdminPassword(cfg.server.dataDir, cfg.auth.adminUsername, cfg.auth.adminEmail)
+		return lockErr
+	})
 	if err != nil {
+		var coded *exitCodeError
+		if errors.As(err, &coded) {
+			return err
+		}
 		if msg, ok := corruptDatabaseMessage(err); ok {
 			return fmt.Errorf("password reset failed: %s", msg)
 		}
@@ -307,18 +323,36 @@ func runServerCommand(ctx context.Context, cmd *cli.Command, cfg *serverConfig) 
 // launcher binds its own listener and calls runServerWithListener instead
 // (FR-112), which keeps the CLI path exactly as it was.
 func runServerWithConfig(ctx context.Context, cfg *serverConfig) (*Instance, error) {
+	// The data directory comes first: a second instance must fail without ever
+	// touching this one's sockets or stores (FR-101).
+	if err := ensureDataDir(cfg.server.dataDir); err != nil {
+		return nil, failf("Failed to create data directory", err)
+	}
+	lock, err := acquireWikiLock(cfg.server.dataDir)
+	if err != nil {
+		return nil, failf("Failed to start server", err)
+	}
+	return listenAndServe(ctx, cfg, lock)
+}
+
+// listenAndServe binds the configured address and hands the bound instance the
+// directory lock, which the instance releases when it has shut down.
+func listenAndServe(ctx context.Context, cfg *serverConfig, lock *advisorylock.File) (*Instance, error) {
 	if cfg.server.unixSocket == "" {
 		listenAddr := cfg.server.host + ":" + cfg.server.port
 		slog.Default().Info("Starting LeafWiki", "address", listenAddr, "data_dir", cfg.server.dataDir)
 		listener, err := net.Listen("tcp", listenAddr)
 		if err != nil {
+			// Nothing took ownership of the lock, so this scope releases it.
+			releaseWikiLock(lock)
 			return nil, failf("Failed to start server", err)
 		}
-		return runServerWithListener(ctx, cfg, listener)
+		return runServerWithListener(ctx, cfg, listener, lock)
 	}
 
 	listener, err := listenOnUnixSocket(cfg.server.unixSocket)
 	if err != nil {
+		releaseWikiLock(lock)
 		return nil, failf("Failed to start server", err)
 	}
 
@@ -329,15 +363,17 @@ func runServerWithConfig(ctx context.Context, cfg *serverConfig) (*Instance, err
 		"host_port_overridden", true,
 	)
 
-	return runServerWithListener(ctx, cfg, listener)
+	return runServerWithListener(ctx, cfg, listener, lock)
 }
 
 // runServerWithListener starts the server on listener and takes ownership of
-// it: on failure the listener is closed here, on success it is closed when the
-// instance stops. Everything the server needs is built here and released in
-// reverse order once serving ends. Setup itself does not observe ctx: a
-// cancelled ctx is checked once, before serving starts, and returns ctx.Err().
-func runServerWithListener(ctx context.Context, cfg *serverConfig, listener net.Listener) (*Instance, error) {
+// it and of lock: on failure both are released here, on success the lock is
+// released once the wiki is closed, so a new instance can only take the
+// directory after nothing of this one is left (FR-101). Everything the server
+// needs is built here and released in reverse order once serving ends. Setup
+// itself does not observe ctx: a cancelled ctx is checked once, before serving
+// starts, and returns ctx.Err().
+func runServerWithListener(ctx context.Context, cfg *serverConfig, listener net.Listener, lock *advisorylock.File) (*Instance, error) {
 	var cleanup func()
 	if cfg.server.unixSocket != "" {
 		cleanup = func() {
@@ -362,6 +398,7 @@ func runServerWithListener(ctx context.Context, cfg *serverConfig, listener net.
 		} else {
 			_ = listener.Close()
 		}
+		releaseWikiLock(lock)
 		return nil, err
 	}
 
@@ -420,12 +457,9 @@ func runServerWithListener(ctx context.Context, cfg *serverConfig, listener net.
 		slog.Default().Warn("allow-insecure enabled. Auth cookies may be transmitted over plain HTTP (INSECURE).")
 	}
 
-	// Check if data directory exists
-	if _, err := os.Stat(cfg.server.dataDir); os.IsNotExist(err) {
-		if err := os.MkdirAll(cfg.server.dataDir, 0755); err != nil {
-			return abort(failf("Failed to create data directory", err))
-		}
-		slog.Default().Info("Data directory created", "path", cfg.server.dataDir)
+	// The directory may have disappeared between taking the lock and booting.
+	if err := ensureDataDir(cfg.server.dataDir); err != nil {
+		return abort(failf("Failed to create data directory", err))
 	}
 
 	publicAccessService, err := buildPublicAccessService(cfg)
@@ -467,6 +501,13 @@ func runServerWithListener(ctx context.Context, cfg *serverConfig, listener net.
 	}
 	cleanups = append(cleanups, backupManager.Stop)
 
+	// The restore write gate is built before the wiki: the HTTP middleware and
+	// the agent channel must share one instance (FR-150).
+	var writeGate *restore.WriteGate
+	if cfg.backup.snapshot {
+		writeGate = restore.NewWriteGate()
+	}
+
 	w, err := wiki.NewWiki(&wiki.WikiOptions{
 		StorageDir:             cfg.server.dataDir,
 		AdminUsername:          cfg.auth.adminUsername,
@@ -500,7 +541,8 @@ func runServerWithListener(ctx context.Context, cfg *serverConfig, listener net.
 			Timeout:            cfg.email.smtpTimeout,
 			PublicURL:          cfg.server.publicURL,
 		},
-		Metrics: metrics,
+		Metrics:   metrics,
+		WriteGate: writeGate,
 	})
 	if err != nil {
 		if msg, ok := corruptDatabaseMessage(err); ok {
@@ -533,8 +575,44 @@ func runServerWithListener(ctx context.Context, cfg *serverConfig, listener net.
 	backupManager.SetOnContentSynced(w.TriggerResyncAsync)
 	w.SetBackupRoutes(wikibackup.NewRoutes(backupManager, w.AuthService()))
 
+	// The local agent channel is a separate unix socket with JSON-RPC frames
+	// (FR-102). A channel that cannot bind is a warning, never a refused start
+	// (FR-104): keyword search and the UI must keep working.
+	if socketPath, enabled := cfg.control.resolveSocketPath(cfg.server.dataDir); enabled {
+		// The socket path must be absolute: a relative --data-dir would
+		// otherwise make the channel refuse to start.
+		if absolute, err := filepath.Abs(socketPath); err == nil {
+			socketPath = absolute
+		}
+		authMode, modeErr := cfg.control.authMode()
+		if modeErr != nil {
+			return abort(failf("Invalid control channel configuration", modeErr))
+		}
+		channel, channelErr := control.New(control.Config{
+			DataDir:      cfg.server.dataDir,
+			SocketPath:   socketPath,
+			AuthMode:     authMode,
+			Source:       w,
+			Pages:        w.ControlPages(),
+			Capabilities: controlCapabilities,
+			Logger:       slog.Default().With("component", "ControlChannel"),
+		})
+		if channelErr != nil {
+			slog.Default().Warn("control channel unavailable", "error", channelErr)
+			removeStaleControlDescriptor(cfg.server.dataDir)
+		} else if startErr := channel.Start(); startErr != nil {
+			slog.Default().Warn("control channel unavailable, the server keeps running without it", "error", startErr)
+			removeStaleControlDescriptor(cfg.server.dataDir)
+		} else {
+			cleanups = append(cleanups, channel.Stop)
+		}
+	} else {
+		// A descriptor from a crashed run would point an agent at a socket that
+		// nobody serves (FR-106, FR-193b).
+		removeStaleControlDescriptor(cfg.server.dataDir)
+	}
+
 	// Initialize full backup snapshots if enabled
-	var writeGate *restore.WriteGate
 	if cfg.backup.snapshot {
 		snapshotsDir := cfg.backup.snapshotDir
 		if snapshotsDir == "" {
@@ -562,7 +640,6 @@ func runServerWithListener(ctx context.Context, cfg *serverConfig, listener net.
 		cleanups = append(cleanups, snapshotScheduler.Stop)
 		w.SetSnapshotRoutes(wikisnapshot.NewRoutes(snapshotManager, snapshotScheduler, w.AuthService(), cfg.backup.snapshotRetention))
 
-		writeGate = restore.NewWriteGate()
 		restoreManager := restore.NewManager(restore.Config{
 			SnapshotManager: snapshotManager,
 			DataDir:         cfg.server.dataDir,
@@ -659,11 +736,28 @@ func runServerWithListener(ctx context.Context, cfg *serverConfig, listener net.
 			if cleanup != nil {
 				cleanup()
 			}
+			// After the wiki is closed and the socket is gone: only then is the
+			// directory free for a new instance (FR-101).
+			releaseWikiLock(lock)
 		}()
 		instance.serveErr = serveWithLifecycle(runCtx, server, listener, cleanup, w.TriggerResyncAsync, reloadSignals, shutdownSignals)
 	}()
 
 	return instance, nil
+}
+
+// controlCapabilities lists what this build's control channel implements, in
+// FR-122b's vocabulary. It is the one place to update when a method lands: the
+// status advertises exactly this list.
+var controlCapabilities = []string{"auth.login", "page.get", "page.apply"}
+
+// removeStaleControlDescriptor deletes a descriptor left behind by a run that is
+// gone, so a client does not wait on a socket nobody serves (FR-106).
+func removeStaleControlDescriptor(dataDir string) {
+	path := filepath.Join(dataDir, "control.json")
+	if err := os.Remove(path); err != nil && !os.IsNotExist(err) {
+		slog.Default().Warn("could not remove a stale control descriptor", "path", path, "error", err)
+	}
 }
 
 // stateDBPaths returns the paths of every state database other than users.db

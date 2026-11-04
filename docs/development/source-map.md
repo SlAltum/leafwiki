@@ -25,10 +25,17 @@ filesystem-canonical (`tree`, `revision`) and SQLite-derived (`links`, `tags`, `
 ## `cmd/leafwiki`
 
 - **`cmd/leafwiki/cli.go`** — the `urfave/cli/v3` command tree: the server command plus operator
-  subcommands (`reset-admin-password`, offline snapshot restore).
+  subcommands (`reset-admin-password`, offline snapshot restore, `vectors`, `check`, `page`,
+  `status`).
+- **`cmd/leafwiki/control_client.go` / `page_cli.go` / `page_write_cli.go`**: the agent CLI,
+  socket discovery (`--control-socket` > `control.json` > default), peer-uid check, the JSON-RPC
+  client, `page get|write|apply|delete` and `status`, the offline fallback, and `exit_codes.go`
+  — the one table mapping RPC errors onto process exit codes. `check_cli.go` and
+  `vectors_sync_cli.go` are the other two offline commands; `wiki_lock.go` is the shared
+  `wiki.lock` helper (`ensureDataDir`, `acquireWikiLock`, `withWikiLock`).
 - **`cmd/leafwiki/flags_*.go`** — flag and env var definitions, one file per area (`server`,
-  `auth`, `backup`, `email`, `frontend`, `metrics`, `proxy`). `leafwiki --help` is generated
-  from these; `docs/` documents them.
+  `auth`, `backup`, `email`, `frontend`, `metrics`, `proxy`, `vectors`, `control`).
+  `leafwiki --help` is generated from these; `docs/` documents them.
 - **`cmd/leafwiki/main.go`** — `runServerCommand`: `slog` logger setup, builds `wiki.WikiOptions`
   and the services that depend on flags (e.g. `buildPublicAccessService`), constructs
   `wiki.Wiki`, the `internal/http` router, Prometheus metrics and the backup/snapshot schedulers;
@@ -185,6 +192,18 @@ resync-derived state.
   `Encoder` interface, so the queue, the pause flag, single-page and full rebuilds are testable
   without a model. A page that fails is recorded and skipped; the rest still commit, and the
   previous generation keeps answering until the new one commits.
+- **`internal/wiki/control`**: the local agent channel
+  ([architecture](./architecture.md#agent-control-channel)). `control.go` owns the unix
+  socket, the connection/idle/frame limits and `control.json`; `frame.go` the JSON-RPC frames
+  (one decoder per connection, so pipelined requests are not swallowed); `dispatch.go` the
+  method table (`status`, `auth.login`, `page.get`, `page.apply`) and the authentication /
+  capability gate; `pages.go` the wire types and the `Pages` interface the composition root
+  implements; `errors.go` the §6.1 error envelope; `peercred_*.go` the peer-uid check per
+  platform. The channel imports no sibling slice and no `internal/wiki`.
+- **`internal/wiki/wiki_control.go` / `wiki_control_pages.go` / `wiki_offline_pages.go`** — the
+  wiki side of that channel: the status source and the page methods (built on the normal `pages`
+  use cases through a small `pageOps` struct), plus `OpenOffline`, which runs the same methods
+  against a stopped data directory.
 - **`internal/tocdisplay`** — the instance-wide "always show table of contents" flag, same
   provider pattern (`Provider` interface, `Fixed` for flag-pinned values).
 - **`internal/favorites`** — per-user private favorited-pages list. `favorites_store.go`

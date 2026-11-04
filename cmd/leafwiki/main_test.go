@@ -28,6 +28,7 @@ import (
 	"github.com/urfave/cli/v3"
 
 	httpmetrics "github.com/perber/wiki/internal/http/metrics"
+	"github.com/perber/wiki/internal/wiki/control"
 )
 
 // runRootCommand parses args through the real command tree and hands the
@@ -1600,7 +1601,7 @@ func TestRunServerWithListener_ServesUntilStop(t *testing.T) {
 		t.Fatalf("listen failed: %v", err)
 	}
 
-	instance, err := runServerWithListener(context.Background(), cfg, listener)
+	instance, err := runServerWithListener(context.Background(), cfg, listener, mustWikiLock(t, cfg.server.dataDir))
 	if err != nil {
 		t.Fatalf("runServerWithListener() error = %v", err)
 	}
@@ -1672,6 +1673,16 @@ func TestRunServerWithConfig_PortInUseReturnsFailure(t *testing.T) {
 	if !strings.Contains(err.Error(), port) {
 		t.Errorf("error = %v, want it to name port %s", err, port)
 	}
+
+	// The failed start must give the data directory back, or the retry of
+	// FR-113 can never succeed.
+	lock, lockErr := acquireTestWikiLock(cfg.server.dataDir)
+	if lockErr != nil {
+		t.Fatalf("data directory still locked after a failed bind: %v", lockErr)
+	}
+	if releaseErr := lock.Release(); releaseErr != nil {
+		t.Errorf("release: %v", releaseErr)
+	}
 }
 
 // recordingHandler collects the records it receives, for the injected-handler
@@ -1740,14 +1751,116 @@ func TestSetupLoggerWith_KeepsEachHandlerLevel(t *testing.T) {
 	}
 }
 
+// A first start creates its data directory the way it always did; the lock file
+// lives in it, so the directory must not end up with the lock helper's own 0700.
+func TestEnsureDataDir_CreatesTheDirectoryWithTheServersMode(t *testing.T) {
+	dataDir := filepath.Join(t.TempDir(), "nested", "data")
+
+	if err := ensureDataDir(dataDir); err != nil {
+		t.Fatalf("ensureDataDir: %v", err)
+	}
+	info, err := os.Stat(dataDir)
+	if err != nil {
+		t.Fatalf("Stat: %v", err)
+	}
+	if !info.IsDir() {
+		t.Fatalf("%s is not a directory", dataDir)
+	}
+	if runtime.GOOS != "windows" && info.Mode().Perm() != 0o755 {
+		t.Fatalf("mode = %v, want 0755 as before the lock existed", info.Mode().Perm())
+	}
+}
+
+// One data directory, one instance (FR-101): the second start fails before it
+// touches anything, the first keeps serving, and the directory comes free again
+// once the first one stopped.
+func TestRunServerWithConfig_RefusesASecondInstanceOnTheSameDataDir(t *testing.T) {
+	dataDir := t.TempDir()
+
+	// A fixed port for every attempt: if the lock were taken after the bind, the
+	// refused start would fail on the port instead of on the directory.
+	probe, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		t.Fatalf("listen failed: %v", err)
+	}
+	_, port, err := net.SplitHostPort(probe.Addr().String())
+	if err != nil {
+		t.Fatalf("split host port: %v", err)
+	}
+	if err := probe.Close(); err != nil {
+		t.Fatalf("close probe: %v", err)
+	}
+
+	newCfg := func() *serverConfig {
+		cfg, _ := newServerConfigForTest(t,
+			"--jwt-secret=test-secret",
+			"--admin-password=test-password",
+			"--data-dir="+dataDir,
+			"--snapshot=false",
+		)
+		cfg.server.host = "127.0.0.1"
+		cfg.server.port = port
+		return cfg
+	}
+
+	first, err := runServerWithConfig(context.Background(), newCfg())
+	if err != nil {
+		t.Fatalf("first start: %v", err)
+	}
+	waitForHealth(t, first.Addr().String())
+	t.Cleanup(func() {
+		stopCtx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+		defer cancel()
+		if stopErr := first.Stop(stopCtx); stopErr != nil {
+			t.Errorf("Stop() in cleanup: %v", stopErr)
+		}
+	})
+
+	_, err = runServerWithConfig(context.Background(), newCfg())
+	if err == nil {
+		t.Fatal("second start succeeded on a data directory another instance owns")
+	}
+	var fatal *fatalError
+	if !errors.As(err, &fatal) {
+		t.Fatalf("second start error = %T, want a *fatalError", err)
+	}
+	if !strings.Contains(err.Error(), dataDir) {
+		t.Errorf("error = %v, want it to name the data directory", err)
+	}
+	// The lock comes before the bind, so the port is not what failed.
+	if strings.Contains(err.Error(), port) {
+		t.Errorf("error = %v, want the refusal to happen before the port is tried", err)
+	}
+
+	// The refused start must not have disturbed the running instance.
+	waitForHealth(t, first.Addr().String())
+
+	stopCtx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancel()
+	if err := first.Stop(stopCtx); err != nil {
+		t.Fatalf("Stop(): %v", err)
+	}
+
+	// Released after the wiki closed, so the next instance can take over.
+	third, err := runServerWithConfig(context.Background(), newCfg())
+	if err != nil {
+		t.Fatalf("third start after the first stopped: %v", err)
+	}
+	stopCtx2, cancel2 := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancel2()
+	if err := third.Stop(stopCtx2); err != nil {
+		t.Errorf("Stop() of the third instance: %v", err)
+	}
+}
+
 // A failed start must release what it took: the listener has to be bindable
 // again, or the retry of FR-113 can never succeed.
 func TestRunServerWithListener_FailedStartReleasesListener(t *testing.T) {
-	// A file where the data directory should be: every later step that needs
-	// a directory inside it fails.
-	dataDir := filepath.Join(t.TempDir(), "not-a-directory")
-	if err := os.WriteFile(dataDir, []byte("x"), 0o644); err != nil {
-		t.Fatalf("write file: %v", err)
+	// A directory where the user database should be: opening the store fails,
+	// which is a start failure after the server took the directory lock.
+	dataDir := t.TempDir()
+	if err := os.Mkdir(filepath.Join(dataDir, "users.db"), 0o755); err != nil {
+		t.Fatalf("create users.db directory: %v", err)
 	}
 
 	cfg, _ := newServerConfigForTest(t,
@@ -1763,7 +1876,7 @@ func TestRunServerWithListener_FailedStartReleasesListener(t *testing.T) {
 	}
 	addr := listener.Addr().String()
 
-	instance, err := runServerWithListener(context.Background(), cfg, listener)
+	instance, err := runServerWithListener(context.Background(), cfg, listener, mustWikiLock(t, dataDir))
 	if err == nil {
 		stopCtx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 		defer cancel()
@@ -1772,6 +1885,13 @@ func TestRunServerWithListener_FailedStartReleasesListener(t *testing.T) {
 	}
 	if instance != nil {
 		t.Fatal("runServerWithListener() returned an instance next to an error")
+	}
+
+	// A failed start gives the directory back, so the retry can run (FR-113).
+	if lock, lockErr := acquireTestWikiLock(dataDir); lockErr != nil {
+		t.Fatalf("data directory still locked after a failed start: %v", lockErr)
+	} else if releaseErr := lock.Release(); releaseErr != nil {
+		t.Errorf("release: %v", releaseErr)
 	}
 
 	rebound, err := net.Listen("tcp", addr)
@@ -1802,12 +1922,18 @@ func TestRunServerWithListener_CancelledContextReleasesListener(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel()
 
-	instance, err := runServerWithListener(ctx, cfg, listener)
+	instance, err := runServerWithListener(ctx, cfg, listener, mustWikiLock(t, cfg.server.dataDir))
 	if instance != nil {
 		t.Fatal("runServerWithListener() returned an instance for a cancelled context")
 	}
 	if !errors.Is(err, context.Canceled) {
 		t.Fatalf("runServerWithListener() error = %v, want context.Canceled", err)
+	}
+
+	if lock, lockErr := acquireTestWikiLock(cfg.server.dataDir); lockErr != nil {
+		t.Fatalf("data directory still locked after a cancelled start: %v", lockErr)
+	} else if releaseErr := lock.Release(); releaseErr != nil {
+		t.Errorf("release: %v", releaseErr)
 	}
 
 	rebound, err := net.Listen("tcp", addr)
@@ -1858,5 +1984,206 @@ func TestFailAndExitAreOnlyReachableFromMain(t *testing.T) {
 
 	if len(offenders) > 0 {
 		t.Fatalf("only main may end the process, found: %s", strings.Join(offenders, ", "))
+	}
+}
+
+// shortTempDir keeps the socket path inside what an AF_UNIX address can hold:
+// a long temporary path is the case FR-104 degrades on, not what this test is
+// about.
+func shortTempDir(t *testing.T) string {
+	t.Helper()
+
+	dir, err := os.MkdirTemp("", "lw")
+	if err != nil {
+		t.Fatalf("MkdirTemp: %v", err)
+	}
+	t.Cleanup(func() {
+		_ = os.RemoveAll(dir)
+	})
+	return dir
+}
+
+// The channel is on by default and answers status over its own socket (FR-102,
+// FR-121), and it disappears with the instance (FR-106).
+func TestRunServerWithListener_PublishesTheControlChannel(t *testing.T) {
+	dataDir := shortTempDir(t)
+	cfg, _ := newServerConfigForTest(t,
+		"--jwt-secret=test-secret",
+		"--admin-password=test-password",
+		"--data-dir="+dataDir,
+		"--snapshot=false",
+	)
+
+	listener, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		t.Fatalf("listen failed: %v", err)
+	}
+	instance, err := runServerWithListener(context.Background(), cfg, listener, mustWikiLock(t, dataDir))
+	if err != nil {
+		t.Fatalf("runServerWithListener() error = %v", err)
+	}
+	stopCtx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancel()
+	defer func() {
+		if stopErr := instance.Stop(stopCtx); stopErr != nil {
+			t.Errorf("Stop(): %v", stopErr)
+		}
+	}()
+
+	payload, err := os.ReadFile(filepath.Join(dataDir, "control.json"))
+	if err != nil {
+		t.Fatalf("read control.json: %v", err)
+	}
+	var descriptor struct {
+		Socket   string `json:"socket"`
+		Protocol string `json:"protocol"`
+	}
+	if err := json.Unmarshal(payload, &descriptor); err != nil {
+		t.Fatalf("decode control.json %q: %v", payload, err)
+	}
+	if descriptor.Protocol != "1" || descriptor.Socket != filepath.Join(dataDir, "control.sock") {
+		t.Fatalf("descriptor = %#v", descriptor)
+	}
+
+	conn, err := net.Dial("unix", descriptor.Socket)
+	if err != nil {
+		t.Skipf("this platform cannot dial a unix socket here: %v", err)
+	}
+	defer func() {
+		_ = conn.Close()
+	}()
+	if err := json.NewEncoder(conn).Encode(map[string]any{"jsonrpc": "2.0", "id": 1, "method": "status"}); err != nil {
+		t.Fatalf("encode status request: %v", err)
+	}
+	var response struct {
+		Result struct {
+			Protocol     string   `json:"protocol"`
+			Capabilities []string `json:"capabilities"`
+			Auth         struct {
+				Mode     string `json:"mode"`
+				Disabled bool   `json:"disabled"`
+			} `json:"auth"`
+			Pages int `json:"pages"`
+		} `json:"result"`
+		Error *struct {
+			Code int `json:"code"`
+		} `json:"error"`
+	}
+	if err := conn.SetReadDeadline(time.Now().Add(10 * time.Second)); err != nil {
+		t.Fatalf("read deadline: %v", err)
+	}
+	if err := json.NewDecoder(conn).Decode(&response); err != nil {
+		t.Fatalf("decode status response: %v", err)
+	}
+	if response.Error != nil {
+		t.Fatalf("status failed: %#v", response.Error)
+	}
+	if response.Result.Protocol != "1" || response.Result.Auth.Mode != "optional" {
+		t.Fatalf("status = %#v", response.Result)
+	}
+	// The wiring advertises exactly what this build implements (FR-122b).
+	if strings.Join(response.Result.Capabilities, ",") != strings.Join(controlCapabilities, ",") {
+		t.Fatalf("advertised capabilities = %v, want %v", response.Result.Capabilities, controlCapabilities)
+	}
+
+	if stopErr := instance.Stop(stopCtx); stopErr != nil {
+		t.Fatalf("Stop(): %v", stopErr)
+	}
+	if _, err := os.Stat(filepath.Join(dataDir, "control.json")); !errors.Is(err, os.ErrNotExist) {
+		t.Fatalf("control.json survived the stop: %v", err)
+	}
+}
+
+// An explicitly empty --control-socket switches the channel off (FR-102).
+func TestRunServerWithListener_ControlChannelCanBeDisabled(t *testing.T) {
+	dataDir := t.TempDir()
+	cfg, _ := newServerConfigForTest(t,
+		"--jwt-secret=test-secret",
+		"--admin-password=test-password",
+		"--data-dir="+dataDir,
+		"--snapshot=false",
+		"--control-socket=",
+	)
+	if !cfg.control.socketExplicit {
+		t.Fatal("the setup did not record the explicit --control-socket")
+	}
+	// What a crashed run leaves behind: an agent must not trust it.
+	stale := filepath.Join(dataDir, "control.json")
+	if err := os.WriteFile(stale, []byte(`{"socket":"/gone/control.sock","protocol":"1"}`), 0o600); err != nil {
+		t.Fatalf("write stale descriptor: %v", err)
+	}
+
+	listener, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		t.Fatalf("listen failed: %v", err)
+	}
+	instance, err := runServerWithListener(context.Background(), cfg, listener, mustWikiLock(t, dataDir))
+	if err != nil {
+		t.Fatalf("runServerWithListener() error = %v", err)
+	}
+	stopCtx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancel()
+	defer func() {
+		if stopErr := instance.Stop(stopCtx); stopErr != nil {
+			t.Errorf("Stop(): %v", stopErr)
+		}
+	}()
+
+	if _, err := os.Stat(filepath.Join(dataDir, "control.json")); !errors.Is(err, os.ErrNotExist) {
+		t.Fatalf("a disabled channel still published control.json: %v", err)
+	}
+	if _, err := os.Stat(filepath.Join(dataDir, "control.sock")); !errors.Is(err, os.ErrNotExist) {
+		t.Fatalf("a disabled channel still bound a socket: %v", err)
+	}
+}
+
+// Every advertised capability must be something the channel implements, so the
+// list cannot outrun the method table (FR-122b). "vectors.wait" describes write
+// behaviour rather than a method, so it is exempt.
+func TestControlCapabilitiesAreImplemented(t *testing.T) {
+	service, err := control.New(control.Config{DataDir: t.TempDir(), Capabilities: controlCapabilities})
+	if err != nil {
+		t.Fatalf("control.New: %v", err)
+	}
+	implemented := map[string]bool{}
+	for _, method := range service.Methods() {
+		implemented[method] = true
+	}
+	for _, capability := range controlCapabilities {
+		if capability == "vectors.wait" {
+			continue
+		}
+		if !implemented[capability] {
+			t.Fatalf("capability %q is advertised but no method implements it (methods: %v)", capability, service.Methods())
+		}
+	}
+	for _, required := range []string{"auth.login"} {
+		found := false
+		for _, capability := range controlCapabilities {
+			if capability == required {
+				found = true
+			}
+		}
+		if !found {
+			t.Fatalf("capability %q is implemented but not advertised", required)
+		}
+	}
+}
+
+func TestControlFlags(t *testing.T) {
+	cfg, _ := newServerConfigForTest(t,
+		"--data-dir=/tmp/wiki",
+		"--control-auth=required",
+	)
+	if cfg.control.controlAuth != "required" {
+		t.Fatalf("control-auth = %q", cfg.control.controlAuth)
+	}
+	if socketPath, enabled := cfg.control.resolveSocketPath("/tmp/wiki"); !enabled || !strings.HasSuffix(socketPath, "control.sock") {
+		t.Fatalf("socket = %q, enabled = %v", socketPath, enabled)
+	}
+
+	disabled, _ := newServerConfigForTest(t, "--data-dir=/tmp/wiki", "--control-socket=")
+	if socketPath, enabled := disabled.control.resolveSocketPath("/tmp/wiki"); enabled {
+		t.Fatalf("an empty --control-socket still enabled the channel at %q", socketPath)
 	}
 }

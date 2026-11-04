@@ -76,6 +76,29 @@ func (s *Store) QueuedPages(limit int) ([]QueueEntry, error) {
 	return entries, err
 }
 
+// RemoveQueuedPage drops a page's entry once it was embedded, but only if it is
+// still the entry that was embedded: a save that lands during the embedding
+// re-points the row, and deleting it would drop that newer content from the
+// queue until the page is edited again. Timestamps carry whole seconds, so a
+// save inside the same second as the read entry still loses its row.
+func (s *Store) RemoveQueuedPage(pageID string, queuedAt time.Time) error {
+	return s.withDB(func(db *sql.DB) error {
+		_, err := db.Exec("DELETE FROM queue WHERE page_id = ? AND queued_at = ?",
+			pageID, queuedAt.UTC().Format(time.RFC3339))
+		return err
+	})
+}
+
+// ClearQueueFailure drops a page's failed queue row once the page is embedded
+// again. A pending row stays: it belongs to a save that landed after the
+// embedding started, and that content needs its own pass.
+func (s *Store) ClearQueueFailure(pageID string) error {
+	return s.withDB(func(db *sql.DB) error {
+		_, err := db.Exec("DELETE FROM queue WHERE page_id = ? AND state = ?", pageID, QueueStateFailed)
+		return err
+	})
+}
+
 // RemoveFromQueue drops a page's entry once it was embedded.
 func (s *Store) RemoveFromQueue(pageID string) error {
 	return s.withDB(func(db *sql.DB) error {
@@ -100,6 +123,15 @@ func (s *Store) QueueCount() (int, error) {
 	var count int
 	err := s.withDBRead(func(db *sql.DB) error {
 		return db.QueryRow(`SELECT COUNT(*) FROM queue WHERE state = ?`, QueueStatePending).Scan(&count)
+	})
+	return count, err
+}
+
+// FailedCount returns how many pages are queued but will not be retried.
+func (s *Store) FailedCount() (int, error) {
+	var count int
+	err := s.withDBRead(func(db *sql.DB) error {
+		return db.QueryRow("SELECT COUNT(*) FROM queue WHERE state = ?", QueueStateFailed).Scan(&count)
 	})
 	return count, err
 }

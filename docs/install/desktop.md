@@ -26,6 +26,24 @@ LeafWiki 有一个可双击启动的 Windows 版本：窗口里显示地址、�
 文件夹必须可写。放在 `C:\Program Files` 这类需要管理员权限的位置时，窗口会
 提示把整个文件夹移到可写位置。
 
+## Agent 访问（控制通道）
+
+面板“基本”页有一行**「AI 助手」**，带复制按钮，内容是一段可以直接粘贴给 AI 的提示词：
+
+> 这是一个本地 LeafWiki 文档站。请先读 "`…\doc\AGENT.md`"（里面有命令、退出码和规则），
+> 然后用 "`…\doc\leafwiki.exe`" 帮我读写页面。
+
+启动器每次启动都会重写 `AGENT.md`（端口与 socket 都是当前值），里面是常用命令、退出码、权限规则与
+“不要直接改文件”的约定。可执行文件会自己找到旁边的 `data\` 目录，所以提示词里不需要任何参数路径。
+
+桌面版与服务端一样会打开本地控制通道（`<数据目录>/control.sock` + `control.json`，见
+[Agent control channel](../development/architecture.md#agent-control-channel)）。启动器窗口里的“打开 wiki”是普通
+HTTP 页面，与本机 CLI（`leafwiki page get|write|apply|delete`）并不同路：CLI 走的是那条 socket。
+
+高级设置里 `control-socket` 与 `control-auth` 都可编辑。注意启动器**会丢弃空值参数**，所以
+“留空 = 关闭通道”在桌面版里做不到：要关闭通道，请绕开启动器自行运行服务端并加
+`--control-socket=`。把 `control-auth` 设为 `required` 则写入必须带账号。
+
 ## 参数页与“显示高级项”
 
 第二页“高级设置”把服务端所有命令行参数做成了表格，可以搜索、只看改动项，

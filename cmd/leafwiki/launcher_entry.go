@@ -20,6 +20,8 @@ import (
 	"gioui.org/unit"
 	"github.com/urfave/cli/v3"
 
+	"github.com/perber/wiki/internal/core/auth"
+	"github.com/perber/wiki/internal/core/shared/advisorylock"
 	"github.com/perber/wiki/internal/core/tools"
 	"github.com/perber/wiki/internal/embed"
 	"github.com/perber/wiki/internal/launcher"
@@ -311,7 +313,12 @@ func resetAdminPasswordForLauncher(dataDir string) (string, error) {
 		return "", err
 	}
 
-	user, err := tools.ResetAdminPassword(dataDir, cfg.auth.adminUsername, cfg.auth.adminEmail)
+	var user *auth.User
+	err = withWikiLock(dataDir, func() error {
+		var lockErr error
+		user, lockErr = tools.ResetAdminPassword(dataDir, cfg.auth.adminUsername, cfg.auth.adminEmail)
+		return lockErr
+	})
 	if err != nil {
 		return "", err
 	}
@@ -448,13 +455,16 @@ func setupLauncherLogging(dataDir string) {
 // startServerForLauncher is the adapter between the launcher's policy and the
 // server's own entry point: the argv is parsed by the real CLI, so flag
 // handling exists once (C-6, FR-112).
-func startServerForLauncher(ctx context.Context, argv []string, listener net.Listener) (launcher.Server, error) {
+func startServerForLauncher(ctx context.Context, argv []string, listener net.Listener, lock *advisorylock.File) (launcher.Server, error) {
 	cfg, err := parseServerConfig(argv)
 	if err != nil {
 		return nil, err
 	}
-	instance, err := runServerWithListener(ctx, cfg, listener)
+	// The launcher took the directory lock before it wrote its own markers; the
+	// instance releases it when it stops.
+	instance, err := runServerWithListener(ctx, cfg, listener, lock)
 	if err != nil {
+		// runServerWithListener owns the lock from here on.
 		return nil, err
 	}
 	return &instanceServer{instance: instance}, nil

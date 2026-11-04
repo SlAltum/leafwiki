@@ -150,6 +150,19 @@ func (s *FavoritesStore) ListPageIDsForUser(userID string) ([]string, error) {
 	return pageIDs, nil
 }
 
+// CountForPage reports how many users favorited one page, which is the impact a
+// delete would have (FR-147).
+func (s *FavoritesStore) CountForPage(pageID string) (int, error) {
+	var count int
+	err := s.withDB(func(db *sql.DB) error {
+		return db.QueryRow(`SELECT COUNT(*) FROM favorites WHERE page_id = ?`, pageID).Scan(&count)
+	})
+	if err != nil {
+		return 0, fmt.Errorf("failed to count favorites for page %s: %w", pageID, err)
+	}
+	return count, nil
+}
+
 // DeleteAllForPage removes every user's favorite of pageID. Called on page delete.
 func (s *FavoritesStore) DeleteAllForPage(pageID string) error {
 	err := s.withDB(func(db *sql.DB) error {

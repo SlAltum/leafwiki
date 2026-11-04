@@ -75,6 +75,13 @@ func extractPageMetadata(fields map[string]interface{}) ([]string, map[string]st
 	return tags, properties
 }
 
+// NormalizeTags and NormalizeAliases are the normalization every writer applies,
+// so a file on disk always matches what the readers return. A caller that writes
+// without them (the agent channel does) makes "the same content again" look like
+// a change.
+func NormalizeTags(tags []string) []string       { return normalizeTagInputs(tags) }
+func NormalizeAliases(aliases []string) []string { return normalizeAliasInputs(aliases) }
+
 // flattenMetadataEntry recursively flattens nested YAML maps into dot-notation
 // keys (e.g. {"a": {"b": "v"}} → properties["a.b"] = "v").
 func flattenMetadataEntry(prefix string, value interface{}, properties map[string]string) {

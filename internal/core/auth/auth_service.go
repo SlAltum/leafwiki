@@ -120,8 +120,10 @@ func NewAuthService(userService *UserService, sessions *SessionManager, totpServ
 	// stay correct across a live-restore hot-swap — this closure calls
 	// a.users() fresh on every invocation rather than capturing one
 	// *UserService at construction time.
-	sessions.resolveUser = func(id string) (*User, error) {
-		return a.users().GetUserByID(id)
+	if sessions != nil {
+		sessions.resolveUser = func(id string) (*User, error) {
+			return a.users().GetUserByID(id)
+		}
 	}
 	return a
 }
@@ -166,24 +168,10 @@ type AuthToken struct {
 // must be called with the resulting LoginChallengeToken and a valid TOTP or
 // recovery code before cookies may be set.
 func (a *AuthService) Login(identifier, password string) (*AuthToken, error) {
-	user, err := a.users().GetUserByIdentifier(identifier)
+	user, err := a.authenticate(identifier, password)
 	if err != nil {
-		_ = bcrypt.CompareHashAndPassword(a.dummyHash, []byte(password))
-		a.log.Warn("login failed: invalid credentials")
-		return nil, ErrUserInvalidCredentials
+		return nil, err
 	}
-
-	if !a.attempts.recordAttempt(user.ID) {
-		a.log.Warn("login rejected: account locked", "userID", user.ID)
-		return nil, ErrUserAccountLocked
-	}
-
-	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
-		a.log.Warn("login failed: invalid credentials")
-		return nil, ErrUserInvalidCredentials
-	}
-
-	user.Password = ""
 
 	if user.TOTPEnabled {
 		if a.totp == nil {
@@ -208,6 +196,51 @@ func (a *AuthService) Login(identifier, password string) (*AuthToken, error) {
 	a.attempts.reset(user.ID)
 	a.log.Info("login succeeded", "userID", user.ID)
 	return a.sessions.IssueSession(user)
+}
+
+// authenticate is the credential half of Login: it looks the account up, counts
+// the attempt against the same lockout counter and compares the password with a
+// dummy hash for unknown users so timing does not reveal which accounts exist. It
+// issues nothing and resets nothing, so a caller can decide what a verified
+// password means.
+func (a *AuthService) authenticate(identifier, password string) (*User, error) {
+	user, err := a.users().GetUserByIdentifier(identifier)
+	if err != nil {
+		_ = bcrypt.CompareHashAndPassword(a.dummyHash, []byte(password))
+		a.log.Warn("login failed: invalid credentials")
+		return nil, ErrUserInvalidCredentials
+	}
+
+	if !a.attempts.recordAttempt(user.ID) {
+		a.log.Warn("login rejected: account locked", "userID", user.ID)
+		return nil, ErrUserAccountLocked
+	}
+
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
+		a.log.Warn("login failed: invalid credentials")
+		return nil, ErrUserInvalidCredentials
+	}
+
+	user.Password = ""
+	return user, nil
+}
+
+// VerifyCredentials is Login's credential check without the session: the control
+// channel proves an account for one connection but must not write sessions.db
+// (FR-111). It is a strict subset of Login — same lockout counter, same bcrypt
+// timing, same TOTP detection — and refuses an account with TOTP enabled,
+// because the channel has no second step and must not pretend otherwise.
+func (a *AuthService) VerifyCredentials(identifier, password string) (*User, error) {
+	user, err := a.authenticate(identifier, password)
+	if err != nil {
+		return nil, err
+	}
+	if user.TOTPEnabled {
+		return nil, ErrUserTOTPRequired
+	}
+	a.attempts.reset(user.ID)
+	a.log.Info("credentials verified", "userID", user.ID)
+	return user, nil
 }
 
 // IssueSessionForUser issues a fresh access/refresh token pair for userID

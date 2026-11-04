@@ -217,6 +217,35 @@ independent of how a given request happened to authenticate. Role/permission che
 downstream of authentication — it reads the resolved user's role regardless of which of the three
 front doors established `CurrentUser` for that request.
 
+## Agent control channel
+
+Agents read and write pages through a local socket in the data directory (`internal/wiki/control`),
+not through the HTTP API. The reason is the trust boundary: a socket that only the data directory's
+owner can open is a stronger promise than a bearer credential, and it fits a same-machine tool.
+
+**Trust boundary.** The socket file is mode 0660 and belongs to the data directory's owner. Both
+sides check the peer user ID where the platform supports it. Windows has no peer credentials, so the
+directory ACL is the whole boundary there. The channel issues no token.
+
+**Capabilities.** `core/auth.Can` decides every operation. Reading, creating, and updating are open
+to an unauthenticated caller, exactly like editing the files. Deleting needs an editor or an admin,
+because nothing restores it. `--control-auth=required` closes everything except `status` and
+`auth.login`.
+
+**Credentials.** `VerifyCredentials` is a strict subset of `Login`: it shares the account lockout
+counter, writes no session, and leaves `sessions.db` alone. An account with TOTP enabled can't
+authenticate over the channel, because there's no second step.
+
+**One writer.** The server holds `<data>/wiki.lock` for its lifetime, so a second instance refuses
+to start. `page.apply` holds the restore gate only for the file write; side effects run after it.
+
+**Versions.** Client and server ship together. An unknown method answers `-32601`, which the client
+reports as exit code 7.
+
+**Costs.** A long data directory path can exceed the 108-byte Unix socket limit on Windows, and the
+CLI then uses the offline path. The restore gate can't protect a write that outlasts its 10-second
+drain timeout.
+
 ## Markdown-to-HTML rendering pipeline (raw HTML safety)
 
 Can an unclosed `<div>` or other malformed HTML in a page's markdown break the surrounding app

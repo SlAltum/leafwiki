@@ -19,20 +19,18 @@ import (
 	"github.com/perber/wiki/internal/wiki/vectors"
 )
 
-// Exit codes of the vectors commands (docs/srs/zh-search-and-retrieval.srs.md
-// §6.2). They travel through the one exit channel main owns.
-const (
-	vectorsExitFailure = 1
-	vectorsExitLocked  = 75
-)
-
 // exitCodeError carries a specific exit code through the single exit channel.
 type exitCodeError struct {
 	code int
 	err  error
 }
 
-func (e *exitCodeError) Error() string { return e.err.Error() }
+func (e *exitCodeError) Error() string {
+	if e.err == nil {
+		return fmt.Sprintf("exit code %d", e.code)
+	}
+	return e.err.Error()
+}
 func (e *exitCodeError) Unwrap() error { return e.err }
 
 // newVectorsCommand builds the offline semantic-index command. It works on the
@@ -59,6 +57,7 @@ func newVectorsCommand(cfg *serverConfig) *cli.Command {
 					return runVectorsBuild(ctx, cfg, cmd.Bool("full"), cmd.Args().First())
 				},
 			},
+			newVectorsSyncCommand(cfg),
 			{
 				Name:  "status",
 				Usage: "Print the semantic index state",
@@ -93,31 +92,31 @@ func vectorPaths(cfg *serverConfig) (dataDir, modelDir string) {
 func runVectorsStatus(cfg *serverConfig, asJSON bool, out io.Writer) error {
 	status, err := readVectorStatus(cfg)
 	if err != nil {
-		return &exitCodeError{code: vectorsExitFailure, err: err}
+		return &exitCodeError{code: exitCodeFailure, err: err}
 	}
 
 	if asJSON {
 		encoded, err := json.Marshal(status)
 		if err != nil {
-			return &exitCodeError{code: vectorsExitFailure, err: err}
+			return &exitCodeError{code: exitCodeFailure, err: err}
 		}
 		if _, err := fmt.Fprintln(out, string(encoded)); err != nil {
-			return &exitCodeError{code: vectorsExitFailure, err: err}
+			return &exitCodeError{code: exitCodeFailure, err: err}
 		}
 		return nil
 	}
 
 	if _, err := fmt.Fprintf(out, "state: %s\npaused: %t\npending: %d\n", status.State, status.Paused, status.Pending); err != nil {
-		return &exitCodeError{code: vectorsExitFailure, err: err}
+		return &exitCodeError{code: exitCodeFailure, err: err}
 	}
 	if status.BuildID != "" {
 		if _, err := fmt.Fprintf(out, "build: %s (model %s, tokenizer %s)\n", status.BuildID, status.ModelID, status.TokenizerVersion); err != nil {
-			return &exitCodeError{code: vectorsExitFailure, err: err}
+			return &exitCodeError{code: exitCodeFailure, err: err}
 		}
 	}
 	if status.LastError != "" {
 		if _, err := fmt.Fprintf(out, "last error: %s\n", status.LastError); err != nil {
-			return &exitCodeError{code: vectorsExitFailure, err: err}
+			return &exitCodeError{code: exitCodeFailure, err: err}
 		}
 	}
 	return nil
@@ -160,12 +159,24 @@ func readVectorStatus(cfg *serverConfig) (vectors.Status, error) {
 func runVectorsBuild(ctx context.Context, cfg *serverConfig, full bool, target string) error {
 	dataDir, modelDir := vectorPaths(cfg)
 
+	// The lock order is fixed: the whole data directory first, then the vectors
+	// database inside it (FR-166). A running server holds the directory, so an
+	// offline build reports the same "in use" exit code as a concurrent build.
+	wikiLock, err := acquireWikiLock(dataDir)
+	if err != nil {
+		if errors.Is(err, advisorylock.ErrLocked) {
+			return &exitCodeError{code: exitCodeLocked, err: err}
+		}
+		return &exitCodeError{code: exitCodeFailure, err: err}
+	}
+	defer releaseWikiLock(wikiLock)
+
 	lock, err := advisorylock.TryAcquire(vectorsLockPath(dataDir))
 	if err != nil {
 		if errors.Is(err, advisorylock.ErrLocked) {
-			return &exitCodeError{code: vectorsExitLocked, err: fmt.Errorf("another process is writing the semantic index: %w", err)}
+			return &exitCodeError{code: exitCodeLocked, err: fmt.Errorf("another process is writing the semantic index: %w", err)}
 		}
-		return &exitCodeError{code: vectorsExitFailure, err: err}
+		return &exitCodeError{code: exitCodeFailure, err: err}
 	}
 	defer func() {
 		if releaseErr := lock.Release(); releaseErr != nil {
@@ -175,7 +186,7 @@ func runVectorsBuild(ctx context.Context, cfg *serverConfig, full bool, target s
 
 	store, err := embed.OpenStore(filepath.Join(dataDir, "vectors.db"))
 	if err != nil {
-		return &exitCodeError{code: vectorsExitFailure, err: err}
+		return &exitCodeError{code: exitCodeFailure, err: err}
 	}
 	defer func() {
 		if closeErr := store.Close(); closeErr != nil {
@@ -185,15 +196,11 @@ func runVectorsBuild(ctx context.Context, cfg *serverConfig, full bool, target s
 
 	model, err := embed.Open(modelDir)
 	if err != nil {
-		return &exitCodeError{code: vectorsExitFailure, err: err}
+		return &exitCodeError{code: exitCodeFailure, err: err}
 	}
-	encoder, err := embed.NewEncoder(model, embed.EncoderOptions{
-		SharedLibraryPath: cfg.vectors.vectorsLibrary,
-		// An offline build is the only work in the process, so it may use the
-		// runtime's default pool; nothing else has to stay responsive.
-	})
+	encoder, err := openOfflineEncoder(cfg, modelDir)
 	if err != nil {
-		return &exitCodeError{code: vectorsExitFailure, err: err}
+		return &exitCodeError{code: exitCodeFailure, err: err}
 	}
 	defer func() {
 		if closeErr := encoder.Close(); closeErr != nil {
@@ -201,9 +208,9 @@ func runVectorsBuild(ctx context.Context, cfg *serverConfig, full bool, target s
 		}
 	}()
 
-	treeService := tree.NewTreeService(dataDir)
-	if err := treeService.LoadTree(); err != nil {
-		return &exitCodeError{code: vectorsExitFailure, err: err}
+	treeService, err := loadVectorTree(dataDir)
+	if err != nil {
+		return &exitCodeError{code: exitCodeFailure, err: err}
 	}
 
 	service := vectors.NewService(store, encoder, treeService, model.Manifest.ModelID, vectors.TokenizerVersion, vectors.ModeManual, slog.Default())
@@ -212,7 +219,7 @@ func runVectorsBuild(ctx context.Context, cfg *serverConfig, full bool, target s
 		started := time.Now()
 		written, err := service.Rebuild(nil)
 		if err != nil {
-			return &exitCodeError{code: vectorsExitFailure, err: err}
+			return &exitCodeError{code: exitCodeFailure, err: err}
 		}
 		elapsed := time.Since(started)
 		if elapsed > 0 {
@@ -223,14 +230,34 @@ func runVectorsBuild(ctx context.Context, cfg *serverConfig, full bool, target s
 
 	pageID, err := resolvePageID(treeService, target)
 	if err != nil {
-		return &exitCodeError{code: vectorsExitFailure, err: err}
+		return &exitCodeError{code: exitCodeFailure, err: err}
 	}
 	started := time.Now()
 	if err := service.IndexPage(pageID); err != nil {
-		return &exitCodeError{code: vectorsExitFailure, err: err}
+		return &exitCodeError{code: exitCodeFailure, err: err}
 	}
 	fmt.Printf("embedded page %s in %s\n", pageID, time.Since(started).Round(time.Millisecond))
 	return nil
+}
+
+// loadVectorTree loads the page tree the offline commands read pages through.
+func loadVectorTree(dataDir string) (*tree.TreeService, error) {
+	treeService := tree.NewTreeService(dataDir)
+	if err := treeService.LoadTree(); err != nil {
+		return nil, err
+	}
+	return treeService, nil
+}
+
+// openOfflineEncoder loads the model and starts inference for an offline
+// command, which is the only work in its process, so the runtime's default
+// thread pool is fine.
+func openOfflineEncoder(cfg *serverConfig, modelDir string) (*embed.Encoder, error) {
+	model, err := embed.Open(modelDir)
+	if err != nil {
+		return nil, err
+	}
+	return embed.NewEncoder(model, embed.EncoderOptions{SharedLibraryPath: cfg.vectors.vectorsLibrary})
 }
 
 // resolvePageID accepts a page id or a route path.

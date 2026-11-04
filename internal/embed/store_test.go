@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 
 	"github.com/perber/wiki/internal/core/shared/sqliteutil"
 )
@@ -23,6 +24,67 @@ func openTestStore(t *testing.T) *Store {
 		}
 	})
 	return store
+}
+
+func TestStore_PageIDsListsEachPageOnce(t *testing.T) {
+	store := openTestStore(t)
+
+	build, err := store.BeginBuild()
+	if err != nil {
+		t.Fatalf("BeginBuild: %v", err)
+	}
+	other, err := store.BeginBuild()
+	if err != nil {
+		t.Fatalf("BeginBuild: %v", err)
+	}
+	if err := store.PutChunks(build, []Chunk{
+		{PageID: "a", ChunkNo: 0, ContentHash: "h", Vec: []float32{1}},
+		{PageID: "a", ChunkNo: 1, ContentHash: "h", Vec: []float32{1}},
+		{PageID: "b", ChunkNo: 0, ContentHash: "h", Vec: []float32{1}},
+	}); err != nil {
+		t.Fatalf("PutChunks: %v", err)
+	}
+	if err := store.PutChunks(other, []Chunk{
+		{PageID: "only-in-the-other-build", ChunkNo: 0, ContentHash: "h", Vec: []float32{1}},
+	}); err != nil {
+		t.Fatalf("PutChunks: %v", err)
+	}
+
+	pageIDs, err := store.PageIDs(build)
+	if err != nil {
+		t.Fatalf("PageIDs: %v", err)
+	}
+	if len(pageIDs) != 2 || pageIDs[0] != "a" || pageIDs[1] != "b" {
+		t.Fatalf("PageIDs = %v, want one entry per page of this build", pageIDs)
+	}
+}
+
+func TestStore_RemoveQueuedPageOnlyDropsTheReadEntry(t *testing.T) {
+	store := openTestStore(t)
+
+	if err := store.EnqueuePage("p1", ""); err != nil {
+		t.Fatalf("EnqueuePage: %v", err)
+	}
+	entries, err := store.QueuedPages(0)
+	if err != nil || len(entries) != 1 {
+		t.Fatalf("QueuedPages = %#v, %v", entries, err)
+	}
+
+	// A save that landed after the entry was read re-pointed the row; the
+	// embedding of the older content must not clear it.
+	if err := store.RemoveQueuedPage("p1", entries[0].QueuedAt.Add(-time.Minute)); err != nil {
+		t.Fatalf("RemoveQueuedPage: %v", err)
+	}
+	if count, err := store.QueueCount(); err != nil || count != 1 {
+		t.Fatalf("queue holds %d pages, %v; want the newer entry kept", count, err)
+	}
+
+	if err := store.RemoveQueuedPage("p1", entries[0].QueuedAt); err != nil {
+		t.Fatalf("RemoveQueuedPage: %v", err)
+	}
+	if count, err := store.QueueCount(); err != nil || count != 0 {
+		t.Fatalf("queue holds %d pages, %v; want the embedded entry gone", count, err)
+	}
 }
 
 func TestOpenStore_CreatesSchema(t *testing.T) {

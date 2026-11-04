@@ -24,6 +24,8 @@ const (
 	PageFailed PageState = "failed"
 	// PageMissing means the page is not in the index at all.
 	PageMissing PageState = "missing"
+	// PageStateOff means there is no build to compare the page against.
+	PageStateOff PageState = "off"
 )
 
 // PageStatus is the per-page answer the page view asks for.
@@ -42,10 +44,30 @@ var errPageUnreadable = errors.New("vectors: page is not readable")
 // without comparing the stored passages against the current content, because
 // "in the index" and "up to date" are different promises.
 func (s *Service) PageStatus(pageID string) (PageStatus, error) {
-	status := PageStatus{PageID: pageID, State: PageMissing}
 	if s.encoder == nil {
 		return PageStatus{}, ErrEncoderUnavailable
 	}
+	return s.pageState(pageID)
+}
+
+// PageDiffStatus reports one page's state without an encoder: it only compares
+// what is stored against what is on disk, which is what an instance without a
+// model directory can still answer (FR-165b). Without a build it answers off,
+// because there is nothing to compare against.
+func (s *Service) PageDiffStatus(pageID string) (PageStatus, error) {
+	current, err := s.store.CurrentBuild()
+	if err != nil {
+		return PageStatus{}, err
+	}
+	if current == nil {
+		return PageStatus{PageID: pageID, State: PageStateOff}, nil
+	}
+	return s.pageState(pageID)
+}
+
+// pageState is the comparison both entries share.
+func (s *Service) pageState(pageID string) (PageStatus, error) {
+	status := PageStatus{PageID: pageID, State: PageMissing}
 
 	entry, err := s.store.QueueEntryFor(pageID)
 	if err != nil {
@@ -76,9 +98,6 @@ func (s *Service) PageStatus(pageID string) (PageStatus, error) {
 		return PageStatus{}, err
 	}
 	status.Passages = len(stored)
-	if len(stored) == 0 {
-		return status, nil
-	}
 
 	currentHashes, err := s.currentHashes(pageID)
 	if err != nil {
@@ -88,8 +107,14 @@ func (s *Service) PageStatus(pageID string) (PageStatus, error) {
 		return PageStatus{}, err
 	}
 
+	// A page with nothing to embed is up to date with no chunks at all, so the
+	// comparison comes before "no chunks means missing": otherwise an empty page
+	// looks stale forever and every sync re-embeds it.
 	if sameHashes(stored, currentHashes) {
 		status.State = PageIndexed
+		return status, nil
+	}
+	if len(stored) == 0 {
 		return status, nil
 	}
 	status.State = PageStale

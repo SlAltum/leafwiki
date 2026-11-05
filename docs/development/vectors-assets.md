@@ -1,45 +1,46 @@
-# 语义检索的模型与推理库
+# Semantic search assets (model and runtime library)
 
-这两样东西体积大且更新独立，不放在版本库里。协作者要让语义检索跑起来，
-需要自己下载一次。
+The model and the inference library are large and change on their own schedule, so they are not
+in the repository. A contributor who wants semantic search running downloads them once.
 
-| 目录 | 内容 | 用途 |
+| Directory | Content | Purpose |
 |---|---|---|
-| `assets/tokenizer/` | all-MiniLM-L6-v2（384 维，英文与多语通用），另含 ONNX Runtime 的 zip | 早期默认模型，测试与体积对照 |
-| `assets/tokenizer-bge/` | bge-small-zh-v1.5（512 维，中文），`model.onnx` 约 91MB | 桌面版实际发布的模型 |
+| `assets/tokenizer/` | all-MiniLM-L6-v2 (384 dimensions, English and general multilingual), plus the ONNX Runtime zip | The early default model; kept for tests and size comparison |
+| `assets/tokenizer-bge/` | bge-small-zh-v1.5 (512 dimensions, Chinese), `model.onnx` at about 91 MB | The model the desktop build ships with |
 
-两者都被 `.gitignore` 忽略（`assets/tokenizer/`、`assets/tokenizer-*/`）。
-不放仓库的原因很简单：单个模型接近 100MB，且模型更新与代码更新互不相干。
+Both are ignored by `.gitignore` (`assets/tokenizer/`, `assets/tokenizer-*/`). The reason is
+simple: one model is close to 100 MB, and a model update has nothing to do with a code update.
 
-## 目录布局
+## Directory layout
 
-每个模型目录必须自带 `manifest.json`，服务端靠它找到并校验模型。
+Every model directory carries a `manifest.json`. The server finds and validates the model
+through it.
 
 ```
 assets/tokenizer-bge/
-  manifest.json      描述文件（字段在下一节）
-  model.onnx         导出的推理模型
-  tokenizer.json     WordPiece 词表
-  config.json        原始模型配置，仅作留档
+  manifest.json      description (fields in the next section)
+  model.onnx         the exported model
+  tokenizer.json     the WordPiece vocabulary
+  config.json        the original model configuration, kept for reference
 ```
 
-`assets/tokenizer/` 里还存着推理库压缩包与解压结果：
+`assets/tokenizer/` also holds the runtime archive and its extraction:
 
 ```
 assets/tokenizer/onnxruntime-win-x64-1.31.1.zip
 assets/tokenizer/ort/onnxruntime-win-x64-1.31.1/lib/onnxruntime.dll
 ```
 
-## 获取模型
+## Getting the model
 
-两条路，任选一条。
+Two ways, pick one.
 
-**一、下载现成的 ONNX 导出。** HuggingFace 上有 transformers.js 格式的仓库
-（例如 `Xenova/bge-small-zh-v1.5`、`Xenova/all-MiniLM-L6-v2`），取其中的
-`onnx/model.onnx` 与 `tokenizer.json`。省事，但导出参数可能与仓库里的
-`manifest.json` 不同，见下一节的校验。
+**1. Download a ready ONNX export.** HuggingFace hosts transformers.js repositories (for example
+`Xenova/bge-small-zh-v1.5` and `Xenova/all-MiniLM-L6-v2`); take `onnx/model.onnx` and
+`tokenizer.json` from one. This is quicker, but the export settings may differ from the
+`manifest.json` in the repository. See the validation section below.
 
-**二、自己导出。** 需要 Python 环境：
+**2. Export it yourself.** This needs a Python environment:
 
 ```bash
 pip install "optimum[onnxruntime]" transformers
@@ -47,22 +48,23 @@ optimum-cli export onnx --model BAAI/bge-small-zh-v1.5 --task feature-extraction
 cp out/model.onnx out/tokenizer.json assets/tokenizer-bge/
 ```
 
-换英文模型时把 `BAAI/bge-small-zh-v1.5` 换成 `sentence-transformers/all-MiniLM-L6-v2`，
-目标目录换成 `assets/tokenizer/`。
+For an English model, replace `BAAI/bge-small-zh-v1.5` with
+`sentence-transformers/all-MiniLM-L6-v2` and copy into `assets/tokenizer/`.
 
-## 获取 ONNX Runtime
+## Getting ONNX Runtime
 
-推理库与 Go 绑定版本互相锁定：绑定的是 ONNX Runtime C API **1.31**，
-其他版本会报 `Error setting ORT API base`。
+The inference library and the Go binding are locked to each other: the binding uses ONNX Runtime
+C API **1.31**, and another version fails with `Error setting ORT API base`.
 
-从 [onnxruntime releases](https://github.com/microsoft/onnxruntime/releases) 下载
-`onnxruntime-win-x64-1.31.1.zip`，解压后取 `lib/onnxruntime.dll`：
+Download `onnxruntime-win-x64-1.31.1.zip` from
+[onnxruntime releases](https://github.com/microsoft/onnxruntime/releases), extract it, and take
+`lib/onnxruntime.dll`:
 
 ```bash
 unzip onnxruntime-win-x64-1.31.1.zip -d assets/tokenizer/ort
 ```
 
-桌面版发布时把 `onnxruntime.dll` 放在 exe 旁边，模型放在 `models/<id>/` 下。
+The desktop build ships `onnxruntime.dll` next to the exe and the model under `models/<id>/`.
 
 ## manifest.json
 
@@ -82,35 +84,37 @@ unzip onnxruntime-win-x64-1.31.1.zip -d assets/tokenizer/ort
 }
 ```
 
-| 字段 | 作用 |
+| Field | What it does |
 |---|---|
-| `dim` | 向量维度，必须与模型输出一致，写错会让检索结果全错 |
-| `pooling` | `cls` 或 `mean`，与模型的训练方式对应；bge 系列用 `cls`，sentence-transformers 用 `mean` |
-| `query_prefix` | 查询侧要加的指令前缀，bge 中文模型必须带；文档侧不加 |
-| `max_tokens` | 单段最大 token 数，超出按段切分 |
-| `files` | 每个文件的 sha256 与字节数，加载前逐个校验 |
+| `dim` | Vector dimension. It must match the model output; a wrong value makes every result wrong. |
+| `pooling` | `cls` or `mean`, matching how the model was trained. bge models use `cls`, sentence-transformers uses `mean`. |
+| `query_prefix` | Instruction prefix added to a query. The bge Chinese model needs it; the document side never gets it. |
+| `max_tokens` | Maximum tokens per passage; longer text is split. |
+| `files` | sha256 and byte count per file, checked before loading. |
 
-## 校验
+## Validation
 
-服务端在启动编码器之前会比对 `files` 里记录的 sha256，不一致就拒绝加载
-（`ErrChecksumMismatch`）。所以换了模型的导出结果，必须同步 `manifest.json`：
+Before the encoder starts, the server compares the sha256 of every file against `files` and
+refuses to load on a mismatch (`ErrChecksumMismatch`). A new export therefore needs a matching
+`manifest.json`:
 
 ```bash
 sha256sum assets/tokenizer-bge/model.onnx assets/tokenizer-bge/tokenizer.json
 ```
 
-把新的摘要与字节数写回 `files`，维度、池化方式、前缀按新模型调整。
+Write the new digests and byte counts back into `files`, then set dimension, pooling and prefix
+for the new model.
 
-自检三步：
+Three checks:
 
-1. 启动日志出现 `semantic search enabled mode=auto model=<id>`，并且没有
-   `semantic search unavailable`
-2. 管理员登录后 `GET /api/admin/search/vectors/status` 返回 `"state":"fresh"`
-3. 发一条“改写”查询，结果里 `semantic` 为 `ok` 且能命中目标页
+1. The startup log shows `semantic search enabled mode=auto model=<id>` and no
+   `semantic search unavailable`.
+2. After an admin login, `GET /api/admin/search/vectors/status` returns `"state":"fresh"`.
+3. A paraphrased query returns `semantic` as `ok` and finds the target page.
 
-## 本地怎么用
+## Using it locally
 
-测试通过环境变量指向本地目录，没有它们时相关用例会被跳过：
+The tests read two environment variables and are skipped without them:
 
 ```bash
 export LEAFWIKI_VECTORS_TEST_MODELS_DIR="$PWD/assets/tokenizer-bge"
@@ -118,22 +122,26 @@ export LEAFWIKI_VECTORS_TEST_LIBRARY="$PWD/assets/tokenizer/ort/onnxruntime-win-
 CGO_ENABLED=1 go test -tags vectors ./internal/embed
 ```
 
-运行期有两个参数：
+At runtime there are two flags:
 
-- `--vectors-model-dir`：模型目录本身，或者只含一个模型的父目录；父目录下有两个以上
-  模型时会报 `ErrModelAmbiguous`，这种情况直接指向具体目录
-- `--vectors-library`：`onnxruntime.dll` 的路径
+- `--vectors-model-dir`: the model directory itself, or a parent that holds exactly one model. A
+  parent with two or more models fails with `ErrModelAmbiguous`; point at the concrete directory
+  in that case.
+- `--vectors-library`: the path to `onnxruntime.dll` (or `libonnxruntime.so`).
 
-桌面版启动器会自动发现 exe 旁边的 `onnxruntime.dll` 与 `models\\`，不需要手动传。
+The desktop launcher finds `onnxruntime.dll` and `models\` next to the exe by itself, so you do
+not pass either flag there.
 
-## 缺失时的行为
+## Behavior when something is missing
 
-- 缺模型或缺推理库不会让服务起不来：日志里有一条 `semantic search unavailable`，
-  检索退回纯关键词。
-- 不带 `vectors` 构建标签的服务端只接受 `--vectors=off`，其他取值启动即报错。
-- 模型文件被改动或复制不完整时，校验失败并按上一条降级，不会产生错误向量。
+- A missing model or missing library does not stop the server: the log has one
+  `semantic search unavailable` line and search falls back to keywords.
+- A server build without the `vectors` tag accepts only `--vectors=off`; any other value fails at
+  startup.
+- A modified or incompletely copied model file fails validation and degrades the same way. It
+  never produces wrong vectors.
 
-## 许可
+## License
 
-模型与推理库各自带许可，发布前请核对模型卡：
-bge-small-zh-v1.5 为 MIT，all-MiniLM-L6-v2 为 Apache-2.0，ONNX Runtime 为 MIT。
+The model and the runtime library carry their own licenses. Check the model card before
+shipping: bge-small-zh-v1.5 is MIT, all-MiniLM-L6-v2 is Apache-2.0, ONNX Runtime is MIT.

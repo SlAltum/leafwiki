@@ -108,7 +108,7 @@ Small improvements, documentation updates, and obvious bug fixes can usually be 
 Clone the repository:
 
 ``` bash
-git clone https://github.com/perber/leafwiki.git
+git clone https://github.com/SlAltum/leafwiki.git
 cd leafwiki
 ```
 
@@ -150,6 +150,10 @@ and frontend workflows). It also scans the built Docker image, weekly, before ea
 on PRs that change an image input such as `Dockerfile`, `go.mod` or `package.json` (those files
 only trigger the image scan; their dependencies are already covered by the filesystem scans).
 `make scan-image` runs the image scan locally (needs Docker and `trivy`).
+The Windows desktop build has its own targets: `make desktop-windows`, and
+`make desktop-windows-vectors VECTORS_ORT_DLL=...` for the build with semantic search (needs a C
+toolchain, ONNX Runtime 1.31.x and the model; see [docs/install/desktop.md](docs/install/desktop.md)).
+`make verify-launcher` compiles the launcher tag without producing a file, and CI runs it.
 Go and Node versions: the `toolchain` line in `go.mod` (the `go` command downloads it) and
 `.nvmrc` (`mise install` or `nvm use`); `make doctor` compares them with what you have.
 

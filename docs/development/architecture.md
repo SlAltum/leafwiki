@@ -242,9 +242,9 @@ to start. `page.apply` holds the restore gate only for the file write; side effe
 **Versions.** Client and server ship together. An unknown method answers `-32601`, which the client
 reports as exit code 7.
 
-**Costs.** A long data directory path can exceed the 108-byte Unix socket limit on Windows, and the
-CLI then uses the offline path. The restore gate can't protect a write that outlasts its 10-second
-drain timeout.
+**Costs.** A long data directory path can exceed the 108-byte Unix socket limit on Windows. The
+server then skips the channel with a warning and keeps running, and the CLI finds the lock held and
+exits 75. The restore gate can't protect a write that outlasts its 10-second drain timeout.
 
 ## Markdown-to-HTML rendering pipeline (raw HTML safety)
 

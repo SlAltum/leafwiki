@@ -179,7 +179,7 @@ push-based.
 2. `w.reloadWithProgress(ctx)` (`internal/wiki/wiki_resync.go`) wraps `runReloadPhases`, holding
    `w.reloadMu` for the **entire** operation (serializes resyncs; also recovers panics so a
    bug in one phase always calls `job.Finish(err)` rather than leaving the job stuck
-   "running" forever). Four phases, each calling `job.SetPhase(...)`:
+   "running" forever). Five phases, each calling `job.SetPhase(...)`:
    - `PhaseTree` — `tree.ReconstructTreeFromFSContext(ctx)` (full re-walk of the markdown
      tree from disk; failure aborts the resync).
    - `PhaseLinks` — `links.IndexAllPagesContext(ctx)` (failure here is logged and continues,
@@ -188,6 +188,9 @@ push-based.
    - `PhaseSearch` — `pagesave.NewSearchIndexSideEffect(...).IndexAllPagesContext(ctx)`
      (failure here **does** abort with `finishErr` set — search is the one phase treated as
      load-bearing enough to fail the whole job).
+   - `PhaseVectors`: `vectorService.ReindexIfStale()`, only when semantic search is on.
+     A failure is logged and leaves the lexical reload intact; a stale or missing index is
+     rebuilt, a running or queued one is left alone.
 3. `GET /api/admin/resync/status` → `GetResyncStatusUseCase.Execute` → `job.Status()`
    (`internal/wiki/resync/job.go`), returning `{running, phase, done, error}`.
 4. Frontend (`ui/leafwiki-ui/src/stores/resync.ts`) polls this endpoint every

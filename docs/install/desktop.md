@@ -1,133 +1,149 @@
-# 桌面启动器（Windows）
+# Desktop app (Windows)
 
-LeafWiki 有一个可双击启动的 Windows 版本：窗口里显示地址、初始密码和日志，
-一个按钮打开百科，关掉窗口就停止服务。适合不想碰命令行、也不想记密码的人。
+LeafWiki has a double-clickable Windows build. A window shows the address, the initial password
+and the log, one button (打开百科) opens the wiki, and closing the window stops the server. It is
+for people who do not want a command line and do not want to remember a password.
 
-它是**同一个** LeafWiki 服务端，加了一个窗口壳：页面、索引、备份、检索全部一样，
-数据落在程序旁边的 `data` 文件夹里。
+It is the same LeafWiki server with a window around it. Pages, indexes, backups and search behave
+exactly as in the server build, and the data lives in a `data` folder next to the program.
 
-## 双击使用
+## Using it
 
-1. 解压整个 `LeafWiki` 文件夹（不要只把 exe 拖出来）。
-2. 双击 `leafwiki.exe`。首次启动会自己生成凭据、启动服务，并打开一次浏览器。
-3. 之后再次打开：窗口里点“打开百科”即可，浏览器不会自动弹出第二次。
+1. Extract the whole `LeafWiki` folder. Do not move the exe out of it.
+2. Double-click `leafwiki.exe`. The first start generates the credentials, starts the server and
+   opens the browser once.
+3. Later starts: click 打开百科. The browser no longer opens by itself.
 
-关掉窗口会停止服务，百科页面里已经保存的内容保持不变。
+Closing the window stops the server. Pages that were saved stay on disk.
 
-## 为什么要求整个文件夹一起移动
+## Why the whole folder moves together
 
-数据目录固定为 **exe 所在目录下的 `data`**；凭据文件（`jwt.secret`、
-`admin.password`）放在 **exe 旁边**，也就是 `data` 的上一层。把 exe 单独拷到别处，
-等于换了一个空实例；把整个文件夹移到桌面或“文档”，页面、用户、密码都跟着走。
+The data directory is `data` next to the exe, and the credential files (`jwt.secret`,
+`admin.password`) sit beside the exe, one level above `data`. Moving the exe alone gives you an
+empty instance; moving the folder takes pages, users and password along.
 
-这个布局与旧的命令行发行版一致：把一个已有的 LeafWiki 文件夹换成这个 exe，
-它直接复用原来的 `jwt.secret`、`admin.password` 和 `data`，窗口里显示的就是原来那个密码。
+The layout matches the command-line distribution: replacing the exe in an existing LeafWiki
+folder reuses the old `jwt.secret`, `admin.password` and `data`, and the window shows the password
+that instance already had.
 
-文件夹必须可写。放在 `C:\Program Files` 这类需要管理员权限的位置时，窗口会
-提示把整个文件夹移到可写位置。
+The folder must be writable. In a location that needs administrator rights, such as
+`C:\Program Files`, the window asks you to move the folder somewhere writable.
 
-## Agent 访问（控制通道）
+## Agent access (control channel)
 
-面板“基本”页有一行**「AI 助手」**，带复制按钮，内容是一段可以直接粘贴给 AI 的提示词：
+The 基本 page has an **AI 助手** row with a 复制 button. It holds one sentence in Chinese that you
+paste into an AI assistant:
 
-> 这是一个本地 LeafWiki 文档站。请先读 "`…\doc\AGENT.md`"（里面有命令、退出码和规则），
-> 然后用 "`…\doc\leafwiki.exe`" 帮我读写页面。
+> 这是一个本地 LeafWiki 文档站。请先读 "`…\doc\AGENT.md`"（里面有命令、退出码和规则），然后用
+> "`…\doc\leafwiki.exe`" 帮我读写页面。
 
-启动器每次启动都会重写 `AGENT.md`（端口与 socket 都是当前值），里面是常用命令、退出码、权限规则与
-“不要直接改文件”的约定。可执行文件会自己找到旁边的 `data\` 目录，所以提示词里不需要任何参数路径。
+Every start rewrites `AGENT.md` next to the exe. The file is in Chinese and holds the current port
+and socket, the common commands, the exit codes, the permission rules and the rule that files must
+not be edited directly. The executable finds `data\` next to itself, so the prompt needs no paths.
 
-桌面版与服务端一样会打开本地控制通道（`<数据目录>/control.sock` + `control.json`，见
-[Agent control channel](../development/architecture.md#agent-control-channel)）。启动器窗口里的“打开 wiki”是普通
-HTTP 页面，与本机 CLI（`leafwiki page get|write|apply|delete`）并不同路：CLI 走的是那条 socket。
+The desktop build opens the local control channel like the server build does
+(`<data>/control.sock` and `control.json`; see
+[Agent control channel](../development/architecture.md#agent-control-channel)). The window's
+打开百科 button opens the ordinary HTTP page. The local CLI
+(`leafwiki page get|write|apply|delete`) uses the socket instead, which is a different path.
 
-高级设置里 `control-socket` 与 `control-auth` 都可编辑。注意启动器**会丢弃空值参数**，所以
-“留空 = 关闭通道”在桌面版里做不到：要关闭通道，请绕开启动器自行运行服务端并加
-`--control-socket=`。把 `control-auth` 设为 `required` 则写入必须带账号。
+On the 高级设置 page, `control-socket` and `control-auth` are editable. The launcher drops empty
+values when it builds the command line, so "empty value closes the channel" is not reachable from
+the desktop build. To close the channel, start the server yourself with `--control-socket=`.
+Setting `control-auth` to `required` makes writes need an account.
 
-## 参数页与“显示高级项”
+## Settings page and "show advanced"
 
-第二页“高级设置”把服务端所有命令行参数做成了表格，可以搜索、只看改动项，
-默认只露出常用的几项（端口、样式表、语义检索、快照间隔等），其余点“显示高级项”。
+The 高级设置 page turns every server flag into a table you can search, filter to changed rows
+(只看改动项), and edit. Only the common rows are visible at first (port, stylesheet, semantic
+search, snapshot interval and a few more); the rest wait behind 显示高级项.
 
-- 改动**先“测试解析”再“保存”**：校验不过不会写进配置文件，错误原文直接显示在表单下方。
-- 保存后需要重启服务才生效，页面会给出“重启并应用”。
-- 数据目录、测试凭据、监听地址等由启动器自己管理的项显示为只读。
-- `--host`、`--unix-socket`、`--log-format` 不出现在可编辑项里：窗口固定只监听
-  127.0.0.1，日志格式是窗口解析用的。
+- A change is validated with 测试解析 before 保存. A rejected value is not written to the
+  configuration file, and the parser's message appears under the form.
+- A saved change needs a restart, and the page offers 重启并应用.
+- Rows the launcher owns, such as the data directory, credentials and listener address, are
+  read-only.
+- `--host`, `--unix-socket` and `--log-format` are not editable: the window always listens on
+  `127.0.0.1`, and the log format is what the window parses.
 
-## 排障
+## Troubleshooting
 
-| 现象 | 处理 |
+| Symptom | What to do |
 |---|---|
-| 窗口里状态是“失败” | 展开状态行下面的技术原文；数据目录不可写、端口冲突、数据库损坏各有对应提示 |
-| 提示“另一个实例正在使用这个数据目录” | 先看任务管理器里是否还有 `leafwiki.exe`；确认没有后重试 |
-| 端口冲突 | 高级设置里把 `port` 改成别的端口，或关掉占用它的程序 |
-| 打不开浏览器 | 点“地址”旁边的“复制”，手动粘到浏览器里 |
-| 忘了改过的密码 | 删掉 `admin.password` 不会恢复密码（密码是 `data\users.db` 里的哈希）；用窗口里的“重置管理员密码” |
+| The status line says 失败 | Expand the technical message under the status line. An unwritable data directory, a busy port and a corrupt database each have their own message. |
+| 另一个实例正在使用这个数据目录 | Check Task Manager for a leftover `leafwiki.exe`, then retry. |
+| Port conflict | Change `port` on the 高级设置 page, or stop the program that holds it. |
+| The browser does not open | Use 复制 next to the address and paste the URL into a browser. |
+| A changed password was forgotten | Deleting `admin.password` does not restore the password; the hash lives in `data\users.db`. Use 重置管理员密码 in the window. |
 
-日志有三处、内容相同：窗口底部的日志区、程序文件夹下的
-`data\logs\launcher.log`（超过 1MiB 滚动为 `launcher.log.1`）、以及从命令行
-启动时的标准输出。数据目录不可写时日志会退到系统临时目录
-`%TEMP%\leafwiki-launcher.log`，路径同时写在窗口里。
+The log appears in three places with the same lines: the log area at the bottom of the window,
+`data\logs\launcher.log` (rotated to `launcher.log.1` at 1 MiB), and standard output when the
+program is started from a command line. If the data directory is not writable, the log falls back
+to `%TEMP%\leafwiki-launcher.log`, and the window shows that path.
 
-## 构建
+## Build
 
 ```
-make desktop-windows         # releases/LeafWiki/leafwiki.exe，含内嵌前端
-make desktop-windows-vectors # 同上 + 语义检索（cgo，附带 models/ 与 onnxruntime.dll）
-make verify-launcher         # 只编译检查，不产出文件（CI 用）
+make desktop-windows         # releases/LeafWiki/leafwiki.exe, frontend embedded
+make desktop-windows-vectors # the same plus semantic search (cgo, ships models/ and onnxruntime.dll)
+make verify-launcher         # compile check only, writes nothing (used by CI)
 ```
 
-## 语义检索版（本 fork 的发布形态）
+## Semantic search build (the release shape of this fork)
 
-桌面版默认开启语义检索：参数页里 `vectors` 的默认值是 `auto`，服务端启动后
-自动为已保存的页面建向量索引。它需要两样**随包发布、但不嵌进 exe** 的东西：
+The desktop build with semantic search turns it on by default: the `vectors` row on the settings
+page reads `auto`, and the server indexes saved pages in the background. It needs two things that
+are shipped next to the executable but **not embedded in it**:
 
 ```
 LeafWiki\
-  leafwiki.exe            ← 带 launcher + vectors 两个构建标签（cgo）
-  onnxruntime.dll         ← ONNX Runtime 1.31.x（win-x64），版本必须匹配
+  leafwiki.exe            the launcher + vectors build (cgo)
+  onnxruntime.dll         ONNX Runtime 1.31.x (win-x64), version must match
   models\
-    bge-small-zh-v1.5\     ← model.onnx / tokenizer.json / manifest.json
+    bge-small-zh-v1.5\    model.onnx / tokenizer.json / manifest.json
   jwt.secret
   admin.password
   data\
 ```
 
-启动器会自动发现 exe 旁边的 `onnxruntime.dll` 与 `models\`，并传给服务端
-（`--vectors-library` / `--vectors-model-dir`）；高级设置里也可以显式指定。
+The launcher finds `onnxruntime.dll` and `models\` next to the exe and passes them to the server
+(`--vectors-library` and `--vectors-model-dir`). You can also set both on the 高级设置 page.
 
-构建：
+Build:
 
 ```
 make desktop-windows-vectors VECTORS_ORT_DLL=D:\path\to\onnxruntime.dll
 ```
 
-- 需要 C 工具链（Windows 上用 MinGW）；服务端产物仍是 `CGO_ENABLED=0`，不受影响
-- `onnxruntime.dll` 必须与绑定的 C API 版本一致：**1.31.x**。1.27 会报
-  `Error setting ORT API base: 2`，1.17 报 `Error setting ORT API base`
-- 缺 dll 或模型缺失不会让服务不可用：日志里有一条
-  `semantic search unavailable`，检索自动退回关键词
-- 换模型只需换 `models/<id>/`（`manifest.json` 描述文件与校验和），不用重新编译
+- Needs a C toolchain (MinGW on Windows). The server build stays `CGO_ENABLED=0` and is not
+  affected.
+- `onnxruntime.dll` must match the bound C API version, **1.31.x**. Version 1.27 fails with
+  `Error setting ORT API base: 2`, and 1.17 fails with `Error setting ORT API base`.
+- A missing DLL or model does not make the server unusable: the log says
+  `semantic search unavailable` and search falls back to keywords.
+- Changing the model means replacing `models/<id>/` (the `manifest.json` and its checksums). No
+  rebuild is needed.
 
-**这两样东西不在仓库里**（`.gitignore` 忽略 `releases/*`、`assets/tokenizer/`、
-`assets/tokenizer-*/`），所以从干净检出打包前要先把它们放回本地。获取方式、目录布局与
-`manifest.json` 的校验规则见 [语义检索的模型与推理库](../development/vectors-assets.md)。
+**Neither file is in the repository** (`.gitignore` covers `releases/*`, `assets/tokenizer/` and
+`assets/tokenizer-*/`), so a clean checkout needs them put back before packaging. Where to get
+them, the directory layout and the `manifest.json` rules are in
+[Semantic search assets](../development/vectors-assets.md).
 
-| 文件 | 从哪来 | 版本约束 |
+| File | Where it comes from | Version constraint |
 |---|---|---|
-| `assets/tokenizer/ort/onnxruntime-win-x64-1.31.1/lib/onnxruntime.dll` | ONNX Runtime 官方 release，`onnxruntime-win-x64-1.31.x.zip` | 必须 1.31.x：绑定的是 ORT C API 1.31，低版本报 `Error setting ORT API base` |
-| `assets/tokenizer-bge/`（`model.onnx` 95MB、`tokenizer.json`、`manifest.json`） | bge-small-zh-v1.5 的 ONNX 导出（本地留档同上） | `manifest.json` 里的 `model_id`/`dim`/`pooling`/`query_prefix` 必须与模型一致，换模型只换这个目录 |
+| `assets/tokenizer/ort/onnxruntime-win-x64-1.31.1/lib/onnxruntime.dll` | The official ONNX Runtime release, `onnxruntime-win-x64-1.31.x.zip` | 1.31.x only: the binding uses ORT C API 1.31, and older versions fail with `Error setting ORT API base` |
+| `assets/tokenizer-bge/` (`model.onnx` about 95 MB, `tokenizer.json`, `manifest.json`) | An ONNX export of bge-small-zh-v1.5 (kept locally, same as above) | `model_id`, `dim`, `pooling` and `query_prefix` in `manifest.json` must match the model; changing the model replaces this directory only |
 
-发布前自检（三条都要成立）：
+Check three things before shipping:
 
-1. 启动日志出现 `semantic search enabled mode=auto model=…`，且**没有**
-   `semantic search unavailable`
-2. `GET /api/admin/search/vectors/status`（管理员登录后）返回
-   `"state":"fresh"`、`"pending":0`
-3. 发一条“改写”查询（不是页面原文里的词），结果里 `semantic` 为 `ok` 且能命中目标页
-   记录。阈值是 `internal/wiki/vectors/recall.go` 的 `SemanticMinSimilarity = 0.6`，
-   低于它的片段不会被召回
+1. The startup log contains `semantic search enabled mode=auto model=…` and no
+   `semantic search unavailable`.
+2. After an admin login, `GET /api/admin/search/vectors/status` returns `"state":"fresh"` and
+   `"pending":0`.
+3. A paraphrased query (one that is not in the page's own words) returns `semantic` as `ok` and
+   finds the target page. The floor is `SemanticMinSimilarity = 0.6` in
+   `internal/wiki/vectors/recall.go`; passages below it are not recalled.
 
-窗口代码在 `launcher` build tag 之后，服务端产物完全不含 GUI 依赖；
-启动器只承诺 Windows（Gio 的 darwin/linux 后端仍需要 cgo）。
+The window code sits behind the `launcher` build tag, so the server binary contains no GUI
+dependency. The launcher only targets Windows: the darwin and linux backends of Gio still need
+cgo.

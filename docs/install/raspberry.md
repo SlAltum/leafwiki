@@ -1,5 +1,9 @@
 # Install `LeafWiki` on a Raspberry Pi
 
+> This guide uses upstream's release artifacts (binaries or container image). They do not contain
+> this fork's changes; build from source or from this repository's `Dockerfile` instead (see
+> [Install](../../README.en.md#install)).
+
 Short introduction: this file explains how to install LeafWiki on a Raspberry Pi and how to expose it to the Internet using Cloudflare Tunnel.
 
 ## Project installation

@@ -1,5 +1,9 @@
 # Deploy LeafWiki on Kubernetes
 
+> This guide uses upstream's release artifacts (binaries or container image). They do not contain
+> this fork's changes; build from source or from this repository's `Dockerfile` instead (see
+> [Install](../../README.en.md#install)).
+
 This example shows how to run LeafWiki on Kubernetes: a `Deployment` backed by a `PersistentVolumeClaim` for `/app/data`, a `Service`, and an `Ingress` to expose it. It was contributed by [@jforman](https://github.com/jforman) in [#1595](https://github.com/perber/leafwiki/issues/1595) and verified end-to-end in a local [kind](https://kind.sigs.k8s.io/) cluster before being added here.
 
 ---
@@ -192,7 +196,7 @@ To listen on another port while service links stay on, set `LEAFWIKI_PORT` expli
 
 ## Non-root containers
 
-To run as a non-root user (see the [Docker non-root example](../../README.md#docker)), add a pod-level `securityContext` with a matching `fsGroup` so the mounted volume is group-writable for that user:
+To run as a non-root user (see the [Docker non-root example](../../README.en.md#docker)), add a pod-level `securityContext` with a matching `fsGroup` so the mounted volume is group-writable for that user:
 
 ```yaml
 spec:
@@ -206,7 +210,7 @@ Whether this is actually required depends on your cluster's `StorageClass`/CSI d
 
 ## Git backup / snapshots / SMTP
 
-All other LeafWiki flags and environment variables work the same as anywhere else — see the [README](../../README.md) for the full list. For example, to add git backup with an SSH key:
+All other LeafWiki flags and environment variables work the same as anywhere else — see the [README](../../README.en.md) for the full list. For example, to add git backup with an SSH key:
 
 ```yaml
           args:

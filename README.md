@@ -1,791 +1,487 @@
-# 🌿 LeafWiki
+# LeafWiki
 
-[![GitHub Stars](https://img.shields.io/github/stars/perber/leafwiki?style=flat-square)](https://github.com/perber/leafwiki/stargazers) [![Latest Release](https://img.shields.io/github/v/release/perber/leafwiki?style=flat-square)](https://github.com/perber/leafwiki/releases) [![Backend CI](https://github.com/perber/leafwiki/actions/workflows/backend.yml/badge.svg)](https://github.com/perber/leafwiki/actions/workflows/backend.yml) [![Frontend CI](https://github.com/perber/leafwiki/actions/workflows/frontend.yml/badge.svg)](https://github.com/perber/leafwiki/actions/workflows/frontend.yml)
+[English](README.en.md) | 中文
 
-Self-hosted wiki. Single Go binary. SQLite + Markdown stored on disk.
+自托管 wiki。Markdown 直接落在磁盘上，旁边是 SQLite 索引，交付物是一个 Go 二进制。
 
-For engineers and self-hosters who want structured, long-lived documentation. No Node.js, no Redis, no Postgres — just a binary and a data directory.
+本仓库是 [perber/leafwiki](https://github.com/perber/leafwiki) 的 fork（派生仓库），基于提交 `714e0368`。上游拥有这个项目。本 fork 增加了尚未进入上游的工作，列在[本 fork 新增的内容](#本-fork-新增的内容)；其余部分保持不变。
 
-![LeafWiki](./assets/preview.png)
+> **尚无 release（发行版）。**本 fork 不发布二进制，也不发布容器镜像。请按下文[安装](#安装)自行构建。上游的 release、`ghcr.io/perber/leafwiki` 镜像、`install.sh` 与 `update.sh` 都是上游构建，不含本页描述的改动。
 
-If you've looked at Wiki.js or Outline and thought "this is too much to operate for what I need" — this could fit for you.
-
-→ Try it without installing: **[demo.leafwiki.com](https://demo.leafwiki.com)** · `Ctrl+E` edit · `Ctrl+S` save · resets hourly  
-→ If it fits, [a star](https://github.com/perber/leafwiki) helps others find it.  
-→ Useful to you? [Sponsor on GitHub](https://github.com/sponsors/perber) · [Buy a coffee on Ko-fi](https://ko-fi.com/perber)
-
-```bash
-docker run -p 8080:8080 -v ~/leafwiki-data:/app/data \
-  ghcr.io/perber/leafwiki:latest \
-  --jwt-secret=yoursecret --admin-password=yourpassword --allow-insecure=true
-```
-
-→ [All install options](#install) (Docker Compose, Linux installer, binary)
+开发文档（`docs/development/`）与安装文档（`docs/install/`）目前为英文。
 
 ---
 
-## Table of Contents
+## 目录
 
-- [Features](#features)
-- [Good fit / not a fit](#good-fit--not-a-fit)
-- [Install](#install)
+- [本 fork 新增的内容](#本-fork-新增的内容)
+- [安装](#安装)
+  - [从源码构建](#从源码构建)
   - [Docker](#docker)
-  - [Docker Compose](#docker-compose)
-  - [Kubernetes](#kubernetes)
-  - [Linux installer](#linux-installer)
-  - [Binary](#binary)
-  - [Reset admin password](#reset-admin-password)
-  - [Restore a snapshot (offline)](#restore-a-snapshot-offline)
-- [Operating Modes](#operating-modes)
-- [Dev Setup](#dev-setup)
-- [Configuration](#configuration)
-  - [CLI Flags](#cli-flags)
-  - [Environment Variables](#environment-variables)
-  - [Custom Stylesheet](#custom-stylesheet)
-  - [Reverse-Proxy Authentication](#reverse-proxy-authentication)
-  - [Unix Socket (v0.11.3)](#unix-socket-v0113)
-  - [Git Backup](#git-backup-v0113-experimental)
-  - [Email (SMTP)](#email-smtp)
-  - [Security](#security)
-  - [Operations notes](#operations-notes)
-- [Keyboard Shortcuts](#keyboard-shortcuts)
-- [Agent Access (CLI)](#agent-access-cli)
-- [External Edits & Resync](#external-edits--resync)
-- [Sorting Pages](#sorting-pages)
-- [Support this project](#support-this-project)
-- [Contributing](#contributing)
+  - [Windows 桌面版](#windows-桌面版)
+  - [管理命令](#管理命令)
+- [检索](#检索)
+  - [关键词检索](#关键词检索)
+  - [语义召回](#语义召回)
+- [Agent 访问](#agent-访问)
+- [配置](#配置)
+  - [必填](#必填)
+  - [命令行参数](#命令行参数)
+  - [环境变量](#环境变量)
+  - [语义检索设置](#语义检索设置)
+- [运行模式](#运行模式)
+- [磁盘文件与重新同步](#磁盘文件与重新同步)
+- [安全](#安全)
+- [开发](#开发)
+- [上游、许可与贡献](#上游许可与贡献)
 
 ---
 
-## Features
+## 本 fork 新增的内容
 
-**Operations:**
-- Single Go binary — no external database, no runtime dependencies
-- Markdown on disk — page content is readable outside the app, backup is `cp -r` (stop the app first)
-- Runs on Linux, macOS, Windows, Raspberry Pi (x86_64 and ARM64)
-- Reverse-proxy friendly with `--base-path`
-- Reverse-proxy authentication via trusted HTTP header (v0.10+)
-- API keys for programmatic and agent access, admin-managed, scoped by role — in development, not yet ready for use
-- Three access modes: fully internal, public read with login-only editing, or open editing without login (see [Operating Modes](#operating-modes))
-- Roles: admin, editor, viewer
+| 方面 | 内容 | 详见 |
+|---|---|---|
+| 检索 | 中日韩文本可按词检索，不再只匹配前缀。全角 ASCII 折叠为半角。拼错的拉丁词会得到可点击的改写建议。API（程序接口）还会返回命中位置的章节标题与锚点。frontmatter（页面元数据）里声明的别名参与检索。 | [关键词检索](#关键词检索) |
+| 语义召回 | 可选的混合检索：页面在进程内向量化，与关键词结果融合，用不同措辞写的页面也能找到。为 `bge-small-zh-v1.5`（中文）构建，也支持任何同格式 manifest（模型描述文件）的模型。 | [语义召回](#语义召回) |
+| 桌面版 | 带窗口的 Windows 构建：地址、初始密码、日志、覆盖全部参数的设置页，以及 AI 助手提示词（`AGENT.md` 写在 exe 旁）。 | [Windows 桌面版](#windows-桌面版) |
+| Agent 访问 | 同一个二进制就是 CLI（命令行工具）：`status`、`page get\|write\|apply\|delete`、`check`、`vectors build\|sync\|status`。它通过本地 socket（套接字）与运行中的服务通信，服务停止时以离线方式写入。 | [Agent 访问](#agent-访问) |
 
-**Core functionality:**
-- Tree navigation — explicit hierarchy, not flat note feeds
-- Manual page ordering — sort order is explicit, not driven by filename (see [Sorting Pages](#sorting-pages))
-- Full-text search across titles and content, with tag-based filtering
-- Tags on pages — searchable and filterable across the wiki
-- Backlinks and link status per page (incoming, outgoing, broken links), with a dedicated admin view for auditing broken links
-- Built-in Markdown editor with live preview, keyboard shortcuts, and autocomplete for internal page links
-- Optimistic locking for concurrent edits
-- Markdown: tables, task lists, footnotes, callouts (`:::info` / `:::warning`), collapsible blocks (`:::collapsible` / `:::collapsed`), Mermaid diagrams, KaTeX math blocks (`$$...$$`, inline `$...$` not supported), sanitized inline HTML, embedded PDFs (`![name](file.pdf)`, optionally opened on a specific page with `![name](file.pdf#page=3)`)
+其余功能（树导航、编辑器、标签、属性、修订历史、用户管理、快照、Git 备份、SMTP、反向代理认证）是上游代码，未改动。
 
-**Customization:**
-- Custom stylesheet (`--custom-stylesheet`, v0.8.5+)
-- Inject HTML/JS into `<head>` for analytics or custom CSS
-- Branding: logo, favicon, site name
-- Dark mode and mobile-friendly UI
-- Translated UI — ships in English, German, and Spanish; `--default-language` picks the default. Contributions of other languages are very welcome — see [docs/i18n.md](docs/i18n.md)
+**随之而来的行为变化。**以下几处与上游构建不同：
 
-**Opt-in via feature flags:**
-- Revision history (`--enable-revision`)
-- Automatic link rewriting when pages are renamed or moved (`--enable-link-refactor`)
-- Email via SMTP for password reset and user invitations (`--smtp-host`, v0.13.0)
-- Git backup — push wiki content to a remote Git repository via SSH or HTTP(S) (`--git-backup`, v0.11.3, experimental)
-
-**Markdown import:**
-- ZIP-based importer for editors and admins
-- Supports Obsidian-style wiki link rewriting on import
-- Best results with a reasonably clean folder structure; not a fully automatic converter for all source formats
-
-**Mobile:**
-
-<p align="center">
-  <img src="./assets/mobile-editor.png" width="260" />
-  <img src="./assets/mobile-pageview.png" width="260" />
-  <img src="./assets/mobile-navigation.png" width="260" />
-</p>
+- 同一数据目录上的第二个服务不再启动。运行中的服务在整个生命周期持有 `<data>/wiki.lock`。
+- 服务运行时，`vectors build`、`vectors sync`、`reset-admin-password` 与 `restore-snapshot` 退出码为 `75`。
+- 可执行文件旁存在 `data/` 时，`--data-dir` 优先使用它。
+- Docker 镜像把 `/app/data` 建成 `0755`（原来是 `0777`）：控制通道的信任边界是数据目录的属主。
+- 没有 `linux/386` 构建：编码器依赖无法为 32 位编译。
 
 ---
 
-## Good fit / not a fit
+## 安装
 
-**Good fit:**
-- Personal wikis, engineering notebooks, and runbooks
-- Internal team or homelab documentation
-- Existing Markdown or Obsidian vaults that need a structured wiki UI
-- Small teams that want tree navigation over flat note feeds
-- Self-hosted environments with low operational overhead
+### 从源码构建
 
-**Probably not a fit:**
-- Organizations needing complex enterprise permissions or approval workflows
-- Real-time collaborative editing
-- Teams looking for a Confluence or Notion replacement
-
-LeafWiki is intentionally narrower than those systems. That focus is part of the value.
-
----
-
-**Prefer not to run your own server?** Free hosted beta — 10 spots, starting September 2026. [Get a beta spot →](https://leafwiki.com/hosted/#waitlist) and help shape the hosted version.
-
----
-
-## Install
-
-### Docker
+需要 Go（版本见 `go.mod` 的 `toolchain` 行）、Node.js（见 `.nvmrc`）和 GNU Make。
 
 ```bash
-docker run -p 8080:8080 \
-    -v ~/leafwiki-data:/app/data \
-    ghcr.io/perber/leafwiki:latest \
-    --jwt-secret=yoursecret \
-    --admin-password=yourpassword \
-    --allow-insecure=true
-```
-
-`--allow-insecure=true` is required for plain HTTP. Omit it when serving over HTTPS (make sure your reverse proxy forwards `X-Forwarded-Proto: https`).
-
-**Non-root:**
-
-```bash
-docker run -p 8080:8080 \
-    -u 1000:1000 \
-    -v ~/leafwiki-data:/app/data \
-    ghcr.io/perber/leafwiki:latest \
-    --jwt-secret=yoursecret \
-    --admin-password=yourpassword \
-    --allow-insecure=true
-```
-
-The data directory must be writable by the specified user.
-
-### Docker Compose
-
-```yaml
-services:
-  leafwiki:
-    image: ghcr.io/perber/leafwiki:latest
-    container_name: leafwiki
-    user: 1000:1000
-    ports:
-      - "8080:8080"
-    environment:
-      - LEAFWIKI_JWT_SECRET=yourSecret
-      - LEAFWIKI_ADMIN_PASSWORD=yourPassword
-      - LEAFWIKI_ALLOW_INSECURE=true  # Required for plain HTTP. Omit for HTTPS (ensure `X-Forwarded-Proto: https` is forwarded).
-    volumes:
-      - ${HOME}/leafwiki-data:/app/data
-    restart: unless-stopped
-```
-
-### Kubernetes
-
-See [docs/install/kubernetes.md](docs/install/kubernetes.md) for a `Deployment` + `PersistentVolumeClaim` + `Service` + `Ingress` example (Gateway API alternative included).
-
-### Linux installer
-
-```bash
-sudo /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/perber/leafwiki/main/install.sh)"
-```
-
-Installs LeafWiki as a system service. Tested on Ubuntu, Debian, and Raspbian.
-
-**Update:**
-
-```bash
-sudo /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/perber/leafwiki/main/update.sh)"
-```
-
-> Only works if you installed with the script above. Not compatible with Docker or binary installs.
-
-**Non-interactive mode:**
-
-```bash
-cp .env.example .env
-# Edit .env with your configuration
-sudo ./install.sh --non-interactive --env-file ./.env
-```
-
-> Security: in interactive mode, environment variables are written in plain text to `/etc/leafwiki/.env`. Restrict access to that file.
-
-**Deployment examples:**
-- [Install with nginx on Ubuntu](docs/install/nginx.md)
-- [Install on a Raspberry Pi](docs/install/raspberry.md)
-
-### Binary
-
-Download `leafwiki-<version>-<os>-<arch>` and its `.sha256` file from
-[GitHub Releases](https://github.com/perber/leafwiki/releases)
-(linux-amd64, linux-arm64, darwin-amd64, darwin-arm64,
-windows-amd64), check that the hash matches the one in the `.sha256` file,
-and rename it to `leafwiki`:
-
-```bash
-sha256sum leafwiki-<version>-<os>-<arch>
-cat leafwiki-<version>-<os>-<arch>.sha256
-mv leafwiki-<version>-<os>-<arch> leafwiki
-chmod +x leafwiki
+git clone https://github.com/SlAltum/leafwiki.git
+cd leafwiki
+make build        # 安装前端依赖、构建 SPA 并嵌入，产出 ./leafwiki
 ./leafwiki --jwt-secret=yoursecret --admin-password=yourpassword --allow-insecure=true
 ```
 
-The server binds to `127.0.0.1:8080` by default. To expose it on the network:
+明文 HTTP 必须加 `--allow-insecure=true`，否则服务端拒绝签发登录 cookie。用 HTTPS 且反向代理转发 `X-Forwarded-Proto: https` 时不要加。
+
+服务默认监听 `127.0.0.1:8080`。加 `--host=0.0.0.0` 可对外暴露。
+
+**数据目录。**`--data-dir` 默认是 `./data`；如果可执行文件旁已存在 `data/` 目录，则用那个目录。第二条规则让整个文件夹可以放在任意位置运行：可执行文件、凭据与 `data/` 一起搬走即可。
+
+**其他平台的发布构建**需要 Docker：`make release` 构建 linux-amd64、linux-arm64、windows-amd64、darwin-amd64 与 darwin-arm64，并把校验和写入 `releases/`。这些构建使用 `CGO_ENABLED=0` 和默认构建标签，因此不含语义召回（见[语义召回](#语义召回)）。
+
+### Docker
+
+从本仓库构建镜像：
 
 ```bash
-./leafwiki --jwt-secret=yoursecret --admin-password=yourpassword --host=0.0.0.0 --allow-insecure=true
+docker build -f Dockerfile -t leafwiki .
+docker run -p 8080:8080 \
+  -v ~/leafwiki-data:/app/data \
+  leafwiki \
+  --jwt-secret=yoursecret --admin-password=yourpassword --allow-insecure=true
 ```
 
-Default data directory is `./data`. Change with `--data-dir`.
+- 镜像不带 `vectors` 构建标签，只接受 `--vectors=off`。
+- `/app/data` 以 `0755` 创建。控制通道的信任边界是“与数据目录同一 uid”，因此挂载的卷必须对运行容器的 uid 可写。
+- 在容器内运行 Agent CLI（`docker compose exec leafwiki /app/leafwiki ...`）：socket 与锁都在容器的数据目录里。
 
-### Build from source
+上游镜像 `ghcr.io/perber/leafwiki:latest` 是上游的构建，不含本页描述的改动。
 
-Requires Go and Node.js (versions: the `toolchain` line in `go.mod`, and `.nvmrc`). `make build` compiles the UI, embeds it, and produces a self-contained `leafwiki` binary (same as release/Docker builds). Use HTTP (`http://localhost:8080/`), not HTTPS, unless you terminate TLS in front of LeafWiki.
+### Windows 桌面版
 
 ```bash
-git clone https://github.com/perber/leafwiki.git
-cd leafwiki
-git switch --detach v0.13.0   # or any tag / main
-make build
-./leafwiki --disable-auth --host=127.0.0.1 --data-dir ./data --allow-insecure=true
+make desktop-windows            # 窗口版，仅关键词检索
+make desktop-windows-vectors VECTORS_ORT_DLL=D:\path\to\onnxruntime.dll
 ```
 
-For API-only local development with Vite, use `make build-api` (or `make run`) instead — see [Dev Setup](#dev-setup).
+两者都产出 `releases/LeafWiki/leafwiki.exe`，前端已嵌入。第二个目标需要 C 工具链（Windows 上用 MinGW）、`onnxruntime.dll`（1.31.x，win-x64）以及 `assets/tokenizer-bge/` 里的模型；它会把 DLL 和 `models/<id>/` 复制到 exe 旁边。
 
-### Reset admin password
+整个文件夹一起使用。exe 会找自己旁边的 `data/`，首次启动在那里生成 `jwt.secret` 与 `admin.password`。首次启动时窗口会在浏览器中打开一次百科，之后不再自动打开。
+
+窗口界面为中文，分两页：“基本”（地址、密码、AI 助手提示词、启停、日志）与“高级设置”（每个服务端参数一行，先用“测试解析”再“保存”）。数据目录、凭据，以及启动器自己决定的参数（`--host`、`--unix-socket`、`--log-format`、`--allow-insecure`、公开访问、认证）由启动器管理，显示为只读。构建命令行时启动器会丢弃空值，所以无法在设置页关闭控制通道；要关闭请自己用 `--control-socket=` 启动服务端。
+
+`desktop-windows-vectors` 构建默认 `--vectors=auto`；不带编码器的构建强制 `--vectors=off`。
+
+布局、排障与发布自检见 [docs/install/desktop.md](docs/install/desktop.md)。
+
+### 管理命令
+
+两个命令都会取 `<data>/wiki.lock`，因此在该数据目录上有服务运行时退出码为 `75`。先停止服务。
 
 ```bash
-./leafwiki reset-admin-password
-```
-
-### Restore a snapshot (offline)
-
-For disaster recovery or migrating to a fresh instance, restore a snapshot ZIP into the data directory while the server is stopped:
-
-```bash
+./leafwiki --data-dir ./data reset-admin-password
 ./leafwiki --data-dir ./data restore-snapshot ./data/snapshots/leafwiki-snapshot-2026-01-01.zip
 ```
 
-When `--snapshot` is enabled, a live restore is also available from the admin UI (Settings → Full Backup). Use this offline command when the server can't start or you're seeding a new data directory. The `--snapshot*` flags are in [CLI Flags](#cli-flags).
+`reset-admin-password` 生成新的随机密码并打印出来，是忘记旧密码时的入口。`restore-snapshot` 用快照 ZIP 替换数据目录，用于灾难恢复或初始化新实例；运行中的服务也可以从管理界面恢复（设置 → 完整备份），恢复期间会拦截写入。恢复会丢弃语义索引，并在恢复后的页面上重建。
 
 ---
 
-## Operating Modes
+## 检索
 
-LeafWiki supports three access modes. Pick the one that matches your environment:
+### 关键词检索
 
-### 1. Internal wiki — login required (default)
+关键词索引始终开启，无需配置。
 
-All access requires authentication. Nobody can read or edit without a valid account. This is the default behavior when no access flags are set.
+- **CJK（中日韩文字）按词索引。**连续的中日韩文字（汉字、平假名、片假名、谚文）按相邻两字切分入索引（单字段落按单字入索引）。查询走同一套分析，所以 `部署`、`回滚` 这类词在中文句子中间也能命中，不只在开头。索引与查询共用同一实现。
+- **宽度折叠。**全角 ASCII（`ＡＢＣ`）折叠为半角，半角片假名（`ｶﾀｶﾅ`）折叠为全角，两种写法都能命中。
+- **短查询也能检索。**CJK 查询最少 2 个字符，拉丁查询最少 3 个；输入框、URL、API 调用与滚动行为共用同一个判定。
+- **拉丁词拼写自动纠正。**语料里不存在的查询词按编辑距离 1、再按 2 生成候选，查询同时匹配原词与纠正词，并保留原词。界面把纠正后的查询作为可点击建议给出。CJK 查询不做纠正。
+- **打开结果落在命中处。**结果会带着查询在 URL（网址）中打开页面，正文里高亮第一个命中并滚动到视野内。API 还会返回命中位置的章节标题与锚点（`section`、`anchor`），供需要更深链接的客户端使用。
+- **别名可检索。**在 frontmatter 中声明 `leafwiki_aliases`（字符串或列表）后，用该名字检索能命中页面；编辑器里有别名字段。由别名命中的结果返回 `matched: "alias"` 与别名原文。
+- **标签过滤结果**，标签分面给出每个标签的计数。
 
-```bash
-./leafwiki --jwt-secret=yoursecret --admin-password=yourpassword
-```
+标题、摘要与高亮都取自页面原文，而不是索引：索引存的是分析后的文本，适合匹配，不适合阅读。
 
-Use this for team-internal wikis or homelab setups where content should stay private.
+### 语义召回
 
-### 2. Public read, login required for editing
-
-Anyone can browse the wiki without logging in. Only authenticated users with an editor or admin role can make changes.
-
-```bash
-./leafwiki --jwt-secret=yoursecret --admin-password=yourpassword --public-access=true
-```
-
-Use this for open documentation or project wikis where readers don't need accounts, but you still want to control who can edit.
-
-### 3. No login — everyone can read and edit (`--disable-auth`)
-
-Authentication is completely disabled. Anyone who can reach the server can read and edit all pages.
+语义召回需要显式开启，默认关闭。开启后，页面引言与每个标题小节在进程内做向量化，存入 `<data>/vectors.db`。检索同时使用两套索引，并用倒数排名融合（RRF，k=60）合并，因此与查询没有共同用词的页面也可能排在前面。
 
 ```bash
-./leafwiki --disable-auth --host=127.0.0.1
+./leafwiki --vectors=auto \
+  --vectors-model-dir=./data/models \
+  --vectors-library=/path/to/libonnxruntime.so \
+  --jwt-secret=yoursecret --admin-password=yourpassword
 ```
 
-> ⚠️ Only use this on trusted internal networks or local setups. Never expose a `--disable-auth` instance to the public internet.
+| 模式 | 行为 |
+|---|---|
+| `off`（默认） | 不加载模型，不创建 `vectors.db`，检索只走关键词。 |
+| `auto` | 保存页面后入队，后台完成向量化。 |
+| `manual` | 不入队，只有显式重建时索引才变化。 |
+
+**依赖什么：**一个带 `manifest.json` 的模型目录（模型 id、维度、池化方式、查询前缀、文件校验和）以及 ONNX Runtime 共享库。manifest 固定了校验和，因此服务端会拒绝加载改动过或复制不完整的模型，也不会写出错误向量。缺模型或缺库不会让服务起不来：日志出现 `semantic search unavailable`，检索退回关键词。
+
+**哪些构建有它：**编码器是 cgo 绑定，位于 `vectors` 构建标签之后。发布二进制与 Docker 镜像都不带它，只接受 `--vectors=off`。要用语义召回：
+
+- 使用带语义检索的 Windows 桌面构建（`make desktop-windows-vectors`），或
+- 用 `CGO_ENABLED=1 -tags vectors` 构建，并提供模型与推理库。
+
+默认模型是 `bge-small-zh-v1.5`（512 维，中文）。模型与 DLL 的获取方式、`manifest.json` 的校验规则见 [docs/development/vectors-assets.md](docs/development/vectors-assets.md)。
+
+**管理界面：**设置 → 语义索引页显示索引状态、模型、排队与失败数量、最近错误、自动索引的暂停开关，以及重建与清空重建。页面菜单（仅管理员）有“语义索引”入口，显示当前页面的索引情况，并可只重建这一页。
+
+**命令行：**`leafwiki --data-dir ./data vectors status`、`vectors build [--full]`、`vectors sync [--dry-run] [--paths a,b]`。`build` 与 `sync` 会取数据目录锁，服务运行期间退出码为 `75`。
+
+**状态：**索引状态为 `off`、`missing`、`queued`、`running`、`stale`、`failed` 或 `fresh`；`paused` 是独立开关。查询返回的 `semantic` 为 `off`、`ok`、`stale` 或 `unavailable`；索引为 stale 或 unavailable 时不会编造结果，由关键词路径作答。
 
 ---
 
-## Dev Setup
+## Agent 访问
 
-**Stack:** Go · React (Vite) · SQLite
-
-```bash
-git clone https://github.com/perber/leafwiki.git
-cd leafwiki
-```
+LeafWiki 通过数据目录里的**控制 socket** 与本地 agent（智能体）通信，客户端就是同一个二进制。它面向同机的编程助手或脚本，不是另一个远程 API。设计说明见
+[Agent control channel](docs/development/architecture.md#agent-control-channel)。
 
 ```bash
-mise install   # optional: Node from .nvmrc and Go; nvm/fnm and any Go >= 1.21 work too
-make setup     # npm dependencies
-make dev       # backend + Vite; Ctrl-C stops both
-```
-
-Vite starts on `http://localhost:5173` (login `admin` / `devpassword`) and proxies the API to
-the backend on `127.0.0.1:8080`. `make doctor` checks your Go and Node versions.
-No local toolchain? The [Dev Container](.devcontainer/devcontainer.json) sets everything up in
-VS Code or [GitHub Codespaces](https://codespaces.new/perber/leafwiki); then run `make dev`.
-
-See [CONTRIBUTING.md](CONTRIBUTING.md#development-setup) for running the two separately and for contribution guidelines.
-
----
-
-## Configuration
-
-### Required
-
-| Flag | Description |
-|------|-------------|
-| `--jwt-secret` | Secret for signing JWTs. Keep it secure. |
-| `--admin-password` | Initial admin password (only applied if no admin exists yet). |
-
-### Optional admin identity
-
-| Flag | Description | Default |
-|------|-------------|---------|
-| `--admin-username` | Initial admin username (only applied if no admin exists yet). | `admin` |
-| `--admin-email` | Initial admin email (only applied if no admin exists yet). | `admin@localhost` |
-
-For plain HTTP: add `--allow-insecure=true` so login and CSRF cookies work.
-
-### CLI Flags
-
-| Flag                             | Description                                                             | Default       | Since   |
-|----------------------------------|-------------------------------------------------------------------------|---------------|---------|
-| `--host`                         | Host/IP the server binds to                                             | `127.0.0.1`   | –       |
-| `--port`                         | Port the server listens on                                              | `8080`        | –       |
-| `--unix-socket`                  | Unix domain socket path; overrides `--host` and `--port`                | `""`          | v0.11.3 |
-| `--data-dir`                     | Directory where data is stored                                          | `./data`      | –       |
-| `--admin-username`               | Initial admin username (only applied if no admin exists yet)            | `admin`       | v0.12.0 |
-| `--admin-email`                  | Initial admin email (only applied if no admin exists yet)               | `admin@localhost` | v0.12.0 |
-| `--public-access`                | Allow public read-only access                                           | `false`       | –       |
-| `--base-path`                    | URL prefix for reverse proxy setups (e.g. `/wiki`)                      | `""`          | v0.8.2  |
-| `--public-url`                   | Public base URL of this wiki (absolute `http(s)://`); used for links in outgoing email, required when `--smtp-host` is set | `""` | v0.13.0 |
-| `--allow-insecure`               | ⚠️ Enables HTTP for auth cookies (required for plain HTTP)              | `false`       | v0.7.0  |
-| `--disable-auth`                 | ⚠️ Disable all authentication (internal networks only)                  | `false`       | v0.7.0  |
-| `--access-token-timeout`         | Access token duration (e.g. `24h`, `15m`)                               | `15m`         | v0.7.0  |
-| `--refresh-token-timeout`        | Refresh token duration (e.g. `168h`)                                    | `168h`        | v0.7.0  |
-| `--max-asset-upload-size`        | Max upload size (e.g. `50MiB`, `52428800`)                              | `50MiB`       | v0.8.5  |
-| `--custom-stylesheet`            | Path to a `.css` file inside the data dir                               | `""`          | v0.8.5  |
-| `--default-language`             | Default UI language code (`en`, `de`, `es`)                             | `""`          | v0.13.0 |
-| `--inject-code-in-header`        | Raw HTML/JS injected into `<head>`                                      | `""`          | v0.6.0  |
-| `--hide-link-metadata-section`   | Hide backlinks and link status panel                                    | `false`       | –       |
-| `--enable-revision`              | Enable revision history                                                 | `false`       | v0.9.0  |
-| `--enable-link-refactor`         | Enable link rewriting on rename/move                                    | `false`       | v0.9.0  |
-| `--max-revision-history`         | Max revisions per page; `0` = unlimited                                 | `100`         | v0.9.0  |
-| `--revision-coalesce-window`     | Window for coalescing rapid successive auto-save revisions by the same author; `0` = disabled | `5m` | v0.11.0 |
-| `--enable-http-remote-user`      | Enable reverse-proxy auth via HTTP header                               | `false`       | v0.10.0 |
-| `--http-remote-user-header-name` | Header name carrying the username or email from the proxy               | `Remote-User` | v0.10.0 |
-| `--enable-http-remote-user-auto-create` | Auto-provision users the proxy asserts but LeafWiki doesn't know    | `false`    | v0.12.1 |
-| `--http-remote-user-email-header-name` | Header name carrying the email for auto-created users               | `""`        | v0.12.1 |
-| `--http-remote-user-default-role` | Role assigned to auto-created users; must not be `admin`               | `viewer`      | v0.12.1 |
-| `--trusted-proxy-ips`            | Trusted proxy IPs/CIDRs for remote-user header                          | `""`          | v0.10.0 |
-| `--login-url`                    | Redirect to an external URL instead of the built-in login form          | `""`          | v0.12.0 |
-| `--logout-url`                   | Redirect to an external URL after logout                                | `""`          | v0.12.0 |
-| `--http-remote-user-logout-url`  | ⚠️ Deprecated, use `--logout-url` instead                               | `""`          | v0.10.0 |
-| `--user-management-url`          | Replace the built-in User Management UI with a link to an external page  | `""`          | v0.11.4 |
-| `--disable-request-log`          | Suppress per-request HTTP access log lines                              | `false`       | v0.10.1 |
-| `--log-format`                   | Log output format: `text` or `json`                                     | `text`        | v0.12.0 |
-| `--totp-encryption-key`          | Key to encrypt per-user TOTP secrets at rest (min 32 bytes); required only once a user enables TOTP | `""` | v0.12.0 |
-| `--enable-metrics`               | Enable the Prometheus `/metrics` endpoint on a separate listener        | `false`       | v0.12.0 |
-| `--metrics-host`                 | Host/IP for the metrics listener                                       | `127.0.0.1`   | v0.12.0 |
-| `--metrics-port`                 | Port for the metrics listener                                          | `9091`        | v0.12.0 |
-| `--snapshot`                     | Enable full backup snapshots (ZIP incl. the SQLite database)           | `true`        | v0.12.0 |
-| `--snapshot-interval`            | Snapshot interval (e.g. `24h`, `6h`); `0` = manual-only                 | `24h`         | v0.12.0 |
-| `--snapshot-retention`           | Number of most recent snapshots to keep; `<= 0` = keep all             | `10`          | v0.12.0 |
-| `--snapshot-dir`                 | Directory to store snapshot ZIPs in                                     | `<data-dir>/snapshots` | v0.12.0 |
-| `--restore-upload-max-size`      | Max size for an uploaded backup ZIP to restore from                    | `500MiB`      | v0.12.0 |
-| `--git-backup`                   | ⚗️ Enable git backup to a remote repository                             | `false`       | v0.11.3 |
-| `--git-backup-remote`            | ⚗️ SSH remote URL for git backup (e.g. `git@github.com:user/repo.git`) | `""` | v0.11.3 |
-| `--git-backup-branch`            | ⚗️ Branch to push to                                                    | `main`        | v0.11.3 |
-| `--git-backup-path`              | ⚗️ Directory holding `root/` and `assets/` (e.g. `docs` → `docs/root`); empty = top level | `""` | v0.13.0 |
-| `--git-backup-ssh-key`           | ⚗️ Raw SSH private key (prefer env var)                                 | `""`          | v0.11.3 |
-| `--git-backup-ssh-key-path`      | ⚗️ Path to SSH private key file                                         | `""`          | v0.11.3 |
-| `--git-backup-ssh-known-hosts`   | ⚗️ Path to `known_hosts` for MITM protection                            | `""`          | v0.11.3 |
-| `--git-backup-http-username`     | ⚗️ Username for HTTP(S) basic auth on `http(s)://` remotes              | `""`          | v0.13.0 |
-| `--git-backup-http-password`     | ⚗️ Password or access token for HTTP(S) basic auth (prefer env var)     | `""`          | v0.13.0 |
-| `--git-backup-author-name`       | ⚗️ Git commit author name                                               | `LeafWiki Backup` | v0.11.3 |
-| `--git-backup-author-email`      | ⚗️ Git commit author email                                              | `backup@leafwiki.local` | v0.11.3 |
-| `--git-backup-interval`          | ⚗️ Backup interval (e.g. `60m`, `2h`); `0` = manual-only               | `60m`         | v0.11.3 |
-| `--smtp-host`                    | SMTP host for password-reset and invite email; unset disables email     | `""`          | v0.13.0 |
-| `--smtp-port`                    | SMTP server port                                                        | `587`         | v0.13.0 |
-| `--smtp-username`                | SMTP auth username                                                      | `""`          | v0.13.0 |
-| `--smtp-password`                | SMTP auth password (prefer env var)                                     | `""`          | v0.13.0 |
-| `--smtp-from`                    | From address for outgoing email (required when `--smtp-host` is set)    | `""`          | v0.13.0 |
-| `--smtp-from-name`               | From display name for outgoing email                                    | `LeafWiki`    | v0.13.0 |
-| `--smtp-security`                | Transport security: `none`, `starttls`, or `tls`                        | `starttls`    | v0.13.0 |
-| `--smtp-insecure-skip-verify`    | Skip TLS certificate verification for SMTP (testing only)               | `false`       | v0.13.0 |
-| `--smtp-timeout`                 | Timeout for a single SMTP send (e.g. `10s`)                             | `10s`         | v0.13.0 |
-| `--control-socket`               | Unix socket agents write through; an empty value disables the channel   | `<data-dir>/control.sock` | v0.14.0 |
-| `--control-auth`                 | `optional` (anonymous may read and write) or `required` (only `status`/`auth.login` without credentials) | `optional` | v0.14.0 |
-
-> Docker image default: `LEAFWIKI_HOST` is set to `0.0.0.0` automatically by the container entrypoint if neither `--host` nor `LEAFWIKI_HOST` is provided.
-
-### Environment Variables
-
-| Variable                                | Description                                          | Default       | Since   |
-|-----------------------------------------|------------------------------------------------------|---------------|---------|
-| `LEAFWIKI_HOST`                         | Host/IP address                                      | `127.0.0.1`   | –       |
-| `LEAFWIKI_PORT`                         | Port                                                 | `8080`        | –       |
-| `LEAFWIKI_UNIX_SOCKET`                  | Unix domain socket path; overrides host/port         | `""`          | v0.11.3 |
-| `LEAFWIKI_DATA_DIR`                     | Data directory path                                  | `./data`      | –       |
-| `LEAFWIKI_ADMIN_PASSWORD`               | Initial admin password *(required)*                  | –             | –       |
-| `LEAFWIKI_ADMIN_USERNAME`               | Initial admin username (only applied if no admin exists yet) | `admin`       | v0.12.0 |
-| `LEAFWIKI_ADMIN_EMAIL`                  | Initial admin email (only applied if no admin exists yet) | `admin@localhost` | v0.12.0 |
-| `LEAFWIKI_JWT_SECRET`                   | JWT signing secret *(required)*                      | –             | –       |
-| `LEAFWIKI_PUBLIC_ACCESS`                | Allow public read-only access                        | `false`       | –       |
-| `LEAFWIKI_BASE_PATH`                    | URL prefix for reverse proxy                         | `""`          | v0.8.2  |
-| `LEAFWIKI_PUBLIC_URL`                   | Public base URL of this wiki (absolute `http(s)://`); used for links in outgoing email, required with `LEAFWIKI_SMTP_HOST` | `""` | v0.13.0 |
-| `LEAFWIKI_ALLOW_INSECURE`               | ⚠️ HTTP auth cookies                                 | `false`       | v0.7.0  |
-| `LEAFWIKI_DISABLE_AUTH`                 | ⚠️ Disable authentication                            | `false`       | v0.7.0  |
-| `LEAFWIKI_ACCESS_TOKEN_TIMEOUT`         | Access token duration                                | `15m`         | v0.7.0  |
-| `LEAFWIKI_REFRESH_TOKEN_TIMEOUT`        | Refresh token duration                               | `168h`        | v0.7.0  |
-| `LEAFWIKI_MAX_ASSET_UPLOAD_SIZE`        | Max upload size                                      | `50MiB`       | v0.8.5  |
-| `LEAFWIKI_CUSTOM_STYLESHEET`            | Path to `.css` file inside data dir                  | `""`          | v0.8.5  |
-| `LEAFWIKI_DEFAULT_LANGUAGE`             | Default UI language code (`en`, `de`, `es`)          | `""`          | v0.13.0 |
-| `LEAFWIKI_INJECT_CODE_IN_HEADER`        | HTML/JS injected into `<head>`                       | `""`          | v0.6.0  |
-| `LEAFWIKI_HIDE_LINK_METADATA_SECTION`   | Hide backlinks and link status panel                 | `false`       | –       |
-| `LEAFWIKI_ENABLE_REVISION`              | Revision history                                     | `false`       | v0.9.0  |
-| `LEAFWIKI_ENABLE_LINK_REFACTOR`         | Link rewriting on rename/move                        | `false`       | v0.9.0  |
-| `LEAFWIKI_MAX_REVISION_HISTORY`         | Max revisions per page; `0` = unlimited              | `100`         | v0.9.0  |
-| `LEAFWIKI_REVISION_COALESCE_WINDOW`     | Window for coalescing rapid successive auto-save revisions; `0` = disabled | `5m` | v0.11.0 |
-| `LEAFWIKI_ENABLE_HTTP_REMOTE_USER`      | Reverse-proxy auth via header                        | `false`       | v0.10.0 |
-| `LEAFWIKI_HTTP_REMOTE_USER_HEADER_NAME` | Username or email header from proxy                  | `Remote-User` | v0.10.0 |
-| `LEAFWIKI_ENABLE_HTTP_REMOTE_USER_AUTO_CREATE` | Auto-provision users the proxy asserts but LeafWiki doesn't know | `false` | v0.12.1 |
-| `LEAFWIKI_HTTP_REMOTE_USER_EMAIL_HEADER_NAME` | Email header for auto-created users            | `""`          | v0.12.1 |
-| `LEAFWIKI_HTTP_REMOTE_USER_DEFAULT_ROLE` | Role assigned to auto-created users; must not be `admin` | `viewer`      | v0.12.1 |
-| `LEAFWIKI_TRUSTED_PROXY_IPS`            | Trusted proxy IPs/CIDRs                              | `""`          | v0.10.0 |
-| `LEAFWIKI_LOGIN_URL`                    | Redirect to an external URL instead of the login form | `""`          | v0.12.0 |
-| `LEAFWIKI_LOGOUT_URL`                   | Redirect to an external URL after logout             | `""`          | v0.12.0 |
-| `LEAFWIKI_HTTP_REMOTE_USER_LOGOUT_URL`  | ⚠️ Deprecated, use `LEAFWIKI_LOGOUT_URL` instead     | `""`          | v0.10.0 |
-| `LEAFWIKI_USER_MANAGEMENT_URL`          | Replace the built-in User Management UI with an external link | `""`  | v0.11.4 |
-| `LEAFWIKI_DISABLE_REQUEST_LOG`          | Suppress per-request HTTP access log lines           | `false`       | v0.10.1 |
-| `LEAFWIKI_LOG_FORMAT`                   | Log output format: `text` or `json`                  | `text`        | v0.12.0 |
-| `LEAFWIKI_LOG_LEVEL`                    | Log level: `debug`, `info`, `warn`, `error` (env-var only, no CLI flag) | `info` | v0.8.0  |
-| `LEAFWIKI_TOTP_ENCRYPTION_KEY`          | Key to encrypt per-user TOTP secrets at rest (min 32 bytes) | `""`    | v0.12.0 |
-| `LEAFWIKI_ENABLE_METRICS`               | Enable the Prometheus `/metrics` endpoint            | `false`       | v0.12.0 |
-| `LEAFWIKI_METRICS_HOST`                 | Host/IP for the metrics listener                     | `127.0.0.1`   | v0.12.0 |
-| `LEAFWIKI_METRICS_PORT`                 | Port for the metrics listener                        | `9091`        | v0.12.0 |
-| `LEAFWIKI_SNAPSHOT`                     | Enable full backup snapshots                         | `true`        | v0.12.0 |
-| `LEAFWIKI_SNAPSHOT_INTERVAL`            | Snapshot interval; `0` = manual-only                 | `24h`         | v0.12.0 |
-| `LEAFWIKI_SNAPSHOT_RETENTION`           | Number of most recent snapshots to keep; `<= 0` = keep all | `10`   | v0.12.0 |
-| `LEAFWIKI_SNAPSHOT_DIR`                 | Directory to store snapshot ZIPs in                  | `<data-dir>/snapshots` | v0.12.0 |
-| `LEAFWIKI_RESTORE_UPLOAD_MAX_SIZE`      | Max size for an uploaded backup ZIP to restore from  | `500MiB`      | v0.12.0 |
-| `LEAFWIKI_GIT_BACKUP`                   | ⚗️ Enable git backup                                | `false`       | v0.11.3 |
-| `LEAFWIKI_GIT_BACKUP_REMOTE`            | ⚗️ SSH remote URL                                   | `""`          | v0.11.3 |
-| `LEAFWIKI_GIT_BACKUP_BRANCH`            | ⚗️ Branch to push to                                | `main`        | v0.11.3 |
-| `LEAFWIKI_GIT_BACKUP_PATH`              | ⚗️ Directory holding `root/` and `assets/` (e.g. `docs` → `docs/root`); empty = top level | `""` | v0.13.0 |
-| `LEAFWIKI_GIT_BACKUP_SSH_KEY`           | ⚗️ Raw SSH private key (preferred over path)        | `""`          | v0.11.3 |
-| `LEAFWIKI_GIT_BACKUP_SSH_KEY_PATH`      | ⚗️ Path to SSH private key file                     | `""`          | v0.11.3 |
-| `LEAFWIKI_GIT_BACKUP_SSH_KNOWN_HOSTS`   | ⚗️ Path to `known_hosts` file                       | `""`          | v0.11.3 |
-| `LEAFWIKI_GIT_BACKUP_HTTP_USERNAME`     | ⚗️ Username for HTTP(S) basic auth                  | `""`          | v0.13.0 |
-| `LEAFWIKI_GIT_BACKUP_HTTP_PASSWORD`     | ⚗️ Password or access token for HTTP(S) basic auth  | `""`          | v0.13.0 |
-| `LEAFWIKI_GIT_BACKUP_AUTHOR_NAME`       | ⚗️ Git commit author name                           | `LeafWiki Backup` | v0.11.3 |
-| `LEAFWIKI_GIT_BACKUP_AUTHOR_EMAIL`      | ⚗️ Git commit author email                          | `backup@leafwiki.local` | v0.11.3 |
-| `LEAFWIKI_GIT_BACKUP_INTERVAL`          | ⚗️ Backup interval (e.g. `60m`); `0` = manual-only | `60m`         | v0.11.3 |
-| `LEAFWIKI_SMTP_HOST`                    | SMTP host for password-reset/invite email; unset disables email | `""` | v0.13.0 |
-| `LEAFWIKI_SMTP_PORT`                    | SMTP server port                                    | `587`         | v0.13.0 |
-| `LEAFWIKI_SMTP_USERNAME`               | SMTP auth username                                   | `""`          | v0.13.0 |
-| `LEAFWIKI_SMTP_PASSWORD`               | SMTP auth password                                   | `""`          | v0.13.0 |
-| `LEAFWIKI_SMTP_FROM`                    | From address (required with `LEAFWIKI_SMTP_HOST`)   | `""`          | v0.13.0 |
-| `LEAFWIKI_SMTP_FROM_NAME`              | From display name                                    | `LeafWiki`    | v0.13.0 |
-| `LEAFWIKI_SMTP_SECURITY`               | Transport security: `none`, `starttls`, or `tls`    | `starttls`    | v0.13.0 |
-| `LEAFWIKI_SMTP_INSECURE_SKIP_VERIFY`   | Skip TLS certificate verification for SMTP           | `false`       | v0.13.0 |
-| `LEAFWIKI_CONTROL_SOCKET`               | Unix socket agents write through; an empty value disables the channel | `<data-dir>/control.sock` | v0.14.0 |
-| `LEAFWIKI_CONTROL_AUTH`                 | `optional` or `required`                             | `optional`    | v0.14.0 |
-| `LEAFWIKI_AGENT_USER`                   | Agent CLI: account to authenticate as                | `""`          | v0.14.0 |
-| `LEAFWIKI_AGENT_PASSWORD`               | Agent CLI: password for `LEAFWIKI_AGENT_USER`        | `""`          | v0.14.0 |
-| `LEAFWIKI_SMTP_TIMEOUT`                | Timeout for a single SMTP send                       | `10s`         | v0.13.0 |
-
-### Custom Stylesheet
-
-Place a `.css` file inside your data directory and pass its path:
-
-```bash
-./leafwiki \
-  --data-dir=./data \
-  --custom-stylesheet=custom.css \
-  --jwt-secret=yoursecret \
-  --admin-password=yourpassword
-```
-
-- File must exist at `./data/custom.css`
-- Served as `/custom.css` (or `${base-path}/custom.css` with `--base-path`)
-- The endpoint is publicly accessible
-
-### Reverse-Proxy Authentication
-
-Available since v0.10.0. Use when an upstream proxy authenticates users and forwards the username or email via HTTP header.
-
-```bash
-./leafwiki \
-  --jwt-secret=yoursecret \
-  --admin-password=yourpassword \
-  --enable-http-remote-user=true \
-  --http-remote-user-header-name=X-Forwarded-User \
-  --trusted-proxy-ips=127.0.0.1,172.18.0.0/16 \
-  --login-url=https://auth.example.com/login \
-  --logout-url=https://auth.example.com/logout
-```
-
-- Only trusts the header from IPs listed in `--trusted-proxy-ips`
-- If the forwarded username or email doesn't match a LeafWiki user, the request is rejected — unless `--enable-http-remote-user-auto-create` is set (see below)
-- Do not enable without configuring `--trusted-proxy-ips`
-- `--login-url` and `--logout-url` are independent, optional redirect targets — set either or both to send users to an external IdP instead of the built-in login form / to redirect after logout
-- `--login-url`, `--logout-url`, and `--user-management-url` must all start with `http://` or `https://`; the server refuses to start otherwise (relative paths are not accepted for any of them)
-- ⚠️ `--login-url` takes effect regardless of `--enable-http-remote-user` and has no in-app bypass: once set, *every* unauthenticated visit (including `/login` itself) redirects to it immediately. Double-check the URL before setting it — a wrong or unreachable value locks all users, including admins, out of the built-in login form
-- `--http-remote-user-logout-url` (v0.10.0) is deprecated; use `--logout-url` instead. It still works as a fallback when `--logout-url`/`LEAFWIKI_LOGOUT_URL` isn't set, but a deprecation warning is logged
-
-#### Auto-creating users (v0.12.1)
-
-By default, a proxy-asserted identity with no matching LeafWiki account is rejected (401). Set `--enable-http-remote-user-auto-create=true` to provision one automatically instead:
-
-```bash
-./leafwiki \
-  --jwt-secret=yoursecret \
-  --admin-password=yourpassword \
-  --enable-http-remote-user=true \
-  --http-remote-user-header-name=X-Forwarded-User \
-  --trusted-proxy-ips=127.0.0.1,172.18.0.0/16 \
-  --enable-http-remote-user-auto-create=true \
-  --http-remote-user-email-header-name=X-Forwarded-Email \
-  --http-remote-user-default-role=viewer
-```
-
-- Requires `--enable-http-remote-user` to also be set; the server refuses to start otherwise
-- The value in `--http-remote-user-header-name` becomes the new account's username verbatim, even if it looks like an email address — if your proxy sends an email in that header and you want a distinct, readable username, point `--http-remote-user-email-header-name` at a separate proxy header
-- If `--http-remote-user-email-header-name` isn't set or the header is empty, a non-deliverable placeholder email (`<username>@remote-user.invalid`) is used instead
-- Auto-created accounts get a random password nobody is told — they can only ever authenticate via the trusted proxy, not the built-in login form
-- `--http-remote-user-default-role` **must not be `admin`** — the server refuses to start otherwise. A forged or misrouted header must not be able to mint an admin account by itself; promote an auto-created user to admin manually if needed
-
-### Unix Socket (v0.11.3)
-
-Use `--unix-socket` when LeafWiki should listen on a local unix domain socket instead of TCP.
-
-```bash
-./leafwiki \
-  --unix-socket=/run/leafwiki/leafwiki.sock \
-  --data-dir=./data \
-  --jwt-secret=yoursecret \
-  --admin-password=yourpassword
-```
-
-- `--unix-socket` overrides `--host` and `--port`
-- LeafWiki still serves normal HTTP; a reverse proxy such as Nginx or Caddy connects to the socket
-- If a stale socket file exists from a previous run, LeafWiki removes it before listening
-- New socket files are created with permissions `0660`
-- On Windows, unix sockets are not supported and LeafWiki returns a startup error if this option is used
-
-### Git Backup (v0.11.3, experimental)
-
-> **Experimental** — This feature is new and may change in future releases. Test it thoroughly before relying on it for critical data.
-
-Git Backup pushes wiki **content** to a remote Git repository on a configurable interval, via **SSH** or **HTTP(S)**. Only the `root/` (pages) and `assets/` directories are committed, so database files (`.db`, `.db-wal`, etc.) and other runtime files are never included; `.gitignore` rules are still honoured. By default the content is committed at the repository top level — set `--git-backup-path` to nest it under a directory (useful for a monorepo).
-
-Backups run automatically on a configurable interval and can also be triggered manually from the **Git Content Backup** page.
-
-**CLI flags (v0.11.3+):**
-
-| Flag | Description | Default |
-|------|-------------|---------|
-| `--git-backup` | Enable git backup | `false` |
-| `--git-backup-remote` | SSH or HTTP(S) remote URL (e.g. `git@github.com:user/repo.git`, `https://github.com/user/repo.git`) | `""` |
-| `--git-backup-branch` | Branch to push to | `main` |
-| `--git-backup-path` | Directory holding `root/` and `assets/`, e.g. `docs` → `docs/root` + `docs/assets`; empty = repository top level (v0.13.0+) | `""` |
-| `--git-backup-ssh-key` | Raw SSH private key (prefer env var) | `""` |
-| `--git-backup-ssh-key-path` | Path to SSH private key file | `""` |
-| `--git-backup-ssh-known-hosts` | Path to `known_hosts` for MITM protection | `""` |
-| `--git-backup-http-username` | Username for HTTP(S) basic auth (v0.13.0+) | `""` |
-| `--git-backup-http-password` | Password or access token for HTTP(S) basic auth (prefer env var, v0.13.0+) | `""` |
-| `--git-backup-author-name` | Git commit author name | `LeafWiki Backup` |
-| `--git-backup-author-email` | Git commit author email | `backup@leafwiki.local` |
-| `--git-backup-interval` | Backup interval (e.g. `60m`, `2h`); `0` = manual-only | `60m` |
-
-**Environment variables:**
-
-| Variable | Description |
-|----------|-------------|
-| `LEAFWIKI_GIT_BACKUP` | Enable git backup |
-| `LEAFWIKI_GIT_BACKUP_REMOTE` | SSH or HTTP(S) remote URL |
-| `LEAFWIKI_GIT_BACKUP_BRANCH` | Branch to push to |
-| `LEAFWIKI_GIT_BACKUP_PATH` | Directory holding `root/` and `assets/`, e.g. `docs` → `docs/root` + `docs/assets` |
-| `LEAFWIKI_GIT_BACKUP_SSH_KEY` | Raw SSH private key |
-| `LEAFWIKI_GIT_BACKUP_SSH_KEY_PATH` | Path to SSH private key file |
-| `LEAFWIKI_GIT_BACKUP_SSH_KNOWN_HOSTS` | Path to `known_hosts` file |
-| `LEAFWIKI_GIT_BACKUP_HTTP_USERNAME` | Username for HTTP(S) basic auth |
-| `LEAFWIKI_GIT_BACKUP_HTTP_PASSWORD` | Password or access token for HTTP(S) basic auth |
-| `LEAFWIKI_GIT_BACKUP_AUTHOR_NAME` | Git commit author name |
-| `LEAFWIKI_GIT_BACKUP_AUTHOR_EMAIL` | Git commit author email |
-| `LEAFWIKI_GIT_BACKUP_INTERVAL` | Backup interval |
-
-**Example — SSH (Docker Compose):**
-
-```yaml
-environment:
-  - LEAFWIKI_GIT_BACKUP=true
-  - LEAFWIKI_GIT_BACKUP_REMOTE=git@github.com:youruser/yourwiki-backup.git
-  - LEAFWIKI_GIT_BACKUP_BRANCH=main
-  - LEAFWIKI_GIT_BACKUP_SSH_KEY=${LEAFWIKI_GIT_BACKUP_SSH_KEY}  # from .env file
-  - LEAFWIKI_GIT_BACKUP_INTERVAL=60m
-```
-
-**Example — HTTPS with an access token (Docker Compose, v0.13.0+):**
-
-```yaml
-environment:
-  - LEAFWIKI_GIT_BACKUP=true
-  - LEAFWIKI_GIT_BACKUP_REMOTE=https://github.com/youruser/yourwiki-backup.git
-  - LEAFWIKI_GIT_BACKUP_BRANCH=main
-  - LEAFWIKI_GIT_BACKUP_HTTP_USERNAME=youruser
-  - LEAFWIKI_GIT_BACKUP_HTTP_PASSWORD=${LEAFWIKI_GIT_BACKUP_HTTP_PASSWORD}  # from .env file
-  - LEAFWIKI_GIT_BACKUP_INTERVAL=60m
-```
-
-On GitHub, create a **fine-grained personal access token** limited to the backup repository with **Contents: Read and write** permission, and use it as the password. The username can be your GitHub username.
-
-**Notes:**
-
-- `--git-backup-remote` is required when pushing to a remote. It must be an SSH URL (`git@...` or `ssh://...`) or an HTTP(S) URL (`https://...`, `http://...`). Leave it unset for local-only backups.
-- For **SSH** remotes, either `--git-backup-ssh-key` or `--git-backup-ssh-key-path` is required. Prefer the environment variable to avoid the key appearing in process listings.
-- For **HTTP(S)** remotes, both `--git-backup-http-username` and `--git-backup-http-password` are required. Prefer `LEAFWIKI_GIT_BACKUP_HTTP_PASSWORD` over the flag — LeafWiki warns at startup when the password is passed as a flag, since flags are visible in process listings. Credentials embedded directly in the remote URL (`https://user:token@host/repo.git`) also work and are masked in logs and in the UI.
-- Prefer `https://` over `http://`: with plain `http://` the credentials and your wiki content travel unencrypted, and LeafWiki logs a warning at startup.
-- `--git-backup-ssh-known-hosts` is optional but recommended for SSH remotes. If not set, LeafWiki falls back to `~/.ssh/known_hosts`. If that file does not exist either (common in containers), SSH host key verification is **disabled** — leaving connections open to MITM attacks. Set this flag explicitly in production. It has no effect on HTTP(S) remotes, which are verified via TLS.
-- If the remote diverges (e.g. someone pushed directly to the backup branch), LeafWiki will stop auto-pushing and show a **Conflict — remote diverged** warning in the UI. Click **Force Push** in the UI to overwrite the remote with the current local backup history. Your wiki content is never lost — the local backup repo is always authoritative.
-- This backs up **content only** — the SQLite database is not included. For a full backup, use your data directory (`cp -r` with the app stopped).
-- When LeafWiki first connects to a remote that already contains a backup, it syncs that content into the local data directory before the wiki loads its pages (local files always win — nothing is overwritten). A new instance therefore picks up the backed-up pages instead of overwriting the remote with an empty wiki, and it does not seed its default welcome page when the backup already has content. After that first sync, backups behave normally, including committing deletions.
-- `--git-backup-path` (e.g. `docs`) commits `root/` and `assets/` under that directory instead of the top level — `docs` produces `docs/root/` and `docs/assets/` — and pulls external edits back from there. This is handy when the backup remote is a monorepo: files outside the configured directory are left untouched. LeafWiki's live content still lives in `<data-dir>/root` and `<data-dir>/assets`; nothing is copied into the repository working tree. Leave it empty to keep the historical top-level layout.
-
----
-
-### Email (SMTP)
-
-Available since v0.13.0. Configure an SMTP server to enable the **forgot-password** flow and **email-based user invitations**. Without `--smtp-host`, both features stay off and the login form shows no password-reset link.
-
-```bash
-./leafwiki \
-  --jwt-secret=yoursecret \
-  --admin-password=yourpassword \
-  --smtp-host=smtp.example.com \
-  --smtp-port=587 \
-  --smtp-security=starttls \
-  --smtp-username=leafwiki@example.com \
-  --smtp-password=yourpassword \
-  --smtp-from=leafwiki@example.com \
-  --public-url=https://wiki.example.com
-```
-
-- `--smtp-from` and `--public-url` are **required** once `--smtp-host` is set — the server refuses to start otherwise
-- `--public-url` must be an absolute `http(s)://` URL; it is the base for links in outgoing email
-- `--smtp-security` is one of `none`, `starttls` (default), or `tls`
-- Prefer `LEAFWIKI_SMTP_PASSWORD` over the flag to keep the password out of process listings
-- `--smtp-insecure-skip-verify` disables TLS certificate verification — for testing only
-
----
-
-### Security
-
-Enabled by default since v0.7.0:
-
-- Secure, HttpOnly cookies for session handling
-- CSRF protection on all state-changing requests
-- Rate limiting on auth endpoints
-- Role-based access: admin, editor, viewer
-
-**`--disable-auth`** removes all authentication. Only use for local development, trusted internal networks, or isolated environments.
-
-```bash
-# Safe local-only example:
-./leafwiki --disable-auth --host=127.0.0.1
-```
-
-For most setups, prefer `--public-access` for read-only public access and the viewer role for restricted accounts.
-
-### Operations notes
-
-- Default bind: `127.0.0.1` (binary) / `0.0.0.0` (Docker image)
-- Default data dir: `./data` (binary) / `/app/data` (container)
-- Defaults are intentionally conservative — a fresh install does not become network-exposed by accident
-
----
-
-## Keyboard Shortcuts
-
-| Action                | Shortcut                               |
-|-----------------------|----------------------------------------|
-| Shortcuts help        | `Ctrl + /` / `Cmd + /`                 |
-| Edit mode             | `Ctrl + E` / `Cmd + E`                 |
-| Save                  | `Ctrl + S` / `Cmd + S`                 |
-| Search                | `Ctrl + Shift + F` / `Cmd + Shift + F` |
-| Navigation pane       | `Ctrl + Shift + E` / `Cmd + Shift + E` |
-| Go to page            | `Ctrl + Alt + P` / `Cmd + Option + P`  |
-| Toggle TOC            | `Ctrl + Shift + O` / `Cmd + Shift + O` |
-| Copy page link        | `Ctrl + Shift + S` / `Cmd + Shift + S` |
-| Share / permalink     | `Ctrl + Shift + L` / `Cmd + Shift + L` |
-| Page history          | `Ctrl + H` / `Cmd + H`                 |
-| Print page            | `Ctrl + P` / `Cmd + P`                 |
-| Delete page           | `Ctrl + Delete` / `Cmd + Delete`       |
-| Bold                  | `Ctrl + B` / `Cmd + B`                 |
-| Italic                | `Ctrl + I` / `Cmd + I`                 |
-| Insert link           | `Ctrl + K` / `Cmd + K`                 |
-| Headline 1–3          | `Ctrl + Alt + 1–3` / `Cmd + Alt + 1–3` |
-
-`Ctrl+V` / `Cmd+V` for pasting images and files works in the editor.  
-`Esc` closes modals, dialogs, and edit mode.
-
-Press `Ctrl+/` / `Cmd+/` in the app for the full in-product shortcuts list.
-
----
-
-## Relative Markdown Links
-
-LeafWiki resolves relative page links with **page-as-folder** semantics: the current page path is treated as a folder, so `[Setup](setup)` on `/docs/guide` resolves to `/docs/guide/setup`, not a sibling `/docs/setup`.
-
-A trailing `.md` suffix in a link target is ignored for page lookup (for example `setup.md` → `setup`), which matches common filesystem / Obsidian-style Markdown.
-
-## Agent Access (CLI)
-
-LeafWiki speaks to local agents through a **control socket** in its data directory, and the same
-binary is the client. This is for a coding assistant or a script running on the same machine; it is
-not another remote API (see [Agent control channel](./docs/development/architecture.md#agent-control-channel)).
-
-```bash
-leafwiki --data-dir ./data status                      # protocol, pages, vector state
-leafwiki --data-dir ./data page get platform/deploy    # path, id, title, version, tags, vectors, content
+leafwiki --data-dir ./data status                       # 协议、页面数、向量状态
+leafwiki --data-dir ./data page get platform/deploy     # 路径、id、标题、版本、标签、正文
 leafwiki --data-dir ./data page write platform/deploy --title "Deploy" --content-file - < deploy.md
 leafwiki --data-dir ./data page apply --batch changes.jsonl --json
 leafwiki --data-dir ./data page delete platform/deploy --dry-run
+leafwiki --data-dir ./data check --json
 ```
 
-* **Reads, creates and updates are open** to a caller that does not authenticate, the same trust
-  level as editing the Markdown files on disk. **Deleting needs an editor or an admin**
-  (`--user`/`--password`, `--password-file` or `LEAFWIKI_AGENT_USER`/`LEAFWIKI_AGENT_PASSWORD`).
-* `--control-auth=required` closes everything except `status` and `auth.login`.
-* `--control-socket=""` turns the channel off. A socket that cannot be bound (a long path on
-  Windows) is a warning; the server keeps running without it.
-* **One writer per data directory**: the running server holds `<data>/wiki.lock`, so a second
-  instance now fails to start instead of half-sharing the directory. When no server runs, the same
-  commands write **offline** (holding the lock) and update the semantic index only when its model is
-  present; otherwise they tell you to run `leafwiki vectors sync`.
-* `--json` prints exactly one JSON object on success and on a partial batch; a failing command
-  prints nothing on stdout (the error and the exit code carry the outcome).
-* Exit codes: `0` success, `1` unclassified, `2` usage, `3` not found, `4` version conflict,
-  `5` not allowed, `6` unreachable/timeout/restore, `7` capability, `8` partial batch, `75` locked.
-* **`vectors build` and `vectors sync` now refuse to run while the server is up** (exit 75): both
-  take the same directory lock. Run them with the server stopped.
+- **读、新建、修改对未认证的调用方开放**，信任级别等同于直接改磁盘上的 Markdown。**删除需要编辑者或管理员**：用 `--user` 配 `--password`、`--password-file`，或 `LEAFWIKI_AGENT_USER` 与 `LEAFWIKI_AGENT_PASSWORD`。
+- `--control-auth=required` 关闭除 `status` 与 `auth.login` 之外的一切。
+- `--control-socket=""` 关闭通道。socket 绑定失败（Windows 上路径过长）只记警告，服务继续运行。
+- **每个数据目录只有一个写者。**服务在生命周期内持有 `<data>/wiki.lock`，第二个实例会拒绝启动，而不是半共享目录。没有服务运行时，写命令以离线方式工作（见下文）。
+- `--json` 在成功和部分批次时精确输出一个 JSON 对象。失败命令的 stdout（标准输出）为空：错误写到 stderr（标准错误），结果由退出码表达。
+- 批次在预检阶段是原子的。任一坏条目会拒绝整个批次且不写盘；执行阶段失败会停止批次，并报告已写入的条目。
+- `--wait`（默认 30 秒）等待刚写入页面的语义索引。`off`、`manual`、`paused` 模式下它什么都不做。
+- `check` 只读且不取锁。它报告树结构问题，例如非法文件名、重名、重复 id、无法解析的 frontmatter。
 
-In a container, run the CLI inside it (`docker compose exec leafwiki /app/leafwiki ...`), because the
-socket and the lock live in the container's data directory. The image creates `/app/data` as
-`0755` owned by root (the channel's trust boundary is "same uid as the data directory"); a named
-volume mounted there must be writable by the uid the container runs as.
+**离线写入：**没有服务运行时，`page write`、`page apply`、`page delete` 取 `<data>/wiki.lock`，复用服务端自己的用例，不记录修订。`page get`、`status` 与 `--dry-run` 需要运行中的服务。如果 `<data>/vectors.db` 与 `<data>/models` 都存在，改动过的页面会重新向量化；否则命令给出警告，之后需要运行 `vectors sync`。
 
-## External Edits & Resync
+**退出码：**`0` 成功，`1` 未分类，`2` 用法，`3` 未找到，`4` 版本冲突，`5` 无权限，`6` 连不上、超时或正在恢复，`7` 能力缺失，`8` 部分成功，`75` 数据目录被占用。
 
-LeafWiki is intended to be the primary writer for a workspace. However, Markdown files may still be changed outside LeafWiki — for example through a text editor, Git, a script, or a bulk import.
+在容器里请在容器内运行 CLI：socket 与锁都在容器的数据目录中。
 
-LeafWiki does not continuously watch the filesystem for these changes. To make externally modified files visible to LeafWiki, trigger a resync in one of two ways:
+每条命令、参数与 JSON 形状见 [docs/development/skills/leafwiki/SKILL.md](docs/development/skills/leafwiki/SKILL.md)；桌面启动器会把同样的提示写进 exe 旁的 `AGENT.md`。
 
-* **Admin UI:** click the **Refresh** button in the page-tree toolbar (admins only). It runs a resync with live progress across four phases (tree, links, tags, search); if HTTP [Git Backup](#git-backup-v0113-experimental) is configured, it first pulls the latest commits from the remote. Non-admin users see the same button, but for them it only re-fetches the current page tree.
-* **OS signal:** send `SIGUSR1` or `SIGHUP` to the running process — no restart required. This can be useful when an external workflow needs to explicitly tell LeafWiki that files have changed.
+---
 
-Both paths run the same resync job and produce the same result. A resync should be considered an explicit reconciliation of the workspace rather than continuous bidirectional filesystem synchronization.
+## 配置
 
-Changes to `.leafwikiignore` are separate and are only read at startup.
+每个参数都有对应的环境变量，列在参数旁边。命令行参数优先于环境变量，环境变量优先于默认值。设置成空值的环境变量按未设置处理。
 
-**New files without a `leafwiki_id`:** LeafWiki stores the identity of a page in the `leafwiki_id` field in its frontmatter rather than deriving it from the filename or path. This allows LeafWiki to retain the identity of a document when it is renamed or moved.
+### 必填
+
+| 参数 | 说明 |
+|---|---|
+| `--jwt-secret` | 签发 JWT 的密钥。妥善保管。 |
+| `--admin-password` | 初始管理员密码。仅在没有管理员时生效。 |
+
+明文 HTTP 请加 `--allow-insecure=true`，登录与 CSRF cookie 才能工作。
+
+### 命令行参数
+
+标为*本 fork*的行只存在于本仓库。
+
+| 参数 | 说明 | 默认值 | 来源 |
+|---|---|---|---|
+| `--host` | 服务绑定的主机/IP | `127.0.0.1` | 上游 |
+| `--port` | 监听端口 | `8080` | 上游 |
+| `--unix-socket` | Unix domain socket 路径；覆盖 `--host` 与 `--port` | `""` | v0.11.3 |
+| `--data-dir` | 数据存放目录 | exe 旁存在 `data/` 时用它，否则 `./data` | 上游 |
+| `--admin-username` | 初始管理员用户名 | `admin` | v0.12.0 |
+| `--admin-email` | 初始管理员邮箱 | `admin@localhost` | v0.12.0 |
+| `--public-access` | 允许公开只读访问 | `false` | 上游 |
+| `--base-path` | 反向代理下的 URL 前缀（例如 `/wiki`） | `""` | v0.8.2 |
+| `--public-url` | 本 wiki 的公开基础 URL；设置 `--smtp-host` 时必填 | `""` | v0.13.0 |
+| `--allow-insecure` | 允许 HTTP 认证 cookie（明文 HTTP 必填） | `false` | v0.7.0 |
+| `--disable-auth` | 关闭全部认证（仅可信网络） | `false` | v0.7.0 |
+| `--access-token-timeout` | 访问令牌有效期（例如 `24h`） | `15m` | v0.7.0 |
+| `--refresh-token-timeout` | 刷新令牌有效期（例如 `168h`） | `168h` | v0.7.0 |
+| `--max-asset-upload-size` | 单次上传上限（例如 `50MiB`） | `50MiB` | v0.8.5 |
+| `--custom-stylesheet` | 数据目录内 `.css` 文件的路径 | `""` | v0.8.5 |
+| `--default-language` | 默认界面语言（`en`、`de`、`es`、`fr`、`zh`） | `""` | v0.13.0 |
+| `--inject-code-in-header` | 注入 `<head>` 的原始 HTML/JS | `""` | v0.6.0 |
+| `--hide-link-metadata-section` | 隐藏反向链接与链接状态面板 | `false` | 上游 |
+| `--enable-revision` | 启用修订历史 | `false` | v0.9.0 |
+| `--enable-link-refactor` | 重命名与移动时改写链接 | `false` | v0.9.0 |
+| `--enable-api-key-management` | 实验性 API 密钥管理 | `false` | 上游 |
+| `--enable-share-links` | 实验性分享链接（尚不可用） | `false` | 上游 |
+| `--editor-limit` | 管理员与编辑者账号上限；`0` 表示不限 | `0` | 上游 |
+| `--max-revision-history` | 每页最大修订数；`0` 表示不限 | `100` | v0.9.0 |
+| `--revision-coalesce-window` | 合并同一作者连续自动保存的时间窗；`0` 表示关闭 | `5m` | v0.11.0 |
+| `--enable-http-remote-user` | 通过 HTTP 头做反向代理认证 | `false` | v0.10.0 |
+| `--http-remote-user-header-name` | 代理传递用户名或邮箱的头 | `Remote-User` | v0.10.0 |
+| `--enable-http-remote-user-auto-create` | 自动创建代理声明的用户 | `false` | v0.12.1 |
+| `--http-remote-user-email-header-name` | 自动创建用户所用邮箱的头 | `""` | v0.12.1 |
+| `--http-remote-user-default-role` | 自动创建用户的角色；不能是 `admin` | `viewer` | v0.12.1 |
+| `--trusted-proxy-ips` | 信任的代理 IP/CIDR | `""` | v0.10.0 |
+| `--login-url` | 外部登录地址，替代内置表单 | `""` | v0.12.0 |
+| `--logout-url` | 退出后的外部跳转地址 | `""` | v0.12.0 |
+| `--http-remote-user-logout-url` | 已废弃，改用 `--logout-url` | `""` | v0.10.0 |
+| `--user-management-url` | 外部用户管理页面，替代内置页面 | `""` | v0.11.4 |
+| `--disable-request-log` | 关闭每请求的访问日志 | `false` | v0.10.1 |
+| `--log-format` | 日志格式：`text` 或 `json` | `text` | v0.12.0 |
+| `--totp-encryption-key` | 静态加密 TOTP 密钥的密钥（至少 32 字节） | `""` | v0.12.0 |
+| `--enable-metrics` | 独立监听器上的 Prometheus `/metrics` | `false` | v0.12.0 |
+| `--metrics-host` | 指标监听主机/IP | `127.0.0.1` | v0.12.0 |
+| `--metrics-port` | 指标监听端口 | `9091` | v0.12.0 |
+| `--snapshot` | 启用快照 ZIP（含 SQLite 数据库） | `true` | v0.12.0 |
+| `--snapshot-interval` | 快照间隔；`0` 表示仅手动 | `24h` | v0.12.0 |
+| `--snapshot-retention` | 保留最近 N 份快照；`<= 0` 表示全保留 | `10` | v0.12.0 |
+| `--snapshot-dir` | 快照 ZIP 目录 | `<data-dir>/snapshots` | v0.12.0 |
+| `--restore-upload-max-size` | 上传恢复 ZIP 的大小上限 | `500MiB` | v0.12.0 |
+| `--git-backup` | 启用 Git 备份到远端仓库 | `false` | v0.11.3 |
+| `--git-backup-remote` | Git 备份远端 URL | `""` | v0.11.3 |
+| `--git-backup-branch` | 推送目标分支 | `main` | v0.11.3 |
+| `--git-backup-path` | 存放 `root/` 与 `assets/` 的目录；空值表示顶层 | `""` | v0.13.0 |
+| `--git-backup-ssh-key` | 原始 SSH 私钥（优先用环境变量） | `""` | v0.11.3 |
+| `--git-backup-ssh-key-path` | SSH 私钥文件路径 | `""` | v0.11.3 |
+| `--git-backup-ssh-known-hosts` | 用于防 MITM 的 `known_hosts` 路径 | `""` | v0.11.3 |
+| `--git-backup-http-username` | HTTP(S) basic auth 用户名 | `""` | v0.13.0 |
+| `--git-backup-http-password` | HTTP(S) basic auth 密码或令牌 | `""` | v0.13.0 |
+| `--git-backup-author-name` | 提交作者名 | `LeafWiki Backup` | v0.11.3 |
+| `--git-backup-author-email` | 提交作者邮箱 | `backup@leafwiki.local` | v0.11.3 |
+| `--git-backup-interval` | 备份间隔；`0` 表示仅手动 | `60m` | v0.11.3 |
+| `--smtp-host` | 用于重置密码与邀请邮件的 SMTP 主机；不设置则关闭邮件 | `""` | v0.13.0 |
+| `--smtp-port` | SMTP 端口 | `587` | v0.13.0 |
+| `--smtp-username` | SMTP 认证用户名 | `""` | v0.13.0 |
+| `--smtp-password` | SMTP 认证密码 | `""` | v0.13.0 |
+| `--smtp-from` | 发件地址（设置 `--smtp-host` 时必填） | `""` | v0.13.0 |
+| `--smtp-from-name` | 发件显示名 | `LeafWiki` | v0.13.0 |
+| `--smtp-security` | 传输安全：`none`、`starttls` 或 `tls` | `starttls` | v0.13.0 |
+| `--smtp-insecure-skip-verify` | 跳过 TLS 证书校验（仅测试） | `false` | v0.13.0 |
+| `--smtp-timeout` | 单次 SMTP 发送超时 | `10s` | v0.13.0 |
+| `--vectors` | 语义检索：`off`、`auto` 或 `manual` | `off` | *本 fork* |
+| `--vectors-model-dir` | 编码器模型目录 | `<data-dir>/models` | *本 fork* |
+| `--vectors-library` | ONNX Runtime 共享库路径 | `""` | *本 fork* |
+| `--control-socket` | Agent socket；空值关闭通道 | `<data-dir>/control.sock` | *本 fork* |
+| `--control-auth` | 匿名 agent 写入策略：`optional` 或 `required` | `optional` | *本 fork* |
+
+> 既没有 `--host` 也没有 `LEAFWIKI_HOST` 时，Docker 入口脚本会设置 `LEAFWIKI_HOST=0.0.0.0`。
+
+### 环境变量
+
+| 变量 | 说明 | 默认值 | 来源 |
+|---|---|---|---|
+| `LEAFWIKI_HOST` | 主机/IP 地址 | `127.0.0.1` | 上游 |
+| `LEAFWIKI_PORT` | 端口 | `8080` | 上游 |
+| `LEAFWIKI_UNIX_SOCKET` | Unix socket 路径；覆盖主机与端口 | `""` | v0.11.3 |
+| `LEAFWIKI_DATA_DIR` | 数据目录路径 | exe 旁存在 `data/` 时用它，否则 `./data` | 上游 |
+| `LEAFWIKI_ADMIN_PASSWORD` | 初始管理员密码（必填） | 无 | 上游 |
+| `LEAFWIKI_ADMIN_USERNAME` | 初始管理员用户名 | `admin` | v0.12.0 |
+| `LEAFWIKI_ADMIN_EMAIL` | 初始管理员邮箱 | `admin@localhost` | v0.12.0 |
+| `LEAFWIKI_JWT_SECRET` | JWT 签名密钥（必填） | 无 | 上游 |
+| `LEAFWIKI_PUBLIC_ACCESS` | 允许公开只读访问 | `false` | 上游 |
+| `LEAFWIKI_BASE_PATH` | 反向代理的 URL 前缀 | `""` | v0.8.2 |
+| `LEAFWIKI_PUBLIC_URL` | 公开基础 URL；设置 `LEAFWIKI_SMTP_HOST` 时必填 | `""` | v0.13.0 |
+| `LEAFWIKI_ALLOW_INSECURE` | 允许 HTTP 认证 cookie | `false` | v0.7.0 |
+| `LEAFWIKI_DISABLE_AUTH` | 关闭认证 | `false` | v0.7.0 |
+| `LEAFWIKI_ACCESS_TOKEN_TIMEOUT` | 访问令牌有效期 | `15m` | v0.7.0 |
+| `LEAFWIKI_REFRESH_TOKEN_TIMEOUT` | 刷新令牌有效期 | `168h` | v0.7.0 |
+| `LEAFWIKI_MAX_ASSET_UPLOAD_SIZE` | 上传大小上限 | `50MiB` | v0.8.5 |
+| `LEAFWIKI_CUSTOM_STYLESHEET` | 数据目录内 `.css` 文件的路径 | `""` | v0.8.5 |
+| `LEAFWIKI_DEFAULT_LANGUAGE` | 默认界面语言 | `""` | v0.13.0 |
+| `LEAFWIKI_INJECT_CODE_IN_HEADER` | 注入 `<head>` 的 HTML/JS | `""` | v0.6.0 |
+| `LEAFWIKI_HIDE_LINK_METADATA_SECTION` | 隐藏反向链接面板 | `false` | 上游 |
+| `LEAFWIKI_ENABLE_REVISION` | 修订历史 | `false` | v0.9.0 |
+| `LEAFWIKI_ENABLE_LINK_REFACTOR` | 重命名与移动时改写链接 | `false` | v0.9.0 |
+| `LEAFWIKI_ENABLE_API_KEY_MANAGEMENT` | 实验性 API 密钥管理 | `false` | 上游 |
+| `LEAFWIKI_ENABLE_SHARE_LINKS` | 实验性分享链接（尚不可用） | `false` | 上游 |
+| `LEAFWIKI_EDITOR_LIMIT` | 管理员与编辑者账号上限；`0` 表示不限 | `0` | 上游 |
+| `LEAFWIKI_MAX_REVISION_HISTORY` | 每页最大修订数 | `100` | v0.9.0 |
+| `LEAFWIKI_REVISION_COALESCE_WINDOW` | 合并连续自动保存；`0` 表示关闭 | `5m` | v0.11.0 |
+| `LEAFWIKI_ENABLE_HTTP_REMOTE_USER` | 反向代理认证 | `false` | v0.10.0 |
+| `LEAFWIKI_HTTP_REMOTE_USER_HEADER_NAME` | 携带代理用户的头 | `Remote-User` | v0.10.0 |
+| `LEAFWIKI_ENABLE_HTTP_REMOTE_USER_AUTO_CREATE` | 自动创建代理用户 | `false` | v0.12.1 |
+| `LEAFWIKI_HTTP_REMOTE_USER_EMAIL_HEADER_NAME` | 自动创建用户的邮箱头 | `""` | v0.12.1 |
+| `LEAFWIKI_HTTP_REMOTE_USER_DEFAULT_ROLE` | 自动创建用户的角色 | `viewer` | v0.12.1 |
+| `LEAFWIKI_TRUSTED_PROXY_IPS` | 信任的代理 IP/CIDR | `""` | v0.10.0 |
+| `LEAFWIKI_LOGIN_URL` | 外部登录地址 | `""` | v0.12.0 |
+| `LEAFWIKI_LOGOUT_URL` | 外部退出跳转 | `""` | v0.12.0 |
+| `LEAFWIKI_HTTP_REMOTE_USER_LOGOUT_URL` | 已废弃，改用 `LEAFWIKI_LOGOUT_URL` | `""` | v0.10.0 |
+| `LEAFWIKI_USER_MANAGEMENT_URL` | 外部用户管理页面 | `""` | v0.11.4 |
+| `LEAFWIKI_DISABLE_REQUEST_LOG` | 关闭每请求日志行 | `false` | v0.10.1 |
+| `LEAFWIKI_LOG_FORMAT` | 日志格式：`text` 或 `json` | `text` | v0.12.0 |
+| `LEAFWIKI_LOG_LEVEL` | `debug`、`info`、`warn` 或 `error`（仅环境变量） | `info` | v0.8.0 |
+| `LEAFWIKI_TOTP_ENCRYPTION_KEY` | 静态加密 TOTP 密钥的密钥 | `""` | v0.12.0 |
+| `LEAFWIKI_ENABLE_METRICS` | Prometheus `/metrics` | `false` | v0.12.0 |
+| `LEAFWIKI_METRICS_HOST` | 指标监听主机 | `127.0.0.1` | v0.12.0 |
+| `LEAFWIKI_METRICS_PORT` | 指标监听端口 | `9091` | v0.12.0 |
+| `LEAFWIKI_SNAPSHOT` | 启用快照 ZIP | `true` | v0.12.0 |
+| `LEAFWIKI_SNAPSHOT_INTERVAL` | 快照间隔；`0` 表示仅手动 | `24h` | v0.12.0 |
+| `LEAFWIKI_SNAPSHOT_RETENTION` | 保留的快照数；`<= 0` 表示全保留 | `10` | v0.12.0 |
+| `LEAFWIKI_SNAPSHOT_DIR` | 快照目录 | `<data-dir>/snapshots` | v0.12.0 |
+| `LEAFWIKI_RESTORE_UPLOAD_MAX_SIZE` | 上传恢复 ZIP 的大小上限 | `500MiB` | v0.12.0 |
+| `LEAFWIKI_GIT_BACKUP` | 启用 Git 备份 | `false` | v0.11.3 |
+| `LEAFWIKI_GIT_BACKUP_REMOTE` | 远端 URL | `""` | v0.11.3 |
+| `LEAFWIKI_GIT_BACKUP_BRANCH` | 推送目标分支 | `main` | v0.11.3 |
+| `LEAFWIKI_GIT_BACKUP_PATH` | 存放 `root/` 与 `assets/` 的目录 | `""` | v0.13.0 |
+| `LEAFWIKI_GIT_BACKUP_SSH_KEY` | 原始 SSH 私钥 | `""` | v0.11.3 |
+| `LEAFWIKI_GIT_BACKUP_SSH_KEY_PATH` | SSH 私钥文件 | `""` | v0.11.3 |
+| `LEAFWIKI_GIT_BACKUP_SSH_KNOWN_HOSTS` | `known_hosts` 文件 | `""` | v0.11.3 |
+| `LEAFWIKI_GIT_BACKUP_HTTP_USERNAME` | HTTP(S) basic auth 用户名 | `""` | v0.13.0 |
+| `LEAFWIKI_GIT_BACKUP_HTTP_PASSWORD` | HTTP(S) basic auth 密码或令牌 | `""` | v0.13.0 |
+| `LEAFWIKI_GIT_BACKUP_AUTHOR_NAME` | 提交作者名 | `LeafWiki Backup` | v0.11.3 |
+| `LEAFWIKI_GIT_BACKUP_AUTHOR_EMAIL` | 提交作者邮箱 | `backup@leafwiki.local` | v0.11.3 |
+| `LEAFWIKI_GIT_BACKUP_INTERVAL` | 备份间隔；`0` 表示仅手动 | `60m` | v0.11.3 |
+| `LEAFWIKI_SMTP_HOST` | SMTP 主机；不设置则关闭邮件 | `""` | v0.13.0 |
+| `LEAFWIKI_SMTP_PORT` | SMTP 端口 | `587` | v0.13.0 |
+| `LEAFWIKI_SMTP_USERNAME` | SMTP 认证用户名 | `""` | v0.13.0 |
+| `LEAFWIKI_SMTP_PASSWORD` | SMTP 认证密码 | `""` | v0.13.0 |
+| `LEAFWIKI_SMTP_FROM` | 发件地址（设置 `LEAFWIKI_SMTP_HOST` 时必填） | `""` | v0.13.0 |
+| `LEAFWIKI_SMTP_FROM_NAME` | 发件显示名 | `LeafWiki` | v0.13.0 |
+| `LEAFWIKI_SMTP_SECURITY` | `none`、`starttls` 或 `tls` | `starttls` | v0.13.0 |
+| `LEAFWIKI_SMTP_INSECURE_SKIP_VERIFY` | 跳过 TLS 校验 | `false` | v0.13.0 |
+| `LEAFWIKI_SMTP_TIMEOUT` | 单次 SMTP 发送超时 | `10s` | v0.13.0 |
+| `LEAFWIKI_VECTORS` | 语义检索模式 | `off` | *本 fork* |
+| `LEAFWIKI_VECTORS_MODEL_DIR` | 编码器模型目录 | `<data-dir>/models` | *本 fork* |
+| `LEAFWIKI_VECTORS_LIBRARY` | ONNX Runtime 共享库 | `""` | *本 fork* |
+| `LEAFWIKI_CONTROL_SOCKET` | Agent socket；空值关闭通道 | `<data-dir>/control.sock` | *本 fork* |
+| `LEAFWIKI_CONTROL_AUTH` | `optional` 或 `required` | `optional` | *本 fork* |
+| `LEAFWIKI_AGENT_USER` | Agent CLI 认证账号（由 CLI 读取，服务端不用） | `""` | *本 fork* |
+| `LEAFWIKI_AGENT_PASSWORD` | `LEAFWIKI_AGENT_USER` 的密码 | `""` | *本 fork* |
+
+### 语义检索设置
+
+- `--vectors=auto` 在页面保存后于后台向量化。保存响应返回 `vector: "queued"`；Agent CLI 的 `--wait` 会轮询到页面为 `indexed`。
+- `--vectors=manual` 从不入队。用管理界面或 CLI 构建、刷新。
+- `--vectors-model-dir` 可以指向单个模型目录，或只含一个模型的父目录。父目录下有多个模型会以歧义报错。
+- `--vectors-library` 是 `onnxruntime.dll`（Windows）或 `libonnxruntime.so` 的路径。Go 绑定锁定 ONNX Runtime C API 1.31：其他版本报 `Error setting ORT API base`。
+- `vectors.db` 与 `models/` 是派生状态。快照与 Git 备份不含它们。恢复会丢弃索引，并从恢复后的页面重建，而不是复用旧向量。
+- 召回片段的相似度下限是 `internal/wiki/vectors/recall.go` 里的常量（`SemanticMinSimilarity`），不是参数。
+
+---
+
+## 运行模式
+
+LeafWiki 有三种访问模式。按环境选择。
+
+1. **内部百科，必须登录（默认）。**不加参数。每次访问都需要账号。
+   ```bash
+   ./leafwiki --jwt-secret=yoursecret --admin-password=yourpassword
+   ```
+2. **公开可读，编辑需登录。**读者不需要账号，编辑者与管理员需要。
+   ```bash
+   ./leafwiki --jwt-secret=yoursecret --admin-password=yourpassword --public-access=true
+   ```
+3. **关闭认证（`--disable-auth`）。**任何能访问服务的人都能读和写。
+   ```bash
+   ./leafwiki --disable-auth --host=127.0.0.1
+   ```
+   仅用于可信网络或本地环境，不要把 `--disable-auth` 实例暴露到公网。这种实例上没人能通过认证，Agent CLI 也无法删除。
+
+角色为 admin、editor、viewer。编辑需要编辑者或管理员。
+
+---
+
+## 磁盘文件与重新同步
+
+`<data>/root/**` 以 Markdown 存页面，是事实来源。frontmatter 保存托管的身份键（`leafwiki_id`、`leafwiki_title`、时间戳、作者 id、`leafwiki_aliases`）与 `tags`；其他键是页面属性。旁边的 SQLite 文件是派生的，可重建。
+
+这些文件由 LeafWiki 自己写入。它不监听文件变化。如果在应用之外改动 Markdown（文本编辑器、脚本、批量导入、`git pull`），要通知运行中的服务：
+
+- **管理界面：**页面树工具栏的刷新按钮会重新同步树、链接、标签、检索与语义索引，并显示实时进度。
+- **系统信号：**向进程发 `SIGUSR1` 或 `SIGHUP`。Windows 没有等价信号，用按钮。
+
+重新同步是核对，不是持续双向同步。应用之外新建、没有 `leafwiki_id` 的 Markdown 文件会在同步时写回一个 id，所以磁盘上会变化一次。如果 `root/` 还在外部 Git 流程里，这个 id 会出现在 diff（差异）中。
+
+不要在服务运行期间直接改希望保留的页面文件：服务看不到改动，下一次从界面保存会覆盖它。改用 [Agent 访问](#agent-访问)，通过服务写入。
+
+---
+
+## 安全
+
+自 v0.7.0 起默认启用：
+
+- 会话使用 Secure、HttpOnly cookie（会话凭据）
+- 所有会改变状态的请求都有 CSRF 保护
+- 认证接口限流
+- 基于角色的访问：admin、editor、viewer
+
+本 fork 相关的注意点：
+
+- `--disable-auth` 移除所有认证。仅用于本地开发或隔离网络。
+- 控制通道是数据目录属主拥有的本地 socket，权限 `0660`，平台支持时校验对端 uid。它不签发 token（令牌）。读、新建、修改对该 uid 开放，信任级别等同于改文件；删除需要编辑者或管理员。`--control-auth=required` 对匿名调用方关闭通道。
+- `--allow-insecure=true` 用于明文 HTTP。离开本机的流量请用反向代理提供 HTTPS。
+- SMTP 与 Git 备份的凭据放在环境变量里，不要放在命令行上，进程列表会显示。
+
+---
+
+## 开发
+
+技术栈：Go、React（Vite）、SQLite。
+
+```bash
+make setup     # 前端与 e2e 的 npm 依赖
+make dev       # 后端与 Vite 一起启动；Ctrl-C 同时停止
+```
+
+Vite 在 `http://localhost:5173` 启动（用户名 `admin`，密码 `devpassword`），并把 API 代理到 `127.0.0.1:8080`。`make doctor` 检查 Go 与 Node 版本。
+
+| 任务 | 命令 |
+|---|---|
+| 本地 CI 子集 | `make ci` |
+| 后端测试与 lint | `make test`、`make lint` |
+| Windows 与 macOS 构建检查 | `make cross` |
+| 前端安装、lint、格式、测试、构建 | `make ui-check` |
+| 启动器编译检查 | `make verify-launcher` |
+| 仓库检查 | `make verify` |
+
+需要编码器的测试读取 `LEAFWIKI_VECTORS_TEST_MODELS_DIR` 与 `LEAFWIKI_VECTORS_TEST_LIBRARY`；没有它们时相关用例跳过。用 `CGO_ENABLED=1 go test -tags vectors ./internal/embed` 运行。
+
+架构、规则与源码地图在 [docs/development/](docs/development/README.md)。Agent 指令与评审角色在 [AGENTS.md](AGENTS.md)。界面语言有英语、德语、西班牙语、法语与中文；新增语言见 [docs/i18n.md](docs/i18n.md)。
+
+---
+
+## 上游、许可与贡献
+
+- 上游项目：[perber/leafwiki](https://github.com/perber/leafwiki)。它的 README 记录了本 fork 继承的功能：Linux、Kubernetes、nginx 与树莓派安装；快照与恢复；Git 备份；SMTP 邮件；反向代理认证；Unix socket；键盘快捷键；页面排序。
+- fork 基线：上游 `main` 的提交 `714e0368`。
+- 上游的 release、Docker 镜像、在线 demo、`install.sh` 与 `update.sh` 属于上游，不含本 fork 的改动。
+- 许可：MIT，见 [LICENSE](LICENSE)。
+- 贡献规则：[CONTRIBUTING.md](CONTRIBUTING.md) 与 [docs/development/rules.md](docs/development/rules.md)。上游相关的问题与 PR 请提到上游；只涉及本 fork 的改动留在这里。

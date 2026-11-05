@@ -1,5 +1,9 @@
 # LeafWiki Demo Setup (with nginx and HTTPS)
 
+> This guide uses upstream's release artifacts (binaries or container image). They do not contain
+> this fork's changes; build from source or from this repository's `Dockerfile` instead (see
+> [Install](../../README.en.md#install)).
+
 This guide demonstrates how to install **LeafWiki** on Ubuntu, configure **nginx** as a reverse proxy, and secure it with a free **Let's Encrypt** SSL certificate via **Certbot**.
 
 ---
